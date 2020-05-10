@@ -6,6 +6,6 @@ LABEL maintener="brice.mbiandji@g2snet.com"
 RUN mkdir -p /usr/local/configuration
 #Adding generated jar to configuration directory
 ADD @project.build.finalName@.jar /usr/local/discovery/
-ADD run.sh run.sh
+RUN run.sh run.sh
 ADD chmod +x run.sh
 CMD ./run.sh
