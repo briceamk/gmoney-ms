@@ -8,7 +8,7 @@ spring:
 server:
   port: 7000
   servlet:
-    context-path: /config
+    context-path: /configuration
 management:
   server:
     port: 7500
