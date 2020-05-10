@@ -7,5 +7,5 @@ RUN mkdir -p /usr/local/configuration
 #Adding generated jar to configuration directory
 ADD @project.build.finalName@.jar /usr/local/configuration/
 ADD run.sh run.sh
-ADD chmod +x run.sh
+RUN chmod +x run.sh
 CMD ./run.sh
