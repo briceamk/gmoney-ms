@@ -1,5 +1,5 @@
 #Start with base image containaing Java runtime
-FROM openjdk:11-jdk-alpine
+FROM adoptopenjdk/openjdk11:latest
 #Add maintener info
 LABEL maintener="brice.mbiandji@g2snet.com"
 #Adding a directory to container
