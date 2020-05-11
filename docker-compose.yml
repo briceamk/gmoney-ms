@@ -2,7 +2,7 @@ version: '3'
 services:
   configuration:
     restart: always
-    image: gmoney/configuration:latest
+    image: ambaindji/configuration:latest
     ports:
       - "7000:7000"
       - "7500:7500"
@@ -10,7 +10,7 @@ services:
       - "PROFILE=test"
   discovery:
     restart: always
-    image: gmoney/discovery:latest
+    image: ambaindji/discovery:latest
     ports:
       - "7000:7000"
       - "7510:7510"
@@ -19,7 +19,7 @@ services:
       - "PROFILE=test"
   proxy:
     restart: always
-    image: gomney/proxy:latest
+    image: ambaindji/proxy:latest
     ports:
       - "5000:5000"
       - "5500:5500"
