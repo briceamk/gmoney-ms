@@ -1,11 +1,13 @@
 #Start with base image containaing Java runtime
 FROM adoptopenjdk/openjdk11:latest
+#To rune network command
+RUN install_packages netcat
 #Add maintener info
 LABEL maintener="brice.mbiandji@g2snet.com"
 #Adding a directory to container
-RUN mkdir -p /usr/local/configuration
+RUN mkdir -p /usr/local/discovery
 #Adding generated jar to configuration directory
 ADD @project.build.finalName@.jar /usr/local/discovery/
-RUN run.sh run.sh
-ADD chmod +x run.sh
+ADD run.sh run.sh
+RUN chmod +x run.sh
 CMD ./run.sh
