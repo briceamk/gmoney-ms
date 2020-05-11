@@ -4,3 +4,5 @@ spring:
       server:
         git:
           uri: https://github.com/briceamk/gmoney-ms-configuration
+          username: ambiandji@gmail.com
+          password: ?.@159MmmmM@++
