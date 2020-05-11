@@ -1,6 +1,6 @@
 spring:
   application:
-    name: proxy-service
+    name: proxy
   cloud:
     config:
       uri: ${CONFIGURATION_SERVICE}
