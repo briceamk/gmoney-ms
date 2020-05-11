@@ -1,6 +1,6 @@
 spring:
   application:
-    name: discovery-service
+    name: discovery
   cloud:
     config:
       uri: ${CONFIGURATION_SERVICE}
