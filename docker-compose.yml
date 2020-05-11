@@ -2,29 +2,29 @@ version: '3'
 services:
   configuration:
     restart: always
-    image: ambaindji/configuration:latest
+    image: gmoney/configuration:latest
     ports:
       - "7000:7000"
       - "7500:7500"
     environment:
-      - "PROFILE=test"
+      - PROFILE=test
   discovery:
     restart: always
-    image: ambaindji/discovery:latest
+    image: gmoney/discovery:latest
     ports:
       - "7000:7000"
       - "7510:7510"
     environment:
-      - "CONFIGURATION_SERVICE=http://configuration:7000"
-      - "PROFILE=test"
+      - CONFIGURATION_SERVICE=http://configuration:7000
+      - PROFILE=test
   proxy:
     restart: always
-    image: ambaindji/proxy:latest
+    image: gomney/proxy:latest
     ports:
       - "5000:5000"
       - "5500:5500"
     environment:
-      - "CONFIGURATION_SERVICE=http://configuration:7000"
-      - "PROFILE=test"
-      - "DISCOVERY_SERVICE=http://discovery:7010/eureka"
+      - CONFIGURATION_SERVICE=http://configuration:7000
+      - PROFILE=test
+      - DISCOVERY_SERVICE=http://discovery:7010/eureka
 
