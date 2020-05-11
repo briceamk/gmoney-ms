@@ -1,0 +1,30 @@
+version: '3'
+services:
+  configuration:
+    restart: always
+    image: gmoney/configuration:latest
+    ports:
+      - "7000:7000"
+      - "7500:7500"
+    environment:
+      - "PROFILE=test"
+  discovery:
+    restart: always
+    image: gmoney/discovery:latest
+    ports:
+      - "7000:7000"
+      - "7510:7510"
+    environment:
+      - "CONFIGURATION_SERVICE=http://configuration:7000"
+      - "PROFILE=test"
+  proxy:
+    restart: always
+    image: gomney/proxy:latest
+    ports:
+      - "5000:5000"
+      - "5500:5500"
+    environment:
+      - "CONFIGURATION_SERVICE=http://configuration:7000"
+      - "PROFILE=test"
+      - "DISCOVERY_SERVICE=http://discovery:7010/eureka"
+
