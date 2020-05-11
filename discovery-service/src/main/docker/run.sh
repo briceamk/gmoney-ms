@@ -3,7 +3,7 @@ echo "##################################################"
 echo "Waiting for GMONEY Configuration service  to start"
 echo "##################################################"
 
-while ! $(nc -z configuration-service 7000 ); do sleep 3; done
+while ! $(nc -z $CONFIGURATION_SERVICE 7000 ); do sleep 3; done
 
 echo ">>>>>>>>>>>>>>>>> Starting GMONEY Discovery......."
 

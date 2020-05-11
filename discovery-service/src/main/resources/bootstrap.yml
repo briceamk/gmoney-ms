@@ -3,4 +3,4 @@ spring:
     name: discovery-service
   cloud:
     config:
-      uri: ${CONFIGURATION-SERVICE}
+      uri: ${CONFIGURATION_SERVICE}

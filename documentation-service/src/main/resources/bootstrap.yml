@@ -3,4 +3,4 @@ spring:
     name: proxy-service
   cloud:
     config:
-      uri: ${CONFIGURATION_SERVICE}
+      uri: ${CONFIGURATION-SERVICE}
