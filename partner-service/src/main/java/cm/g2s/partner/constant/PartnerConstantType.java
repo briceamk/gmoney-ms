@@ -1,4 +1,4 @@
-package cm.g2s.partner;
+package cm.g2s.partner.constant;
 
 public class PartnerConstantType {
 

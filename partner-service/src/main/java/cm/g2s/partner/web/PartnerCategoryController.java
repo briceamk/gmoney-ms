@@ -1,6 +1,6 @@
 package cm.g2s.partner.web;
 
-import cm.g2s.partner.PartnerConstantType;
+import cm.g2s.partner.constant.PartnerConstantType;
 import cm.g2s.partner.service.PartnerCategoryService;
 import cm.g2s.partner.shared.dto.PartnerCategoryDto;
 import cm.g2s.partner.shared.dto.PartnerCategoryDtoPage;
