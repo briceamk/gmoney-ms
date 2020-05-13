@@ -28,7 +28,7 @@ public class SwaggerConfiguration {
 
     private ApiInfo getApiInfo(){
         return new ApiInfo(
-                "Partner Service API",
+                "Company Service API",
                 "Api to manage Company",
                 "1.0.0",
                 "Terms of Service",
