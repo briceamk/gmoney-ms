@@ -2,6 +2,8 @@ version: '3'
 services:
   configuration:
     restart: always
+    hostname: configuration
+    container_name: configuration
     image: gmoney/configuration:latest
     ports:
       - "7000:7000"
@@ -10,6 +12,8 @@ services:
       - PROFILE=test
   discovery:
     restart: always
+    hostname: discovery
+    container_name: discovery
     image: gmoney/discovery:latest
     ports:
       - "7000:7000"
@@ -19,6 +23,8 @@ services:
       - PROFILE=test
   proxy:
     restart: always
+    hostname: proxy
+    container_name: proxy
     image: gomney/proxy:latest
     ports:
       - "5000:5000"
