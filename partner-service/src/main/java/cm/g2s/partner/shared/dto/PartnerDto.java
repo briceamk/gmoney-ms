@@ -1,6 +1,5 @@
 package cm.g2s.partner.shared.dto;
 
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,7 +10,6 @@ import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -41,6 +39,7 @@ public class PartnerDto implements Serializable {
     private String nicIssuePlace;
     private String city;
     private String country;
+    private CompanyDto companyDto;
     @PositiveOrZero(message = "credit limit is greater thant zeros")
     private BigDecimal creditLimit;
     private String type;

@@ -51,6 +51,7 @@ public class Partner implements Serializable {
     private String city;
     private String country;
     private BigDecimal creditLimit;
+    private String companyId;
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 16)
     private PartnerType type;

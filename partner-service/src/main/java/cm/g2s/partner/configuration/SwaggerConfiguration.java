@@ -29,7 +29,7 @@ public class SwaggerConfiguration {
     private ApiInfo getApiInfo(){
         return new ApiInfo(
                 "Partner Service API",
-                "Api to manage partner",
+                "Api to manage Partner",
                 "1.0.0",
                 "Terms of Service",
                 new Contact("Brice MBIANDJI", "http://g2snet.com", "brice.mbiandji@g2snet.com"),
