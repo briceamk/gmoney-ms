@@ -1,5 +1,6 @@
 package cm.g2s.partner.shared.dto;
 
+import cm.g2s.partner.service.company.model.CompanyDto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -26,18 +26,18 @@ public class PartnerController {
     private final PartnerService partnerService;
 
     @PostMapping
-    public ResponseEntity<?> createPartner(@Valid @RequestBody PartnerDto partnerDto) {
-        partnerDto = partnerService.createPartner(partnerDto);
+    public ResponseEntity<?> create(@Valid @RequestBody PartnerDto partnerDto) {
+        partnerDto = partnerService.create(partnerDto);
         URI uri = ServletUriComponentsBuilder
                 .fromCurrentContextPath().path("/api/v1/partners/{id}")
                 .buildAndExpand(partnerDto.getId()).toUri();
-        return ResponseEntity.created(uri).body(new ResponseApi(true, "partner saved successfully!"));
+        return ResponseEntity.created(uri).body(new ResponseApi(true, "Partner saved successfully!"));
     }
 
     @PutMapping
     public ResponseEntity<?> update(@Validated @RequestBody PartnerDto partnerDto) {
         partnerService.update(partnerDto);
-        return new ResponseEntity<>(new ResponseApi(true, "partner updated successfully!"), HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseApi(true, "Partner updated successfully!"), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
@@ -72,6 +72,6 @@ public class PartnerController {
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteById(@PathVariable String id) {
         partnerService.deleteById(id);
-        return new ResponseEntity<>(new ResponseApi(true, "partner deleted successfully!"), HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseApi(true, "Partner deleted successfully!"), HttpStatus.OK);
     }
 }

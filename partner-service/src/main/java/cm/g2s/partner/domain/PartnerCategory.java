@@ -35,7 +35,6 @@ public class PartnerCategory implements Serializable {
     private Timestamp lastModifiedDate;
     @Column(length = 64, insertable = false)
     private String lastUpdatedUid;
-    
     @Column(nullable = false, unique = true, length = 64)
     private String name;
     private BigDecimal creditLimit;

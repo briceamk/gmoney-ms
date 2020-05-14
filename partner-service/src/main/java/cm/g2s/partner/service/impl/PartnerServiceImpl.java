@@ -30,7 +30,7 @@ public class PartnerServiceImpl implements PartnerService {
     private final WalletRepository walletRepository;
 
     @Override
-    public PartnerDto createPartner(PartnerDto partnerDto) {
+    public PartnerDto create(PartnerDto partnerDto) {
         //we verify if database contains same nic  provided in dto
         if(partnerDto.getNicId() != null && partnerRepository.existsByNicId(partnerDto.getNicId())) {
             log.error("provided national identity card {} is already taken!", partnerDto.getNicId());

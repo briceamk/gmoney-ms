@@ -1,7 +1,7 @@
 package cm.g2s.partner.shared.mapper;
 
 import cm.g2s.partner.domain.Partner;
-import cm.g2s.partner.service.company.CompanyClientService;
+import cm.g2s.partner.service.company.service.CompanyClientService;
 import cm.g2s.partner.shared.dto.PartnerDto;
 import org.springframework.beans.factory.annotation.Autowired;
 

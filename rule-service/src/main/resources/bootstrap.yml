@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: rule
+  cloud:
+    config:
+      uri: ${CONFIGURATION_SERVICE}

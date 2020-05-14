@@ -11,6 +11,7 @@ import cm.g2s.account.shared.exception.ResourceNotFoundException;
 import cm.g2s.account.shared.mapper.AccountMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -52,7 +53,7 @@ public class AccountServiceImpl implements AccountService {
                 exits = false;
             }
         }
-        Account account = accountMapper.map(accountDto);
+        val account = accountMapper.map(accountDto);
         //We set default state of account
         account.setState(AccountState.CREATED);
         log.info(account.toString());
@@ -66,7 +67,7 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public AccountDto findById(String id) {
-        Account account = accountRepository.findById(id).orElseThrow(
+        val account = accountRepository.findById(id).orElseThrow(
                 () -> {
                     log.error("Account with id {} not found",id);
                     throw new ResourceNotFoundException(String.format("Account with id %s not found",id));
@@ -88,7 +89,7 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public AccountDto findByPartnerId(String partnerId) {
-        Account account = accountRepository.findByPartnerId(partnerId).orElseThrow(
+        val account = accountRepository.findByPartnerId(partnerId).orElseThrow(
                 () -> {
                     log.error("Account with partner id {} not found",partnerId);
                     throw new ResourceNotFoundException(String.format("Account with partner id %s not found",partnerId));
@@ -124,7 +125,7 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public void deleteById(String id) {
-        Account account = accountRepository.findById(id).orElseThrow(
+        val account = accountRepository.findById(id).orElseThrow(
                 () -> {
                     log.error("Account with id {} not found",id);
                     throw new ResourceNotFoundException(String.format("Account with id %s not found",id));
@@ -134,12 +135,12 @@ public class AccountServiceImpl implements AccountService {
     }
 
     private String generateNumber(){
-        ThreadLocalRandom random = ThreadLocalRandom.current();
+        val random = ThreadLocalRandom.current();
         return ((Long)  random.nextLong(1_000_000_000L, 10_000_000_000L)).toString();
     }
 
     private String generateKey() {
-        ThreadLocalRandom random = ThreadLocalRandom.current();
+        val random = ThreadLocalRandom.current();
         return ((Long)  random.nextLong(10L, 100L)).toString();
     }
 }

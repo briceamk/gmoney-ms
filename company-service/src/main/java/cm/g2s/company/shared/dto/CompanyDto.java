@@ -24,7 +24,6 @@ public class CompanyDto implements Serializable {
     @NotEmpty(message = "code is required")
     @Size(max = 12, message= "code can have maximum 12 characters")
     private String code;
-    @Column(nullable = false, length = 64)
     @NotEmpty(message = "name is required")
     @Size(max = 12, message= "name can have maximum 64 characters")
     private String name;

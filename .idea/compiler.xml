@@ -7,12 +7,12 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="proxy-service" />
-        <module name="documentation-service" />
-        <module name="configuration-service" />
         <module name="discovery-service" />
+        <module name="documentation-service" />
+        <module name="proxy-service" />
+        <module name="configuration-service" />
       </profile>
-      <profile name="Annotation profile for partner-service" enabled="true">
+      <profile name="Annotation profile for account-service" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
@@ -32,24 +32,33 @@
           <entry name="$MAVEN_REPOSITORY$/joda-time/joda-time/2.9/joda-time-2.9.jar" />
           <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.12/lombok-1.18.12.jar" />
         </processorPath>
+        <module name="account-service" />
         <module name="partner-service" />
+        <module name="rule-service" />
+        <module name="company-service" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="account-service" target="1.8" />
+      <module name="company-service" target="1.8" />
       <module name="configuration-service" target="11" />
       <module name="discovery-service" target="11" />
       <module name="documentation-service" target="11" />
       <module name="partner-service" target="1.8" />
       <module name="proxy-service" target="11" />
+      <module name="rule-service" target="1.8" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="account-service" options="-parameters -Amapstruct.defaultComponentModel=spring" />
+      <module name="company-service" options="-parameters -Amapstruct.defaultComponentModel=spring" />
       <module name="configuration-service" options="-parameters" />
       <module name="discovery-service" options="-parameters" />
       <module name="documentation-service" options="-parameters" />
       <module name="partner-service" options="-parameters -Amapstruct.defaultComponentModel=spring" />
       <module name="proxy-service" options="-parameters" />
+      <module name="rule-service" options="-parameters -Amapstruct.defaultComponentModel=spring" />
     </option>
   </component>
 </project>
