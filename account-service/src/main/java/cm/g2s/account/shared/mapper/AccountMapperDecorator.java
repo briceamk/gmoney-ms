@@ -34,9 +34,9 @@ public abstract  class AccountMapperDecorator implements AccountMapper{
         Account account = accountMapper.map(accountDto);
         if(account == null )
             return null;
-        if(account.getPartnerId() != null)
+        if(accountDto.getPartnerDto() != null)
             account.setPartnerId(accountDto.getPartnerDto().getId());
-        if(account.getUserId() != null)
+        if(accountDto.getUserDto() != null)
             account.setUserId(accountDto.getUserDto().getId());
         return account;
     }
