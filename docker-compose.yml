@@ -36,8 +36,8 @@ services:
       context: proxy-service/src/main/docker
       dockerfile: Dockerfile
     ports:
-      - "5000:5000"
-      - "5500:5500"
+      - "8100:8100"
+      - "8500:8500"
     environment:
       - CONFIGURATION_SERVICE=http://configuration:7000
       - PROFILE=test
