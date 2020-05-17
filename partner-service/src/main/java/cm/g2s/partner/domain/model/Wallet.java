@@ -1,5 +1,6 @@
-package cm.g2s.partner.domain;
+package cm.g2s.partner.domain.model;
 
+import cm.g2s.partner.domain.data.BaseEntity;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
@@ -9,30 +10,12 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
-@Getter
-@Setter
+@Data
 @Entity
-@Builder
 @NoArgsConstructor
-@AllArgsConstructor
-public  class Wallet implements Serializable {
+public  class Wallet extends BaseEntity {
 
     static final long serialVersionUID = 9186582349103994579L;
-
-    @Id @GeneratedValue(generator = "uuid")
-    @GenericGenerator(name = "uuid", strategy = "uuid2")
-    @Column(length = 64, nullable = false, updatable = false)
-    private String id;
-    @Column(length = 64)
-    private String createdUid;
-    @CreationTimestamp
-    @Column(updatable = false, nullable = false)
-    private Timestamp createdDate;
-    @UpdateTimestamp
-    @Column(insertable = false)
-    private Timestamp lastModifiedDate;
-    @Column(length = 64, insertable = false)
-    private String lastUpdatedUid;
     
     @Column(unique = true, nullable = false, length = 16)
     private String name;
@@ -45,5 +28,13 @@ public  class Wallet implements Serializable {
     @JoinColumn(name = "partner_id", nullable = false)
     private Partner partner;
 
-    
+    @Builder
+    public Wallet(String id, String name, WalletType type, Boolean isDefault, Boolean active, Partner partner) {
+        super(id);
+        this.name = name;
+        this.type = type;
+        this.isDefault = isDefault;
+        this.active = active;
+        this.partner = partner;
+    }
 }

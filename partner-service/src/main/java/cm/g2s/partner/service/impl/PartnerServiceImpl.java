@@ -1,8 +1,8 @@
 package cm.g2s.partner.service.impl;
 
-import cm.g2s.partner.domain.Partner;
-import cm.g2s.partner.domain.PartnerState;
-import cm.g2s.partner.domain.PartnerType;
+import cm.g2s.partner.domain.model.Partner;
+import cm.g2s.partner.domain.model.PartnerState;
+import cm.g2s.partner.domain.model.PartnerType;
 import cm.g2s.partner.repository.PartnerRepository;
 import cm.g2s.partner.repository.WalletRepository;
 import cm.g2s.partner.service.PartnerService;

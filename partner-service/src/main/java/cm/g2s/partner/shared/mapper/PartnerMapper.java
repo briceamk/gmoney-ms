@@ -1,6 +1,6 @@
 package cm.g2s.partner.shared.mapper;
 
-import cm.g2s.partner.domain.Partner;
+import cm.g2s.partner.domain.model.Partner;
 import cm.g2s.partner.shared.dto.PartnerDto;
 import org.mapstruct.DecoratedWith;
 import org.mapstruct.Mapper;

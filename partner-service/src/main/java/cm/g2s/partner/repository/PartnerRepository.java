@@ -1,10 +1,9 @@
 package cm.g2s.partner.repository;
 
-import cm.g2s.partner.domain.Partner;
-import cm.g2s.partner.domain.PartnerState;
-import cm.g2s.partner.domain.PartnerType;
+import cm.g2s.partner.domain.model.Partner;
+import cm.g2s.partner.domain.model.PartnerState;
+import cm.g2s.partner.domain.model.PartnerType;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

@@ -1,4 +1,4 @@
-package cm.g2s.partner.domain;
+package cm.g2s.partner.domain.model;
 
 /**
  * ENTERPRISE: PartnerController who's added in app with agreement of his company

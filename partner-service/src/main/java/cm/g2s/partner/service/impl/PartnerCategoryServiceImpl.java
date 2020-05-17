@@ -1,6 +1,6 @@
 package cm.g2s.partner.service.impl;
 
-import cm.g2s.partner.domain.PartnerCategory;
+import cm.g2s.partner.domain.model.PartnerCategory;
 import cm.g2s.partner.repository.PartnerCategoryRepository;
 import cm.g2s.partner.service.PartnerCategoryService;
 import cm.g2s.partner.shared.dto.PartnerCategoryDto;
