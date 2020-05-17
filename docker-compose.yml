@@ -4,7 +4,7 @@ services:
     restart: always
     hostname: configuration
     container_name: configuration
-    image: gmoney/configuration:latest
+    image: ambaindji/gmoney-configuration:latest
     build:
       context: configuration-service/src/main/docker
       dockerfile: Dockerfile
@@ -17,7 +17,7 @@ services:
     restart: always
     hostname: discovery
     container_name: discovery
-    image: gmoney/discovery:latest
+    image: ambaindji/gmoney-discovery:latest
     build:
       context: discovery-service/src/main/docker
       dockerfile: Dockerfile
@@ -31,7 +31,7 @@ services:
     restart: always
     hostname: proxy
     container_name: proxy
-    image: gomney/proxy:latest
+    image: ambaindji/gmoney-proxy:latest
     build:
       context: proxy-service/src/main/docker
       dockerfile: Dockerfile
