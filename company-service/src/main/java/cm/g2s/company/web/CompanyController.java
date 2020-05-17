@@ -15,6 +15,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -31,6 +32,7 @@ public class CompanyController {
     private final CompanyService companyService;
 
     @PostMapping
+    @PreAuthorize("hasRole('ROLE_ADMIN') or (hasRole('ROLE_MANAGER') and hasAuthority('CREATE_COMPANY'))")
     public ResponseEntity<?> create(@CurrentPrincipal CustomPrincipal principal,
                                     @Validated @RequestBody CompanyDto companyDto) {
         companyDto = companyService.create(principal, companyDto);
@@ -41,6 +43,7 @@ public class CompanyController {
     }
 
     @PutMapping
+    @PreAuthorize("hasRole('ROLE_ADMIN') or (hasRole('ROLE_MANAGER') and hasAuthority('UPDATE_COMPANY'))")
     public ResponseEntity<?> update(@CurrentPrincipal CustomPrincipal principal,
                                     @Validated @RequestBody CompanyDto companyDto) {
         companyService.update(principal, companyDto);
@@ -48,18 +51,21 @@ public class CompanyController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or (hasRole('ROLE_MANAGER') and hasAuthority('READ_COMPANY')) or (hasRole('ROLE_USER') and hasAuthority('READ_COMPANY'))")
     public ResponseEntity<?> findById(@CurrentPrincipal CustomPrincipal principal,
                                       @PathVariable String id) {
         return new ResponseEntity<>(companyService.findById(principal, id), HttpStatus.OK);
     }
 
     @GetMapping("/code/{code}")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or (hasRole('ROLE_MANAGER') and hasAuthority('READ_COMPANY')) or (hasRole('ROLE_USER') and hasAuthority('READ_COMPANY'))")
     public ResponseEntity<?> findByCode(@CurrentPrincipal CustomPrincipal principal,
                                         @PathVariable String code) {
         return new ResponseEntity<>(companyService.findByCode(principal, code), HttpStatus.OK);
     }
 
     @GetMapping
+    @PreAuthorize("hasRole('ROLE_ADMIN') or (hasRole('ROLE_MANAGER') and hasAuthority('READ_COMPANY')) or (hasRole('ROLE_USER') and hasAuthority('READ_COMPANY'))")
     public ResponseEntity<CompanyDtoPage> findAll(@CurrentPrincipal CustomPrincipal principal,
                                                   @RequestParam(value = "pageNumber", required = false) Integer pageNumber,
                                                   @RequestParam(value = "pageSize", required = false) Integer pageSize,
@@ -86,6 +92,7 @@ public class CompanyController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or (hasRole('ROLE_MANAGER') and hasAuthority('DELETE_COMPANY'))")
     public ResponseEntity<?> deleteById(@CurrentPrincipal CustomPrincipal principal,
                                         @PathVariable String id) {
         companyService.deleteById(principal, id);
@@ -93,15 +100,17 @@ public class CompanyController {
     }
 
     @PutMapping("/uploadLogo/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or (hasRole('ROLE_MANAGER') and hasAuthority('UPDATE_COMPANY'))")
     public ResponseEntity<?> storeCompanyLogo(@CurrentPrincipal CustomPrincipal principal,
                                               @PathVariable String id, @RequestParam(name = "image", required = true) MultipartFile image) {
-        CompanyDto companyDto = companyService.dbStoreImage(companyService.findById(principal, id), image);
+        CompanyDto companyDto = companyService.dbStoreImage(principal, companyService.findById(principal, id), image);
         companyService.update(principal, companyDto);
         return ResponseEntity.ok(new ResponseApi(true, "Company logo updated successfully"));
     }
 
 
     @GetMapping("/downloadLogo/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or (hasRole('ROLE_MANAGER') and hasAuthority('READ_COMPANY'))  or (hasRole('ROLE_USER') and hasAuthority('READ_COMPANY'))")
     public ResponseEntity<?> getCompanyLogo(@CurrentPrincipal CustomPrincipal principal,
                                             @PathVariable String id) {
         CompanyDto companyDto = companyService.findById(principal, id);

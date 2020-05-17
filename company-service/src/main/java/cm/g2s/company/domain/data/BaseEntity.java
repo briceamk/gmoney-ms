@@ -3,9 +3,11 @@ package cm.g2s.company.domain.data;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
@@ -26,14 +28,16 @@ public class BaseEntity implements Serializable {
     @GenericGenerator(name = "uuid", strategy = "uuid2")
     @Column(length = 64, nullable = false, updatable = false)
     protected String id;
-    @Column(length = 64)
+    @CreatedBy
+    @Column(length = 64, nullable = false, updatable = false)
     protected String createdUid;
-    @CreationTimestamp
+    @CreatedDate
     @Column(updatable = false, nullable = false)
     protected Timestamp createdDate;
-    @UpdateTimestamp
+    @LastModifiedDate
     @Column(insertable = false)
     protected Timestamp lastModifiedDate;
+    @LastModifiedBy
     @Column(length = 64, insertable = false)
     protected String lastModifiedUid;
 

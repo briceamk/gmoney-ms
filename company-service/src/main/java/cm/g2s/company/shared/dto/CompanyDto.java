@@ -1,6 +1,7 @@
 package cm.g2s.company.shared.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -38,6 +39,7 @@ public class CompanyDto implements Serializable {
     private String trn;
     private String logoFileName;
     private Boolean active = true;
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private byte[] logoImage;
     private String logoImageType;
 
