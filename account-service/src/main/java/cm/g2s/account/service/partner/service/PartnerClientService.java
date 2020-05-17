@@ -5,7 +5,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-@FeignClient("partner")
+@FeignClient(value = "partner", fallback = PartnerClientServiceFallBack.class)
 public interface PartnerClientService {
     @GetMapping("/api/v1/partners/{id}")
     PartnerDto findById(@PathVariable String id);

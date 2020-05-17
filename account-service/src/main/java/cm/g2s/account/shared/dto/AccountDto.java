@@ -2,6 +2,7 @@ package cm.g2s.account.shared.dto;
 
 import cm.g2s.account.domain.model.AccountState;
 import cm.g2s.account.service.partner.model.PartnerDto;
+import cm.g2s.account.service.user.model.UserDto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -38,8 +39,7 @@ public class AccountDto implements Serializable {
     @JsonFormat(pattern="yyyy-MM-dd'T'HH:mm:ss", shape=JsonFormat.Shape.STRING)
     private LocalDateTime lastUpdateBalanceDate;
     private PartnerDto partnerDto;
-    //TODO Add UserDto
-    //private UserDto userDto;
+    private UserDto userDto;
     private String state;
 
 }

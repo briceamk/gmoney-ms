@@ -22,7 +22,7 @@
 		<maven.compiler.source>${java.version}</maven.compiler.source>
 		<maven.compiler.target>${java.version}</maven.compiler.target>
 		<spring-cloud.version>Hoxton.SR4</spring-cloud.version>
-		<docker.image.name>gmoney/account</docker.image.name>
+		<docker.image.name>ambaindji/gmoney-account</docker.image.name>
 		<docker.image.tag>latest</docker.image.tag>
 	</properties>
 
