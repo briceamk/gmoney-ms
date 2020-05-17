@@ -21,6 +21,7 @@ public class Rule extends BaseEntity {
     private String name;
     private Boolean active;
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "rule")
+    @OrderBy("input ASC")
     private List<RuleLine> ruleLines;
 
     @Builder

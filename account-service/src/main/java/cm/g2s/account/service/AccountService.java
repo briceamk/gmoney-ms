@@ -1,21 +1,22 @@
 package cm.g2s.account.service;
 
+import cm.g2s.account.security.CustomPrincipal;
 import cm.g2s.account.shared.dto.AccountDto;
 import cm.g2s.account.shared.dto.AccountDtoPage;
 import org.springframework.data.domain.PageRequest;
 
 public interface AccountService {
-    AccountDto create(AccountDto accountDto);
+    AccountDto create(CustomPrincipal principal, AccountDto accountDto);
 
-    void update(AccountDto accountDto);
+    void update(CustomPrincipal principal, AccountDto accountDto);
 
-    AccountDto findById(String id);
+    AccountDto findById(CustomPrincipal principal, String id);
 
-    AccountDto findByNumber(String number);
+    AccountDto findByNumber(CustomPrincipal principal, String number);
 
-    AccountDto findByPartnerId(String partnerId);
+    AccountDto findByPartnerId(CustomPrincipal principal, String partnerId);
 
-    AccountDtoPage findAll(String number, String partnerId, PageRequest of);
+    AccountDtoPage findAll(CustomPrincipal principal, String number, String partnerId, PageRequest of);
 
-    void deleteById(String id);
+    void deleteById(CustomPrincipal principal, String id);
 }

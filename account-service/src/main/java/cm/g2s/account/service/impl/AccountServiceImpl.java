@@ -3,6 +3,7 @@ package cm.g2s.account.service.impl;
 import cm.g2s.account.domain.model.Account;
 import cm.g2s.account.domain.model.AccountState;
 import cm.g2s.account.repository.AccountRepository;
+import cm.g2s.account.security.CustomPrincipal;
 import cm.g2s.account.service.AccountService;
 import cm.g2s.account.shared.dto.AccountDto;
 import cm.g2s.account.shared.dto.AccountDtoPage;
@@ -30,7 +31,7 @@ public class AccountServiceImpl implements AccountService {
     private final AccountMapper accountMapper;
 
     @Override
-    public AccountDto create(AccountDto accountDto) {
+    public AccountDto create(CustomPrincipal principal,  AccountDto accountDto) {
         //We check if partner have account
         if(accountDto.getPartnerDto() != null && accountRepository.existsByPartnerId(accountDto.getPartnerDto().getId())) {
             log.error("{} already have an account!", accountDto.getPartnerDto().getLastName());
@@ -61,12 +62,12 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public void update(AccountDto accountDto) {
+    public void update(CustomPrincipal principal, AccountDto accountDto) {
         accountRepository.save(accountMapper.map(accountDto));
     }
 
     @Override
-    public AccountDto findById(String id) {
+    public AccountDto findById(CustomPrincipal principal, String id) {
         val account = accountRepository.findById(id).orElseThrow(
                 () -> {
                     log.error("Account with id {} not found",id);
@@ -77,7 +78,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public AccountDto findByNumber(String number) {
+    public AccountDto findByNumber(CustomPrincipal principal, String number) {
         Account account = accountRepository.findByNumber(number).orElseThrow(
                 () -> {
                     log.error("Account with number {} not found",number);
@@ -88,7 +89,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public AccountDto findByPartnerId(String partnerId) {
+    public AccountDto findByPartnerId(CustomPrincipal principal, String partnerId) {
         val account = accountRepository.findByPartnerId(partnerId).orElseThrow(
                 () -> {
                     log.error("Account with partner id {} not found",partnerId);
@@ -99,7 +100,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public AccountDtoPage findAll(String number, String partnerId, PageRequest pageRequest) {
+    public AccountDtoPage findAll(CustomPrincipal principal, String number, String partnerId, PageRequest pageRequest) {
 
         Page<Account> accountPage;
 
@@ -124,7 +125,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public void deleteById(String id) {
+    public void deleteById(CustomPrincipal principal, String id) {
         val account = accountRepository.findById(id).orElseThrow(
                 () -> {
                     log.error("Account with id {} not found",id);

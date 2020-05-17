@@ -1,26 +1,27 @@
 package cm.g2s.company.service;
 
+import cm.g2s.company.security.CustomPrincipal;
 import cm.g2s.company.shared.dto.CompanyDto;
 import cm.g2s.company.shared.dto.CompanyDtoPage;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface CompanyService {
-    CompanyDto create(CompanyDto companyDto);
+    CompanyDto create(CustomPrincipal principal, CompanyDto companyDto);
 
-    void update(CompanyDto companyDto);
+    void update(CustomPrincipal principal, CompanyDto companyDto);
 
-    CompanyDto findById(String id);
+    CompanyDto findById(CustomPrincipal principal, String id);
 
-    CompanyDto findByCode(String code);
+    CompanyDto findByCode(CustomPrincipal principal, String code);
 
-    CompanyDtoPage findAll(String code, String name, String email, String phoneNumber, String mobileNumber, String vat, String trn, String street, String city, PageRequest of);
+    CompanyDtoPage findAll(CustomPrincipal principal, String code, String name, String email, String phoneNumber, String mobileNumber, String vat, String trn, String street, String city, PageRequest of);
 
-    void deleteById(String id);
+    void deleteById(CustomPrincipal principal, String id);
 
-    CompanyDto dbStoreImage(CompanyDto companyDto, MultipartFile image);
+    CompanyDto dbStoreImage(CustomPrincipal principal, CompanyDto companyDto, MultipartFile image);
 
-    MultipartFile dbDefaultImage(CompanyDto companyDto);
+    MultipartFile dbDefaultImage(CustomPrincipal principal, CompanyDto companyDto);
 
 
 }

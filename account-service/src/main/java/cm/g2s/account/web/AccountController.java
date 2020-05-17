@@ -1,6 +1,8 @@
 package cm.g2s.account.web;
 
 import cm.g2s.account.constant.AccountConstantType;
+import cm.g2s.account.security.CurrentPrincipal;
+import cm.g2s.account.security.CustomPrincipal;
 import cm.g2s.account.service.AccountService;
 import cm.g2s.account.shared.dto.AccountDto;
 import cm.g2s.account.shared.dto.AccountDtoPage;
@@ -17,16 +19,17 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 
 @RestController
-@RequestMapping("/api/v1/accounts")
 @RequiredArgsConstructor
+@RequestMapping("/api/v1/accounts")
 @Api(value = "Account", tags = "Account End Points")
 public class AccountController {
 
     private final AccountService accountService;
 
     @PostMapping
-    public ResponseEntity<?> create(@Validated @RequestBody AccountDto accountDto) {
-        accountDto = accountService.create(accountDto);
+    public ResponseEntity<?> create(@CurrentPrincipal CustomPrincipal principal,
+                                    @Validated @RequestBody AccountDto accountDto) {
+        accountDto = accountService.create(principal, accountDto);
         URI uri = ServletUriComponentsBuilder
                 .fromCurrentContextPath().path("/api/v1/accounts/{id}")
                 .buildAndExpand(accountDto.getId()).toUri();
@@ -34,28 +37,33 @@ public class AccountController {
     }
 
     @PutMapping
-    public ResponseEntity<?> update(@Validated @RequestBody AccountDto accountDto) {
-        accountService.update(accountDto);
+    public ResponseEntity<?> update(@CurrentPrincipal CustomPrincipal principal,
+                                    @Validated @RequestBody AccountDto accountDto) {
+        accountService.update(principal, accountDto);
         return new ResponseEntity<>(new ResponseApi(true, "Account updated successfully!"), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> findById(@PathVariable String id) {
-        return new ResponseEntity<>(accountService.findById(id), HttpStatus.OK);
+    public ResponseEntity<?> findById(@CurrentPrincipal CustomPrincipal principal,
+                                      @PathVariable String id) {
+        return new ResponseEntity<>(accountService.findById(principal, id), HttpStatus.OK);
     }
 
     @GetMapping("/number/{number}")
-    public ResponseEntity<?> findByCode(@PathVariable String number) {
-        return new ResponseEntity<>(accountService.findByNumber(number), HttpStatus.OK);
+    public ResponseEntity<?> findByCode(@CurrentPrincipal CustomPrincipal principal,
+                                        @PathVariable String number) {
+        return new ResponseEntity<>(accountService.findByNumber(principal, number), HttpStatus.OK);
     }
 
     @GetMapping("/partnerId/{partnerId}")
-    public ResponseEntity<?> findByPartnerId(@PathVariable String partnerId) {
-        return new ResponseEntity<>(accountService.findByPartnerId(partnerId), HttpStatus.OK);
+    public ResponseEntity<?> findByPartnerId(@CurrentPrincipal CustomPrincipal principal,
+                                             @PathVariable String partnerId) {
+        return new ResponseEntity<>(accountService.findByPartnerId(principal, partnerId), HttpStatus.OK);
     }
 
     @GetMapping
-    public ResponseEntity<AccountDtoPage> findAll(@RequestParam(value = "pageNumber", required = false) Integer pageNumber,
+    public ResponseEntity<AccountDtoPage> findAll(@CurrentPrincipal CustomPrincipal principal,
+                                                  @RequestParam(value = "pageNumber", required = false) Integer pageNumber,
                                                   @RequestParam(value = "pageSize", required = false) Integer pageSize,
                                                   @RequestParam(value = "number", required = false) String number,
                                                   @RequestParam(value = "partnerId", required = false) String partnerId){
@@ -69,12 +77,13 @@ public class AccountController {
             pageSize = AccountConstantType.DEFAULT_PAGE_SIZE;
         }
 
-        return new ResponseEntity<>(accountService.findAll(number, partnerId, PageRequest.of(pageNumber, pageSize)), HttpStatus.OK);
+        return new ResponseEntity<>(accountService.findAll(principal, number, partnerId, PageRequest.of(pageNumber, pageSize)), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteById(@PathVariable String id) {
-        accountService.deleteById(id);
+    public ResponseEntity<?> deleteById(@CurrentPrincipal CustomPrincipal principal,
+                                        @PathVariable String id) {
+        accountService.deleteById(principal, id);
         return new ResponseEntity<>(new ResponseApi(true, "Account deleted successfully!"), HttpStatus.OK);
     }
 

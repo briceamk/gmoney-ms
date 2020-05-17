@@ -3,6 +3,7 @@ package cm.g2s.rule.service.impl;
 import cm.g2s.rule.domain.model.Rule;
 import cm.g2s.rule.domain.model.RuleLine;
 import cm.g2s.rule.repository.RuleRepository;
+import cm.g2s.rule.security.CustomPrincipal;
 import cm.g2s.rule.service.RuleService;
 import cm.g2s.rule.shared.dto.RuleDto;
 import cm.g2s.rule.shared.dto.RuleDtoPage;
@@ -22,7 +23,6 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 import java.math.BigDecimal;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,7 +37,7 @@ public class RuleServiceImpl implements RuleService {
     private final RuleMapper ruleMapper;
 
     @Override
-    public RuleDto create(RuleDto ruleDto) {
+    public RuleDto create(CustomPrincipal principal, RuleDto ruleDto) {
         //We check if rules exist
         if(ruleRepository.existsByCode(ruleDto.getCode())) {
             log.error("provided code {} is already used!", ruleDto.getCode());
@@ -49,7 +49,7 @@ public class RuleServiceImpl implements RuleService {
     }
 
     @Override
-    public void update(RuleDto ruleDto) {
+    public void update(CustomPrincipal principal, RuleDto ruleDto) {
         //TODO validate unique fields
         val rule = ruleMapper.map(ruleDto);
         rule.getRuleLines().forEach(ruleLine -> ruleLine.setRule(rule));
@@ -57,7 +57,7 @@ public class RuleServiceImpl implements RuleService {
     }
 
     @Override
-    public RuleDto findById(String id) {
+    public RuleDto findById(CustomPrincipal principal, String id) {
         val rule = ruleRepository.findById(id).orElseThrow(
                 () -> {
                     log.info("Rule with id {} not found", id);
@@ -68,7 +68,7 @@ public class RuleServiceImpl implements RuleService {
     }
 
     @Override
-    public RuleDtoPage findAll(String code, String name, PageRequest pageRequest) {
+    public RuleDtoPage findAll(CustomPrincipal principal, String code, String name, PageRequest pageRequest) {
 
         Page<Rule> rulePage;
 
@@ -94,7 +94,7 @@ public class RuleServiceImpl implements RuleService {
     }
 
     @Override
-    public void deleteById(String id) {
+    public void deleteById(CustomPrincipal principal, String id) {
         val rule = ruleRepository.findById(id).orElseThrow(
                 () -> {
                     log.info("Rule with id {} not found", id);
@@ -105,15 +105,14 @@ public class RuleServiceImpl implements RuleService {
     }
 
     @Override
-    public Map<String, BigDecimal> getRuleLineValue(String id, Integer numberOfDays, BigDecimal amount) throws ScriptException {
-        Rule rule = ruleMapper.map(findById(id));
+    public Map<String, BigDecimal> processInterest(CustomPrincipal principal, String id, Integer numberOfDays, BigDecimal amount) throws ScriptException {
+        Rule rule = ruleMapper.map(findById(principal, id));
         Map<String, BigDecimal> result = new HashMap<>();
         if(rule.getRuleLines().size() <= 0) {
             log.error("No rule line for given rule!");
             throw new BadRequestException("No rule line for given rule!");
         }
         List<RuleLine>  ruleLines = rule.getRuleLines();
-        ruleLines.sort((rl1, rl2) -> rl1.getInput().compareTo(rl2.getInput()));
         for(RuleLine rl: ruleLines) {
             if(match(rl, numberOfDays)){
                 result.put("interest", getAmount(rl, numberOfDays, amount));

@@ -1,5 +1,6 @@
 package cm.g2s.rule.service;
 
+import cm.g2s.rule.security.CustomPrincipal;
 import cm.g2s.rule.shared.dto.RuleDto;
 import cm.g2s.rule.shared.dto.RuleDtoPage;
 import org.springframework.data.domain.PageRequest;
@@ -9,17 +10,17 @@ import java.math.BigDecimal;
 import java.util.Map;
 
 public interface RuleService {
-    RuleDto create(RuleDto ruleDto);
+    RuleDto create(CustomPrincipal principal, RuleDto ruleDto);
 
-    void update(RuleDto ruleDto);
+    void update(CustomPrincipal principal, RuleDto ruleDto);
 
-    RuleDto findById(String id);
+    RuleDto findById(CustomPrincipal principal, String id);
 
-    RuleDtoPage findAll(String code, String name, PageRequest of);
+    RuleDtoPage findAll(CustomPrincipal principal, String code, String name, PageRequest of);
 
-    void deleteById(String id);
+    void deleteById(CustomPrincipal principal, String id);
 
-    Map<String, BigDecimal> getRuleLineValue(String id, Integer numberOfDays, BigDecimal amount) throws ScriptException;
+    Map<String, BigDecimal> processInterest(CustomPrincipal principal, String id, Integer numberOfDays, BigDecimal amount) throws ScriptException;
 
 
 }

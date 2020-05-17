@@ -4,6 +4,7 @@ import cm.g2s.company.configuration.FileStorageConfiguration;
 import cm.g2s.company.constant.CompanyConstantType;
 import cm.g2s.company.domain.model.Company;
 import cm.g2s.company.repository.CompanyRepository;
+import cm.g2s.company.security.CustomPrincipal;
 import cm.g2s.company.service.CompanyService;
 import cm.g2s.company.shared.dto.CompanyDto;
 import cm.g2s.company.shared.dto.CompanyDtoPage;
@@ -50,7 +51,7 @@ public class CompanyServiceImpl implements CompanyService {
     }
 
     @Override
-    public CompanyDto create(CompanyDto companyDto) {
+    public CompanyDto create(CustomPrincipal principal,  CompanyDto companyDto) {
         // we check if code, name, phoneNumber, mobileNumber, email, vatNumber, tradeRegister exist
         if(companyRepository.existsByCode(companyDto.getCode())) {
             log.warn("Company with code {} exist!", companyDto.getCode());
@@ -82,19 +83,19 @@ public class CompanyServiceImpl implements CompanyService {
         }
         companyDto = companyMapper.map(companyRepository.save(companyMapper.map(companyDto)));
         // we set and save default image
-        MultipartFile image = dbDefaultImage(companyDto);
-        companyDto = dbStoreImage(companyDto, image);
+        MultipartFile image = dbDefaultImage(principal, companyDto);
+        companyDto = dbStoreImage(principal, companyDto, image);
         return companyMapper.map(companyRepository.save(companyMapper.map(companyDto)));
     }
 
     @Override
-    public void update(CompanyDto companyDto) {
+    public void update(CustomPrincipal principal, CompanyDto companyDto) {
         // TODO validate unique fields
         companyRepository.save(companyMapper.map(companyDto));
     }
 
     @Override
-    public CompanyDto findById(String id) {
+    public CompanyDto findById(CustomPrincipal principal, String id) {
         Company company = companyRepository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException(String.format("company with id %s not found!", id))
         );
@@ -102,7 +103,7 @@ public class CompanyServiceImpl implements CompanyService {
     }
 
     @Override
-    public CompanyDto findByCode(String code) {
+    public CompanyDto findByCode(CustomPrincipal principal, String code) {
         Company company = companyRepository.findByCodeIgnoreCase(code).orElseThrow(
                 () -> new ResourceNotFoundException(String.format("company with code %s not found!", code))
         );
@@ -110,7 +111,7 @@ public class CompanyServiceImpl implements CompanyService {
     }
 
     @Override
-    public CompanyDtoPage findAll(String code, String name, String email, String phoneNumber,
+    public CompanyDtoPage findAll(CustomPrincipal principal, String code, String name, String email, String phoneNumber,
                                   String mobileNumber, String vat, String trn, String street, String city, PageRequest pageRequest) {
 
         Page<Company> companyPage;
@@ -145,7 +146,7 @@ public class CompanyServiceImpl implements CompanyService {
     }
 
     @Override
-    public void deleteById(String id) {
+    public void deleteById(CustomPrincipal principal, String id) {
         Company company = companyRepository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException(String.format("company with id %s not found!", id))
         );
@@ -153,7 +154,7 @@ public class CompanyServiceImpl implements CompanyService {
     }
 
     @Override
-    public CompanyDto dbStoreImage(CompanyDto companyDto, MultipartFile image) {
+    public CompanyDto dbStoreImage(CustomPrincipal principal, CompanyDto companyDto, MultipartFile image) {
         // normalize file name
         String logoFileName = StringUtils.cleanPath(image.getOriginalFilename());
         try {
@@ -171,7 +172,7 @@ public class CompanyServiceImpl implements CompanyService {
     }
 
     @Override
-    public MultipartFile dbDefaultImage(CompanyDto companyDto) {
+    public MultipartFile dbDefaultImage(CustomPrincipal principal, CompanyDto companyDto) {
         try {
             Path path = this.storagePath.resolve(CompanyConstantType.DEFAULT_COMPANY_LOGO_FILE_NAME).normalize();
             byte[] content = Files.readAllBytes(path);

@@ -1,6 +1,8 @@
 package cm.g2s.company.web;
 
 import cm.g2s.company.constant.CompanyConstantType;
+import cm.g2s.company.security.CurrentPrincipal;
+import cm.g2s.company.security.CustomPrincipal;
 import cm.g2s.company.service.CompanyService;
 import cm.g2s.company.shared.dto.CompanyDto;
 import cm.g2s.company.shared.dto.CompanyDtoPage;
@@ -21,16 +23,17 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 
 @RestController
-@RequestMapping("/api/v1/companies")
 @RequiredArgsConstructor
+@RequestMapping("/api/v1/companies")
 @Api(value = "Company", tags = "Company End Points")
 public class CompanyController {
 
     private final CompanyService companyService;
 
     @PostMapping
-    public ResponseEntity<?> create(@Validated @RequestBody CompanyDto companyDto) {
-        companyDto = companyService.create(companyDto);
+    public ResponseEntity<?> create(@CurrentPrincipal CustomPrincipal principal,
+                                    @Validated @RequestBody CompanyDto companyDto) {
+        companyDto = companyService.create(principal, companyDto);
         URI uri = ServletUriComponentsBuilder
                 .fromCurrentContextPath().path("/api/v1/companies/{id}")
                 .buildAndExpand(companyDto.getId()).toUri();
@@ -38,23 +41,27 @@ public class CompanyController {
     }
 
     @PutMapping
-    public ResponseEntity<?> update(@Validated @RequestBody CompanyDto companyDto) {
-        companyService.update(companyDto);
+    public ResponseEntity<?> update(@CurrentPrincipal CustomPrincipal principal,
+                                    @Validated @RequestBody CompanyDto companyDto) {
+        companyService.update(principal, companyDto);
         return new ResponseEntity<>(new ResponseApi(true, "Company updated successfully!"), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> findById(@PathVariable String id) {
-        return new ResponseEntity<>(companyService.findById(id), HttpStatus.OK);
+    public ResponseEntity<?> findById(@CurrentPrincipal CustomPrincipal principal,
+                                      @PathVariable String id) {
+        return new ResponseEntity<>(companyService.findById(principal, id), HttpStatus.OK);
     }
 
     @GetMapping("/code/{code}")
-    public ResponseEntity<?> findByCode(@PathVariable String code) {
-        return new ResponseEntity<>(companyService.findByCode(code), HttpStatus.OK);
+    public ResponseEntity<?> findByCode(@CurrentPrincipal CustomPrincipal principal,
+                                        @PathVariable String code) {
+        return new ResponseEntity<>(companyService.findByCode(principal, code), HttpStatus.OK);
     }
 
     @GetMapping
-    public ResponseEntity<CompanyDtoPage> findAll(@RequestParam(value = "pageNumber", required = false) Integer pageNumber,
+    public ResponseEntity<CompanyDtoPage> findAll(@CurrentPrincipal CustomPrincipal principal,
+                                                  @RequestParam(value = "pageNumber", required = false) Integer pageNumber,
                                                   @RequestParam(value = "pageSize", required = false) Integer pageSize,
                                                   @RequestParam(value = "code", required = false) String code,
                                                   @RequestParam(value = "name", required = false) String name,
@@ -75,26 +82,29 @@ public class CompanyController {
             pageSize = CompanyConstantType.DEFAULT_PAGE_SIZE;
         }
 
-        return new ResponseEntity<>(companyService.findAll(code, name, email, phoneNumber, mobileNumber, vat, trn, street, city, PageRequest.of(pageNumber, pageSize)), HttpStatus.OK);
+        return new ResponseEntity<>(companyService.findAll(principal, code, name, email, phoneNumber, mobileNumber, vat, trn, street, city, PageRequest.of(pageNumber, pageSize)), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteById(@PathVariable String id) {
-        companyService.deleteById(id);
+    public ResponseEntity<?> deleteById(@CurrentPrincipal CustomPrincipal principal,
+                                        @PathVariable String id) {
+        companyService.deleteById(principal, id);
         return new ResponseEntity<>(new ResponseApi(true, "Company deleted successfully!"), HttpStatus.OK);
     }
 
     @PutMapping("/uploadLogo/{id}")
-    public ResponseEntity<?> storeCompanyLogo(@PathVariable String id, @RequestParam(name = "image", required = true) MultipartFile image) {
-        CompanyDto companyDto = companyService.dbStoreImage(companyService.findById(id), image);
-        companyService.update(companyDto);
+    public ResponseEntity<?> storeCompanyLogo(@CurrentPrincipal CustomPrincipal principal,
+                                              @PathVariable String id, @RequestParam(name = "image", required = true) MultipartFile image) {
+        CompanyDto companyDto = companyService.dbStoreImage(companyService.findById(principal, id), image);
+        companyService.update(principal, companyDto);
         return ResponseEntity.ok(new ResponseApi(true, "Company logo updated successfully"));
     }
 
 
     @GetMapping("/downloadLogo/{id}")
-    public ResponseEntity<?> getCompanyLogo(@PathVariable String id) {
-        CompanyDto companyDto = companyService.findById(id);
+    public ResponseEntity<?> getCompanyLogo(@CurrentPrincipal CustomPrincipal principal,
+                                            @PathVariable String id) {
+        CompanyDto companyDto = companyService.findById(principal, id);
         return ResponseEntity.ok()
                 .contentType(MediaType.parseMediaType(companyDto.getLogoImageType()))
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + companyDto.getLogoFileName().replace(id + "_", "") + "\"")
