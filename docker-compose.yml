@@ -5,6 +5,9 @@ services:
     hostname: configuration
     container_name: configuration
     image: gmoney/configuration:latest
+    build:
+      context: configuration-service/src/main/docker
+      dockerfile: Dockerfile
     ports:
       - "7000:7000"
       - "7500:7500"
@@ -15,6 +18,9 @@ services:
     hostname: discovery
     container_name: discovery
     image: gmoney/discovery:latest
+    build:
+      context: discovery-service/src/main/docker
+      dockerfile: Dockerfile
     ports:
       - "7000:7000"
       - "7510:7510"
@@ -26,6 +32,9 @@ services:
     hostname: proxy
     container_name: proxy
     image: gomney/proxy:latest
+    build:
+      context: proxy-service/src/main/docker
+      dockerfile: Dockerfile
     ports:
       - "5000:5000"
       - "5500:5500"
