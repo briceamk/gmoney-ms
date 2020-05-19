@@ -66,7 +66,7 @@ public class UserController {
     }
 
     @GetMapping
-    public @ResponseBody ResponseEntity<?> findAll(@CurrentPrincipal UserPrincipal userPrincipal,
+    public @ResponseBody ResponseEntity<?> findAll(
             @RequestParam(value = "pageNumber", required = false) Integer pageNumber,
             @RequestParam(value = "pageSize", required = false) Integer pageSize,
             @RequestParam(value = "fullName", required = false) String fullName,
@@ -80,13 +80,13 @@ public class UserController {
         if (pageSize == null || pageSize < 1) {
             pageSize = UaaConstantType.DEFAULT_PAGE_SIZE;
         }
-        return ResponseEntity.ok(userService.findAll(userPrincipal, fullName, username, email, mobile, PageRequest.of(pageNumber, pageSize)));
+        return ResponseEntity.ok(userService.findAll( fullName, username, email, mobile, PageRequest.of(pageNumber, pageSize)));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getUserById(@CurrentPrincipal UserPrincipal userPrincipal,
+    public ResponseEntity<?> getUserById(
                                          @PathVariable String id) {
-        return ResponseEntity.ok(userService.findById(userPrincipal, id));
+        return ResponseEntity.ok(userService.findById( id));
     }
 
     @DeleteMapping("/{id}")

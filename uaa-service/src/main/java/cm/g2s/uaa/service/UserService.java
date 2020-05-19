@@ -14,9 +14,9 @@ public interface UserService {
 
     void resetPassword(UserPrincipal userPrincipal, String userId, ResetPassword resetPassword);
 
-    UserDtoPage findAll(UserPrincipal userPrincipal, String fullName, String username, String email, String mobile, PageRequest pageRequest);
+    UserDtoPage findAll(String fullName, String username, String email, String mobile, PageRequest pageRequest);
 
-    UserDto findById(UserPrincipal userPrincipal, String id);
+    UserDto findById( String id);
 
     void deleteById(UserPrincipal userPrincipal, String id);
 }

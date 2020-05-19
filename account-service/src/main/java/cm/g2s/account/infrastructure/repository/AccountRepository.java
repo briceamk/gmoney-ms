@@ -1,4 +1,4 @@
-package cm.g2s.account.repository;
+package cm.g2s.account.infrastructure.repository;
 
 import cm.g2s.account.domain.model.Account;
 import org.springframework.data.domain.Page;

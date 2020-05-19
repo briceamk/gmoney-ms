@@ -1,8 +1,10 @@
 package cm.g2s.partner.service;
 
+
 import cm.g2s.partner.shared.dto.PartnerCategoryDto;
 import cm.g2s.partner.shared.dto.PartnerCategoryDtoPage;
 import org.springframework.data.domain.PageRequest;
+
 
 public interface PartnerCategoryService {
     PartnerCategoryDto create(PartnerCategoryDto categoryDto);
@@ -10,6 +12,8 @@ public interface PartnerCategoryService {
     void update(PartnerCategoryDto categoryDto);
 
     PartnerCategoryDto findById(String id);
+
+    PartnerCategoryDto findByDefaultCategory(Boolean defaultCategory);
 
     void deleteById(String id);
 

@@ -16,4 +16,6 @@ public interface PartnerService {
                            String type, String state, PageRequest of);
 
     void deleteById(String id);
+
+    void deleteByUserId(String userId);
 }

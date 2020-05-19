@@ -1,4 +1,4 @@
-package cm.g2s.uaa.repository;
+package cm.g2s.uaa.infrastructure.repository;
 
 import cm.g2s.uaa.domain.model.Permission;
 import org.springframework.data.jpa.repository.JpaRepository;

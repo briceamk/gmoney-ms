@@ -1,4 +1,4 @@
-package cm.g2s.partner.repository;
+package cm.g2s.partner.infrastructure.repository;
 
 import cm.g2s.partner.domain.model.Wallet;
 import org.springframework.data.jpa.repository.JpaRepository;

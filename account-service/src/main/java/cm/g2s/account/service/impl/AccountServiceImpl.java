@@ -2,7 +2,7 @@ package cm.g2s.account.service.impl;
 
 import cm.g2s.account.domain.model.Account;
 import cm.g2s.account.domain.model.AccountState;
-import cm.g2s.account.repository.AccountRepository;
+import cm.g2s.account.infrastructure.repository.AccountRepository;
 import cm.g2s.account.security.CustomPrincipal;
 import cm.g2s.account.service.AccountService;
 import cm.g2s.account.shared.dto.AccountDto;
@@ -18,6 +18,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
@@ -54,10 +55,11 @@ public class AccountServiceImpl implements AccountService {
                 exits = false;
             }
         }
+        if(accountDto.getBalance() == null)
+            accountDto.setBalance(new BigDecimal("0.00"));
         val account = accountMapper.map(accountDto);
         //We set default state of account
         account.setState(AccountState.CREATED);
-        log.info(account.toString());
         return accountMapper.map(accountRepository.save(account));
     }
 

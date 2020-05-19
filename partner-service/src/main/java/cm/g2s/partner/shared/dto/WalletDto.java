@@ -26,10 +26,10 @@ public class WalletDto implements Serializable {
     @Size(min = 9, max = 9, message = "Phone number length is exactly 9 digits.")
     private String name;
     @NotEmpty(message = "Type is required")
-    private WalletType type;
+    private String type;
     private Boolean isDefault;
     private Boolean active = true;
     @JsonIgnore
-    private Partner partner;
+    private PartnerDto partnerDto;
 
 }

@@ -42,6 +42,6 @@ public class AuthController {
                 .fromCurrentContextPath().path("/auth/sign-up/{id}")
                 .buildAndExpand(userDto.getId()).toUri();
 
-        return ResponseEntity.created(uri).body(new ResponseApi(true, "User registered successfully"));
+        return ResponseEntity.created(uri).body(new ResponseApi(true, "We are processing your request. you will receive an email in few minutes!"));
     }
 }

@@ -4,3 +4,5 @@ spring:
   cloud:
     config:
       uri: ${CONFIGURATION_SERVICE}
+    stream:
+      bindings:

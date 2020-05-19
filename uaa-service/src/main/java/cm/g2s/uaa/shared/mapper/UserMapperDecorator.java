@@ -1,6 +1,7 @@
 package cm.g2s.uaa.shared.mapper;
 
 import cm.g2s.uaa.domain.model.User;
+import cm.g2s.uaa.domain.model.UserState;
 import cm.g2s.uaa.shared.dto.UserDto;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -25,6 +26,8 @@ public abstract class UserMapperDecorator implements UserMapper{
         User user = userMapper.map(userDto);
         if(userDto.getRoleDtos() != null)
             user.setRoles(roleMapper.mapToListEntity(userDto.getRoleDtos()));
+        if(userDto.getState() != null && !userDto.getState().isEmpty())
+            user.setState(UserState.valueOf(userDto.getState()));
         return user;
     }
 
@@ -33,6 +36,8 @@ public abstract class UserMapperDecorator implements UserMapper{
         UserDto userDto = userMapper.map(user);
         if(user.getRoles() != null )
             userDto.setRoleDtos(roleMapper.mapToListDto(user.getRoles()));
+        if(user.getState() != null)
+            userDto.setState(user.getState().name());
         return userDto;
     }
 }

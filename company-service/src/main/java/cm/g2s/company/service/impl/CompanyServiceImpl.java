@@ -91,7 +91,7 @@ public class CompanyServiceImpl implements CompanyService {
     @Override
     public void update(CustomPrincipal principal, CompanyDto companyDto) {
         // TODO validate unique fields
-        //we check if logo is not in dto and set it before saving
+        //we check if logo is not in payload and set it before saving
         if(companyDto.getLogoImage() == null || companyDto.getLogoImage().length == 0)
             companyDto.setLogoImage(findById(principal, companyDto.getId()).getLogoImage());
         companyRepository.save(companyMapper.map(companyDto));

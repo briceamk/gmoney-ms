@@ -1,15 +1,19 @@
 package cm.g2s.partner.service.impl;
 
 import cm.g2s.partner.domain.model.Partner;
+import cm.g2s.partner.domain.model.PartnerCategory;
 import cm.g2s.partner.domain.model.PartnerState;
 import cm.g2s.partner.domain.model.PartnerType;
-import cm.g2s.partner.repository.PartnerRepository;
-import cm.g2s.partner.repository.WalletRepository;
+import cm.g2s.partner.infrastructure.repository.PartnerRepository;
+import cm.g2s.partner.infrastructure.repository.WalletRepository;
+import cm.g2s.partner.service.PartnerCategoryService;
 import cm.g2s.partner.service.PartnerService;
+import cm.g2s.partner.shared.dto.PartnerCategoryDto;
 import cm.g2s.partner.shared.dto.PartnerDto;
 import cm.g2s.partner.shared.dto.PartnerDtoPage;
 import cm.g2s.partner.shared.exception.BadRequestException;
 import cm.g2s.partner.shared.exception.ResourceNotFoundException;
+import cm.g2s.partner.shared.mapper.PartnerCategoryMapper;
 import cm.g2s.partner.shared.mapper.PartnerMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,10 +32,12 @@ public class PartnerServiceImpl implements PartnerService {
     private final PartnerRepository partnerRepository;
     private final PartnerMapper partnerMapper;
     private final WalletRepository walletRepository;
+    private final PartnerCategoryService categoryService;
+    private final PartnerCategoryMapper categoryMapper;
 
     @Override
     public PartnerDto create(PartnerDto partnerDto) {
-        //we verify if database contains same nic  provided in dto
+        //we verify if database contains same nic  provided in payload
         if(partnerDto.getNicId() != null && partnerRepository.existsByNicId(partnerDto.getNicId())) {
             log.error("provided national identity card {} is already taken!", partnerDto.getNicId());
             throw new BadRequestException(String.format("provided national identity card %s is already taken!", partnerDto.getNicId()));
@@ -58,6 +64,18 @@ public class PartnerServiceImpl implements PartnerService {
         // if(!partner.getCompanyCode().isEmpty) partner.setType(PartnerType.ENTERPRISE);
         partner.setType(PartnerType.FREE);
 
+        //We check if there is not category, We set de default
+        if(partner.getCategory() == null) {
+            PartnerCategoryDto categoryDto = categoryService.findByDefaultCategory(true);
+            if(categoryDto != null)
+                partner.setCategory(categoryMapper.map(categoryDto));
+            else{
+                log.error("Unable to find default category ofr partner!");
+                throw new BadRequestException("Unable to find default category ofr partner!");
+            }
+
+        }
+
         return partnerMapper.map(partnerRepository.save(partner));
     }
 
@@ -78,7 +96,10 @@ public class PartnerServiceImpl implements PartnerService {
     @Override
     public PartnerDto findById(String id) {
         Partner partner = partnerRepository.findById(id).orElseThrow(
-                () -> new ResourceNotFoundException("partner with provided id not found!")
+                () -> {
+                    log.error("partner with provided id not found!");
+                    throw new ResourceNotFoundException("partner with provided id not found!");
+                }
         );
         return partnerMapper.map(partner);
     }
@@ -119,8 +140,23 @@ public class PartnerServiceImpl implements PartnerService {
     @Override
     public void deleteById(String id) {
         Partner partner = partnerRepository.findById(id).orElseThrow(
-                () -> new ResourceNotFoundException(String.format("partner with id %s not found!", id))
+                () -> {
+                    log.error("partner with id {} not found!", id);
+                    throw new ResourceNotFoundException(String.format("partner with id %s not found!", id));
+                }
         );
+        partnerRepository.delete(partner);
+    }
+
+    @Override
+    public void deleteByUserId(String userId) {
+        Partner partner = partnerRepository.findByUserId(userId).orElseThrow(
+                () -> {
+                    log.error("Partner with user id {} not found", userId);
+                    throw  new ResourceNotFoundException("Partner with id %s not found");
+                }
+        );
+
         partnerRepository.delete(partner);
     }
 }

@@ -1,6 +1,7 @@
 package cm.g2s.partner.shared.dto;
 
 import cm.g2s.partner.service.company.model.CompanyDto;
+import cm.g2s.partner.service.uaa.UserDto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -49,6 +50,8 @@ public class PartnerDto implements Serializable {
     private List<WalletDto> walletDtos;
     @NotNull(message = "category is required")
     private PartnerCategoryDto categoryDto;
+    @NotNull(message = "user is required")
+    private UserDto userDto;
 
 
 }

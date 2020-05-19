@@ -1,7 +1,7 @@
 package cm.g2s.uaa.security;
 
 import cm.g2s.uaa.domain.model.User;
-import cm.g2s.uaa.repository.UserRepository;
+import cm.g2s.uaa.infrastructure.repository.UserRepository;
 import cm.g2s.uaa.security.commons.CustomPrincipal;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

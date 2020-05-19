@@ -1,7 +1,7 @@
 package cm.g2s.uaa.service.impl;
 
 import cm.g2s.uaa.domain.model.Permission;
-import cm.g2s.uaa.repository.PermissionRepository;
+import cm.g2s.uaa.infrastructure.repository.PermissionRepository;
 import cm.g2s.uaa.service.PermissionService;
 import cm.g2s.uaa.shared.dto.PermissionDto;
 import cm.g2s.uaa.shared.exception.ResourceNotFoundException;

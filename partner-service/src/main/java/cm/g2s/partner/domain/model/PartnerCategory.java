@@ -22,12 +22,14 @@ public class PartnerCategory extends BaseEntity {
     private String name;
     private BigDecimal creditLimit;
     private Boolean active;
+    private Boolean defaultCategory;
 
     @Builder
-    public PartnerCategory(String id, String name, BigDecimal creditLimit, Boolean active) {
+    public PartnerCategory(String id, String name, BigDecimal creditLimit, Boolean active, Boolean defaultCategory) {
         super(id);
         this.name = name;
         this.creditLimit = creditLimit;
         this.active = active;
+        this.defaultCategory = defaultCategory;
     }
 }

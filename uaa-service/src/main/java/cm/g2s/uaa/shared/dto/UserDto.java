@@ -1,5 +1,7 @@
 package cm.g2s.uaa.shared.dto;
 
+import cm.g2s.uaa.service.broker.consumer.dto.CompanyDto;
+import cm.g2s.uaa.service.broker.consumer.dto.PartnerDto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -32,6 +34,12 @@ public class UserDto implements Serializable {
     @NotEmpty(message = "Password is required")
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
+    private String city;
+    // TODO Active this after all test are ok private PartnerDto partnerDto;
+    // TODO Active this after all test are ok private CompanyDto companyDto;
+    private String companyId;
+    private String partnerId;
+    private String state;
     private Boolean accountNonExpired = true;
     private Boolean accountNonLocked = true;
     private Boolean credentialsNonExpired = true;

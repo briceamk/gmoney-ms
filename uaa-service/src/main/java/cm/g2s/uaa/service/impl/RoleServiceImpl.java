@@ -1,7 +1,7 @@
 package cm.g2s.uaa.service.impl;
 
 import cm.g2s.uaa.domain.model.Role;
-import cm.g2s.uaa.repository.RoleRepository;
+import cm.g2s.uaa.infrastructure.repository.RoleRepository;
 import cm.g2s.uaa.service.PermissionService;
 import cm.g2s.uaa.service.RoleService;
 import cm.g2s.uaa.shared.dto.RoleDto;

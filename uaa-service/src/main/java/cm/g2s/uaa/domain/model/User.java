@@ -21,13 +21,19 @@ public class User extends BaseEntity {
     private String email;
     @Column(nullable = false, unique = true, length = 12)
     private String mobile;
+    //TODO remove city after test complete
+    private String city;
+    private String partnerId;
+    private String companyId;
     @Column(nullable = false)
     private String password;
     private Boolean accountNonExpired;
     private Boolean accountNonLocked;
     private Boolean credentialsNonExpired;
     private Boolean enabled;
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @Enumerated(EnumType.STRING)
+    private UserState state;
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "users_role",
             joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
@@ -36,17 +42,24 @@ public class User extends BaseEntity {
     private Set<Role> roles;
 
     @Builder
-    public User(String id, String fullName, String username, String email, String mobile, String password,
-                boolean accountNonExpired, boolean accountNonLocked, boolean credentialsNonExpired, boolean enabled, Set<Role> roles) {
+    public User(String id, String fullName, String username, String email, String mobile, String city,
+                String partnerId, String companyId, String password, boolean accountNonExpired,
+                boolean accountNonLocked, boolean credentialsNonExpired, UserState state,
+                boolean enabled, Set<Role> roles) {
         super(id);
         this.fullName = fullName;
         this.username = username;
         this.email = email;
         this.mobile = mobile;
+        //TODO remove city after test complete
+        this.city = city;
+        this.companyId = companyId;
+        this.partnerId = partnerId;
         this.password = password;
         this.accountNonExpired = accountNonExpired;
         this.accountNonLocked = accountNonLocked;
         this.credentialsNonExpired = credentialsNonExpired;
+        this.state = state;
         this.enabled = enabled;
         this.roles = roles;
     }

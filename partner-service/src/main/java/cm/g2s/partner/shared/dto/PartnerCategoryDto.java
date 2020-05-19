@@ -16,7 +16,7 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 public class PartnerCategoryDto implements Serializable {
 
-    static final long serialVersionUID = 7205702359578891281L;
+    static final long serialVersionUID = -5555252415629211011L;
 
     private String id;
     @NotEmpty(message = "name is required")
@@ -25,5 +25,6 @@ public class PartnerCategoryDto implements Serializable {
     @Positive(message = "Credit limit must greater than zero")
     private BigDecimal creditLimit;
     private Boolean active = true;
+    private Boolean defaultCategory;
 
 }

@@ -1,4 +1,4 @@
-package cm.g2s.uaa.repository;
+package cm.g2s.uaa.infrastructure.repository;
 
 import cm.g2s.uaa.domain.model.User;
 import org.springframework.data.domain.Page;

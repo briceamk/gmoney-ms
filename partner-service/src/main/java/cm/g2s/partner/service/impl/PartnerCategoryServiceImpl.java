@@ -1,7 +1,7 @@
 package cm.g2s.partner.service.impl;
 
 import cm.g2s.partner.domain.model.PartnerCategory;
-import cm.g2s.partner.repository.PartnerCategoryRepository;
+import cm.g2s.partner.infrastructure.repository.PartnerCategoryRepository;
 import cm.g2s.partner.service.PartnerCategoryService;
 import cm.g2s.partner.shared.dto.PartnerCategoryDto;
 import cm.g2s.partner.shared.dto.PartnerCategoryDtoPage;
@@ -27,17 +27,37 @@ public class PartnerCategoryServiceImpl implements PartnerCategoryService {
 
     @Override
     public PartnerCategoryDto create(PartnerCategoryDto categoryDto) {
-        //we verify if database contains a category with same name provided in dto
+        //we verify if database contains a category with same name provided in payload
         if(categoryRepository.existsByNameIgnoreCase(categoryDto.getName())){
             log.error("category name is already used! please provide another!");
             throw new BadRequestException("category name is already used! please provide another!");
         }
+        if(categoryRepository.count() == 0) {
+            categoryDto.setDefaultCategory(true);
+        } else {
+            if(categoryDto.getDefaultCategory()) {
+                PartnerCategoryDto savedCategoryDto = findByDefaultCategory(true);
+                if(savedCategoryDto != null && !savedCategoryDto.getId().equals(categoryDto.getId())) {
+                    savedCategoryDto.setDefaultCategory(false);
+                    categoryRepository.save(categoryMapper.map(savedCategoryDto));
+                }
+            }
+        }
+
         return categoryMapper.map(categoryRepository.save(categoryMapper.map(categoryDto)));
     }
 
     @Override
     public void update(PartnerCategoryDto categoryDto) {
         //TODO manage unique fields
+        //We check if default Category has change
+        if(categoryDto.getDefaultCategory()) {
+            PartnerCategoryDto savedCategoryDto = findByDefaultCategory(true);
+            if(savedCategoryDto != null && !savedCategoryDto.getId().equals(categoryDto.getId())) {
+                savedCategoryDto.setDefaultCategory(false);
+                categoryRepository.save(categoryMapper.map(savedCategoryDto));
+            }
+        }
         categoryRepository.save(categoryMapper.map(categoryDto));
     }
 
@@ -46,6 +66,14 @@ public class PartnerCategoryServiceImpl implements PartnerCategoryService {
         PartnerCategory category = categoryRepository.findById(id).orElseThrow(
                 () ->  new BadRequestException("category with provided id not found!")
         );
+        return categoryMapper.map(category);
+    }
+
+    @Override
+    public PartnerCategoryDto findByDefaultCategory(Boolean defaultCategory) {
+        PartnerCategory category = categoryRepository.findByDefaultCategory(defaultCategory).orElse(null);
+        if(category == null)
+            return null;
         return categoryMapper.map(category);
     }
 

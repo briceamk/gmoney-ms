@@ -35,6 +35,7 @@ public class Partner extends BaseEntity {
     private String country;
     private BigDecimal creditLimit;
     private String companyId;
+    private String userId;
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 16)
     private PartnerType type;
@@ -49,7 +50,7 @@ public class Partner extends BaseEntity {
 
     @Builder
     public Partner(String id, String firstName, String lastName, Date bornDate, String nicId, String email, Date nicIssueDate,
-                   String nicIssuePlace, String city, String country, BigDecimal creditLimit, String companyId,
+                   String nicIssuePlace, String city, String country, BigDecimal creditLimit, String companyId, String userId,
                    PartnerType type, PartnerState state, List<Wallet> wallets, PartnerCategory category) {
         super(id);
         this.firstName = firstName;
@@ -63,9 +64,11 @@ public class Partner extends BaseEntity {
         this.country = country;
         this.creditLimit = creditLimit;
         this.companyId = companyId;
+        this.userId = userId;
         this.type = type;
         this.state = state;
         this.wallets = wallets;
         this.category = category;
+
     }
 }

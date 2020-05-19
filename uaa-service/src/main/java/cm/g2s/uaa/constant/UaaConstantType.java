@@ -19,4 +19,6 @@ public class UaaConstantType {
 
     public static final String[] PUBLIC_MATCHERS = {"/api/v1/auth/**", "/actuator/**", "/v2/api-docs/**"};
 
+    public static final String USER_ID_HEADER = "userId";
+    public static final String PARTNER_ID_HEADER = "partnerId";
 }

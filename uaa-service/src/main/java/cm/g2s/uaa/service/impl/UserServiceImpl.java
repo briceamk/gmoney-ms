@@ -1,7 +1,7 @@
 package cm.g2s.uaa.service.impl;
 
 import cm.g2s.uaa.domain.model.User;
-import cm.g2s.uaa.repository.UserRepository;
+import cm.g2s.uaa.infrastructure.repository.UserRepository;
 import cm.g2s.uaa.service.UserService;
 import cm.g2s.uaa.shared.dto.UserDto;
 import cm.g2s.uaa.shared.dto.UserDtoPage;
@@ -51,7 +51,7 @@ public class UserServiceImpl implements UserService {
         // Creating user's account
         User user = userMapper.map(userDto);
 
-        //TODO publish event USER_CREATED to partner-service and notification-service
+        //TODO publish broker USER_CREATED to partner-service and notification-service
         return userMapper.map(userRepository.save(user));
     }
 
@@ -59,7 +59,7 @@ public class UserServiceImpl implements UserService {
     public void update(UserPrincipal userPrincipal, UserDto userDto) {
 
         if (userDto.getPassword() == null || userDto.getPassword().isEmpty()) {
-            UserDto dbUserDto = findById(userPrincipal, userDto.getId());
+            UserDto dbUserDto = findById( userDto.getId());
             userDto.setPassword(dbUserDto.getPassword());
         }
         userRepository.save(userMapper.map(userDto));
@@ -82,7 +82,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDtoPage findAll(UserPrincipal userPrincipal, String fullName, String username, String email, String mobile, PageRequest pageRequest) {
+    public UserDtoPage findAll( String fullName, String username, String email, String mobile, PageRequest pageRequest) {
 
         Page<User> userPage;
 
@@ -116,7 +116,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto findById(UserPrincipal userPrincipal, String id) {
+    public UserDto findById( String id) {
         User user = userRepository.findById(id).orElseThrow(
                 () -> {
                     log.error("User with id {} not found",id);
