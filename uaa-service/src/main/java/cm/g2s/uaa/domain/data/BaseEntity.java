@@ -31,7 +31,7 @@ public abstract  class BaseEntity implements Serializable {
     @Column(length = 64, nullable = false, updatable = false)
     protected String id;
     @CreatedBy
-    @Column(length = 64)
+    @Column(length = 64, updatable = false)
     protected String createdUid;
     @CreatedDate
     @Column(updatable = false, nullable = false)

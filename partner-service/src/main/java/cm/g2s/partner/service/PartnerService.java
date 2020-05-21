@@ -18,4 +18,6 @@ public interface PartnerService {
     void deleteById(String id);
 
     void deleteByUserId(String userId);
+
+
 }

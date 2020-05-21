@@ -15,7 +15,7 @@ public class UaaClientServiceImpl implements UaaClientService {
 
     @Override
     public UserDto findById(String id) {
-        log.info("Calling uaa-service api");
+        log.info("Calling uaa-service api from partner-service.....");
         return uaaClientService.findById(id);
     }
 

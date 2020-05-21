@@ -7,7 +7,8 @@ import cm.g2s.uaa.domain.model.UserState;
 import cm.g2s.uaa.infrastructure.repository.UserRepository;
 import cm.g2s.uaa.service.RoleService;
 import cm.g2s.uaa.service.UserManagerService;
-import cm.g2s.uaa.service.broker.consumer.dto.PartnerDto;
+import cm.g2s.uaa.service.broker.consumer.payload.CreateAccountResponse;
+import cm.g2s.uaa.service.partner.dto.PartnerDto;
 import cm.g2s.uaa.service.broker.consumer.payload.CreatePartnerResponse;
 import cm.g2s.uaa.shared.dto.RoleDto;
 import cm.g2s.uaa.shared.dto.UserDto;
@@ -17,7 +18,6 @@ import cm.g2s.uaa.shared.mapper.UserMapper;
 import cm.g2s.uaa.sm.UserStateChangeInterceptor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.messaging.Message;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.statemachine.StateMachine;
 import org.springframework.statemachine.config.StateMachineFactory;
@@ -54,29 +54,31 @@ public class UserManagerServiceImpl implements UserManagerService {
         RoleDto roleDto = roleService.findByName(UaaConstantType.DEFAULT_USER_ROLE);
         user.setRoles(new LinkedHashSet<>(Arrays.asList(roleMapper.map(roleDto))));
         UserDto savedUserDto = userMapper.map(userRepository.save(user));
-        //publish broker USER_CREATED_PENDING to partner-service
+        //prevent partner-service with event CREATE_PARTNER
         sendUserEvent(savedUserDto, UserEvent.CREATE_PARTNER, null);
         return savedUserDto;
     }
 
     @Override
+    @Transactional
     public void processPartnerCreationResponse(String userId, Boolean creationPartnerError, CreatePartnerResponse response) {
         log.info("Process partner creation action result");
         Optional<User> optionalUser = userRepository.findById(userId);
+        PartnerDto partnerDto = PartnerDto.builder().id(response.getPartnerDto().getId()).build();
 
         optionalUser.ifPresent(user -> {
             if(!creationPartnerError) {
                 // Change state and update partnerId in User Object
-                sendUserEvent(userMapper.map(user), UserEvent.CREATE_PARTNER_PASSED, response.getPartnerDto());
+                sendUserEvent(userMapper.map(user), UserEvent.CREATE_PARTNER_PASSED, partnerDto);
                 // Wait for status change
                 awaitForStatus(userId, UserState.PARTNER_CREATED);
 
-                UserDto userDtoCreated = userMapper.map(userRepository.findById(userId).get());
+                UserDto savedUserDto = userMapper.map(userRepository.findById(userId).get());
 
-                sendUserEvent(userDtoCreated, UserEvent.CREATE_ACCOUNT, response.getPartnerDto());
+                sendUserEvent(savedUserDto, UserEvent.CREATE_ACCOUNT, partnerDto);
 
             } else {
-                sendUserEvent(userMapper.map(user), UserEvent.CREATE_PARTNER_FAILED, null);
+                sendUserEvent(userMapper.map(user), UserEvent.CREATE_PARTNER_FAILED, partnerDto);
 
                 // Wait for status change
                 awaitForStatus(userId, UserState.PARTNER_CREATED_EXCEPTION);
@@ -97,23 +99,25 @@ public class UserManagerServiceImpl implements UserManagerService {
     }
 
     @Override
-    public void processAccountCreationResponse(String userId, Boolean creationAccountError) {
+    @Transactional
+    public void processAccountCreationResponse(String userId, Boolean creationAccountError, CreateAccountResponse response) {
         log.info("Process account creation action result");
         Optional<User> optionalUser = userRepository.findById(userId);
+        PartnerDto partnerDto = PartnerDto.builder().id(response.getUserDto().getPartnerDto().getId()).build();
 
         optionalUser.ifPresent(user -> {
             if(!creationAccountError) {
                 // Change state and update partnerId in User Object
-                sendUserEvent(userMapper.map(user), UserEvent.CREATE_ACCOUNT_PASSED, null);
+                sendUserEvent(userMapper.map(user), UserEvent.CREATE_ACCOUNT_PASSED, partnerDto);
                 // Wait for status change
                 awaitForStatus(userId, UserState.ACCOUNT_CREATED);
 
                 UserDto userDtoCreated = userMapper.map(userRepository.findById(userId).get());
 
-                sendUserEvent(userDtoCreated, UserEvent.CREATE_USER, null);
+                sendUserEvent(userDtoCreated, UserEvent.CREATE_USER,partnerDto);
 
             } else {
-                sendUserEvent(userMapper.map(user), UserEvent.CREATED_ACCOUNT_FAILED, null);
+                sendUserEvent(userMapper.map(user), UserEvent.CREATED_ACCOUNT_FAILED, partnerDto);
 
                 // Wait for status change
                 awaitForStatus(userId, UserState.ACCOUNT_CREATED_EXCEPTION);

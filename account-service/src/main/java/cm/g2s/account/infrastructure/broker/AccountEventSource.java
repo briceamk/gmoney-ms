@@ -5,10 +5,17 @@ import org.springframework.cloud.stream.annotation.Output;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.SubscribableChannel;
 
+
 public interface AccountEventSource {
     @Input(value = "accountCreatedChannel")
     SubscribableChannel accountCreated();
 
+    @Input(value = "accountDebitedChannel")
+    SubscribableChannel accountDebited();
+
     @Output(value = "accountCreatedResponseChannel")
     MessageChannel accountCreatedResponse();
+
+    @Output(value = "accountDebitedResponseChannel")
+    MessageChannel accountDebitedResponse();
 }

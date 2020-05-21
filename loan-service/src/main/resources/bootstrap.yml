@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: loan
+  cloud:
+    config:
+      uri: ${CONFIGURATION_SERVICE}

@@ -1,6 +1,6 @@
 package cm.g2s.uaa.service.broker.consumer.payload;
 
-import cm.g2s.uaa.service.broker.consumer.dto.PartnerDto;
+import cm.g2s.uaa.service.partner.dto.PartnerDto;
 import cm.g2s.uaa.shared.dto.UserDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

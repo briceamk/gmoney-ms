@@ -20,7 +20,7 @@ public interface RuleService {
 
     void deleteById(CustomPrincipal principal, String id);
 
-    Map<String, BigDecimal> processInterest(CustomPrincipal principal, String id, Integer numberOfDays, BigDecimal amount) throws ScriptException;
+    Map<String, BigDecimal> processInterest(CustomPrincipal principal, String ruleId, Long numberOfDays, BigDecimal amount) throws ScriptException;
 
 
 }

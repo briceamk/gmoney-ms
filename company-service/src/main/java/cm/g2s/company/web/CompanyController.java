@@ -58,10 +58,9 @@ public class CompanyController {
     }
 
     @GetMapping("/code/{code}")
-    @PreAuthorize("hasRole('ROLE_ADMIN') or (hasRole('ROLE_MANAGER') and hasAuthority('READ_COMPANY')) or (hasRole('ROLE_USER') and hasAuthority('READ_COMPANY'))")
-    public ResponseEntity<?> findByCode(@CurrentPrincipal CustomPrincipal principal,
-                                        @PathVariable String code) {
-        return new ResponseEntity<>(companyService.findByCode(principal, code), HttpStatus.OK);
+    //@PreAuthorize("hasRole('ROLE_ADMIN') or (hasRole('ROLE_MANAGER') and hasAuthority('READ_COMPANY')) or (hasRole('ROLE_USER') and hasAuthority('READ_COMPANY'))")
+    public ResponseEntity<?> findByCode(@PathVariable String code) {
+        return new ResponseEntity<>(companyService.findByCode(code), HttpStatus.OK);
     }
 
     @GetMapping

@@ -23,6 +23,7 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -105,8 +106,9 @@ public class RuleServiceImpl implements RuleService {
     }
 
     @Override
-    public Map<String, BigDecimal> processInterest(CustomPrincipal principal, String id, Integer numberOfDays, BigDecimal amount) throws ScriptException {
-        Rule rule = ruleMapper.map(findById(principal, id));
+    public Map<String, BigDecimal> processInterest(CustomPrincipal principal, String ruleId,
+                                                   Long numberOfDays, BigDecimal amount) throws ScriptException {
+        Rule rule = ruleMapper.map(findById(principal, ruleId));
         Map<String, BigDecimal> result = new HashMap<>();
         if(rule.getRuleLines().size() <= 0) {
             log.error("No rule line for given rule!");
@@ -115,7 +117,8 @@ public class RuleServiceImpl implements RuleService {
         List<RuleLine>  ruleLines = rule.getRuleLines();
         for(RuleLine rl: ruleLines) {
             if(match(rl, numberOfDays)){
-                result.put("interest", getAmount(rl, numberOfDays, amount));
+                BigDecimal interest = getAmount(rl, numberOfDays, amount).setScale(2, RoundingMode.HALF_UP);
+                result.put("interest", interest);
                 return result;
             }
         }
@@ -123,7 +126,7 @@ public class RuleServiceImpl implements RuleService {
         return result;
     }
 
-    private Boolean match(RuleLine ruleLine, Integer numberOfDays) {
+    private Boolean match(RuleLine ruleLine, Long numberOfDays) {
 
         switch (ruleLine.getOperator()) {
             case EQUAL:
@@ -137,7 +140,8 @@ public class RuleServiceImpl implements RuleService {
         }
     }
 
-    private BigDecimal getAmount(RuleLine ruleLine, Integer numberOfDays, BigDecimal amount ) throws ScriptException {
+    private BigDecimal getAmount(RuleLine ruleLine, Long numberOfDays, BigDecimal amount ) throws ScriptException {
+        @SuppressWarnings("removal")
         ScriptEngineManager manager = new ScriptEngineManager();
         ScriptEngine engine = manager.getEngineByName("javascript");
         switch (ruleLine.getType()) {

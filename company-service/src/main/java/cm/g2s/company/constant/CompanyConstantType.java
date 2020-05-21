@@ -12,5 +12,10 @@ public class CompanyConstantType {
     public static final String EMAIL = "email";
     public static final String JTI = "jti";
 
-    public static final String[] PUBLIC_MATCHERS = {"/api/v1/auth/**", "/actuator/**", "/v2/api-docs/**"};
+    public static final String[] PUBLIC_MATCHERS = {
+            "/api/v1/auth/**",
+            "/actuator/**",
+            "/v2/api-docs/**",
+            "/api/v1/companies/code/**"
+    };
 }

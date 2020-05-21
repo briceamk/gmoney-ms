@@ -1,4 +1,4 @@
-package cm.g2s.uaa.service.broker.consumer.dto;
+package cm.g2s.uaa.service.partner.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

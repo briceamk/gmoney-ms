@@ -25,7 +25,7 @@ public class CreatePartnerAction implements Action<UserState, UserEvent> {
         String userId = (String) context.getMessage().getHeaders().get(UaaConstantType.USER_ID_HEADER);
         UserDto userDto = userService.findById(userId);
 
-        log.info("Send Partner creation request to the queue for userId: userId");
+        log.info("Send Partner creation request to the queue for userId: {}", userId);
         publisherService.onCreatePartnerEvent(userDto);
     }
 }

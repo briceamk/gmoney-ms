@@ -1,7 +1,6 @@
 package cm.g2s.partner.shared.dto;
 
-import cm.g2s.partner.domain.model.Partner;
-import cm.g2s.partner.domain.model.WalletType;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

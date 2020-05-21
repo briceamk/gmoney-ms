@@ -10,12 +10,10 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
-@EnableSwagger2
-@EnableJpaAuditing
+
+
 @EnableEurekaClient
-@EnableResourceServer
 @SpringBootApplication
-@EnableGlobalMethodSecurity(prePostEnabled = true)
 @EnableConfigurationProperties({FileStorageConfiguration.class})
 public class CompanyServiceApplication {
 

@@ -47,7 +47,6 @@ public class PartnerServiceImpl implements PartnerService {
             log.error("provided email {} is already taken!", partnerDto.getEmail());
             throw new BadRequestException(String.format("provided email %s is already taken!", partnerDto.getEmail()));
         }
-
         Partner partner = partnerMapper.map(partnerDto);
         // we set partner default state
         partner.setState(PartnerState.CREATE);
@@ -60,21 +59,12 @@ public class PartnerServiceImpl implements PartnerService {
             }
             wallet.setPartner(partner);
         });
-        // TODO if partner give a company code, we set is type a ENTERPRISE
-        // if(!partner.getCompanyCode().isEmpty) partner.setType(PartnerType.ENTERPRISE);
+
+        // We set the type. ENTERPRISE if user has provided a valid company Code
+        if(partner.getCompanyId() != null && !partner.getCompanyId().isEmpty())
+            partner.setType(PartnerType.ENTERPRISE);
         partner.setType(PartnerType.FREE);
 
-        //We check if there is not category, We set de default
-        if(partner.getCategory() == null) {
-            PartnerCategoryDto categoryDto = categoryService.findByDefaultCategory(true);
-            if(categoryDto != null)
-                partner.setCategory(categoryMapper.map(categoryDto));
-            else{
-                log.error("Unable to find default category ofr partner!");
-                throw new BadRequestException("Unable to find default category ofr partner!");
-            }
-
-        }
 
         return partnerMapper.map(partnerRepository.save(partner));
     }

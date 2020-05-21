@@ -5,6 +5,8 @@ import cm.g2s.account.shared.dto.AccountDto;
 import cm.g2s.account.shared.dto.AccountDtoPage;
 import org.springframework.data.domain.PageRequest;
 
+import java.math.BigDecimal;
+
 public interface AccountService {
     AccountDto create(CustomPrincipal principal, AccountDto accountDto);
 
@@ -19,4 +21,7 @@ public interface AccountService {
     AccountDtoPage findAll(CustomPrincipal principal, String number, String partnerId, PageRequest of);
 
     void deleteById(CustomPrincipal principal, String id);
+
+    void debitAccount(String accountId, BigDecimal debitAmount);
+
 }

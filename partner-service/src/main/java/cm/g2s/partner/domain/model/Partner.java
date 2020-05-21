@@ -36,6 +36,7 @@ public class Partner extends BaseEntity {
     private BigDecimal creditLimit;
     private String companyId;
     private String userId;
+    private String ruleId;
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 16)
     private PartnerType type;

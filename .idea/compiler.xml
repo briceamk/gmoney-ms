@@ -37,6 +37,7 @@
         <module name="rule-service" />
         <module name="company-service" />
         <module name="partner-service" />
+        <module name="loan-service" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
@@ -45,6 +46,7 @@
       <module name="configuration-service" target="11" />
       <module name="discovery-service" target="11" />
       <module name="documentation-service" target="11" />
+      <module name="loan-service" target="1.8" />
       <module name="partner-service" target="1.8" />
       <module name="proxy-service" target="11" />
       <module name="rule-service" target="1.8" />
@@ -58,6 +60,7 @@
       <module name="configuration-service" options="-parameters" />
       <module name="discovery-service" options="-parameters" />
       <module name="documentation-service" options="-parameters" />
+      <module name="loan-service" options="-parameters -Amapstruct.defaultComponentModel=spring" />
       <module name="partner-service" options="-parameters -Amapstruct.defaultComponentModel=spring" />
       <module name="proxy-service" options="-parameters" />
       <module name="rule-service" options="-parameters -Amapstruct.defaultComponentModel=spring" />

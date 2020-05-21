@@ -86,6 +86,13 @@ ROLE_USER
 
 INSERT INTO role_permission (role_id, permission_id)
     SELECT
+        'c5e85331-b4f3-49cc-b7c3-1cfbaa6be8a2', 'UPDATE_USER_ID'
+WHERE NOT EXISTS (
+    SELECT * FROM role_permission WHERE role_id = 'c5e85331-b4f3-49cc-b7c3-1cfbaa6be8a2' AND permission_id = 'UPDATE_USER_ID'
+);
+
+INSERT INTO role_permission (role_id, permission_id)
+    SELECT
         'c5e85331-b4f3-49cc-b7c3-1cfbaa6be8a2', 'READ_USER_ID'
 WHERE NOT EXISTS (
     SELECT * FROM role_permission WHERE role_id = 'c5e85331-b4f3-49cc-b7c3-1cfbaa6be8a2' AND permission_id = 'READ_USER_ID'

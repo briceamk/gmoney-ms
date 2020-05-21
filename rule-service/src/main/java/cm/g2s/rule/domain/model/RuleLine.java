@@ -20,7 +20,7 @@ public class RuleLine extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private RuleLineType type;
     @Column(nullable = false)
-    private Integer input;
+    private Long input;
     private Double amount;
     private Double factor;
     private String formula;
@@ -30,7 +30,7 @@ public class RuleLine extends BaseEntity {
 
     @Builder
     public RuleLine(String id, String name, Operator operator, RuleLineType type,
-                    Integer input, Double amount, Double factor, String formula, Rule rule) {
+                    Long input, Double amount, Double factor, String formula, Rule rule) {
         super(id);
         this.name = name;
         this.operator = operator;

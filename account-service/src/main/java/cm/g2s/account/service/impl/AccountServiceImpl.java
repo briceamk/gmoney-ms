@@ -137,6 +137,19 @@ public class AccountServiceImpl implements AccountService {
         accountRepository.delete(account);
     }
 
+    @Override
+    public void debitAccount(String accountId, BigDecimal debitAmount) {
+        Account account = accountRepository.findById(accountId).orElseThrow(
+                () -> {
+                    log.error("Account with id {} not found",accountId);
+                    throw new ResourceNotFoundException(String.format("Account with id %s not found",accountId));
+                }
+        );
+        account.setBalance(account.getBalance().add(debitAmount));
+        account.setState(AccountState.PENDING);
+        accountRepository.save(account);
+    }
+
     private String generateNumber(){
         val random = ThreadLocalRandom.current();
         return ((Long)  random.nextLong(1_000_000_000L, 10_000_000_000L)).toString();

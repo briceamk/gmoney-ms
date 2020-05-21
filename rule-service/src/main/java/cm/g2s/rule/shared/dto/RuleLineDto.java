@@ -25,7 +25,7 @@ public class RuleLineDto implements Serializable {
     private String operator;
     @NotEmpty(message = "type is required")
     @Positive(message = "input is greater than zero")
-    private Integer input;
+    private Long input;
     private String type;
     private Double amount;
     private Double factor;

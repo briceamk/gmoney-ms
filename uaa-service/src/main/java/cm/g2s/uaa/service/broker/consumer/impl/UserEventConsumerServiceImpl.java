@@ -27,6 +27,6 @@ public class UserEventConsumerServiceImpl implements UserEventConsumerService {
     @StreamListener(target = "accountCreatedResponseChannel")
     public void observeCreateAccountResponse(CreateAccountResponse response) {
         log.info("Receiving Account creation response from account-service");
-        userManagerService.processAccountCreationResponse(response.getUserDto().getId(), response.getCreationAccountError());
+        userManagerService.processAccountCreationResponse(response.getUserDto().getId(), response.getCreationAccountError(), response);
     }
 }

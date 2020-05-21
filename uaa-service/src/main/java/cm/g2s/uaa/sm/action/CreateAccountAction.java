@@ -4,6 +4,7 @@ import cm.g2s.uaa.constant.UaaConstantType;
 import cm.g2s.uaa.domain.event.UserEvent;
 import cm.g2s.uaa.domain.model.UserState;
 import cm.g2s.uaa.service.UserService;
+import cm.g2s.uaa.service.partner.dto.PartnerDto;
 import cm.g2s.uaa.service.broker.publisher.UserEventPublisherService;
 import cm.g2s.uaa.shared.dto.UserDto;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +24,9 @@ public class CreateAccountAction implements Action<UserState, UserEvent> {
     @Override
     public void execute(StateContext<UserState, UserEvent> context) {
         String userId = (String) context.getMessage().getHeaders().get(UaaConstantType.USER_ID_HEADER);
+        String partnerId = (String) context.getMessage().getHeaders().get(UaaConstantType.PARTNER_ID_HEADER);
         UserDto userDto = userService.findById(userId);
+        userDto.setPartnerDto(PartnerDto.builder().id(partnerId).build());
 
         log.info("Send Account creation request to the queue for userId: userId");
         publisherService.onCreateAccountEvent(userDto);

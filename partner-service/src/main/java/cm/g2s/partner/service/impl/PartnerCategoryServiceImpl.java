@@ -35,7 +35,7 @@ public class PartnerCategoryServiceImpl implements PartnerCategoryService {
         if(categoryRepository.count() == 0) {
             categoryDto.setDefaultCategory(true);
         } else {
-            if(categoryDto.getDefaultCategory()) {
+            if(categoryDto.getDefaultCategory() != null && categoryDto.getDefaultCategory()) {
                 PartnerCategoryDto savedCategoryDto = findByDefaultCategory(true);
                 if(savedCategoryDto != null && !savedCategoryDto.getId().equals(categoryDto.getId())) {
                     savedCategoryDto.setDefaultCategory(false);
@@ -51,7 +51,7 @@ public class PartnerCategoryServiceImpl implements PartnerCategoryService {
     public void update(PartnerCategoryDto categoryDto) {
         //TODO manage unique fields
         //We check if default Category has change
-        if(categoryDto.getDefaultCategory()) {
+        if(categoryDto.getDefaultCategory() != null && categoryDto.getDefaultCategory()) {
             PartnerCategoryDto savedCategoryDto = findByDefaultCategory(true);
             if(savedCategoryDto != null && !savedCategoryDto.getId().equals(categoryDto.getId())) {
                 savedCategoryDto.setDefaultCategory(false);

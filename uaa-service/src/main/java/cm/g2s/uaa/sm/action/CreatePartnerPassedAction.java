@@ -4,6 +4,7 @@ import cm.g2s.uaa.constant.UaaConstantType;
 import cm.g2s.uaa.domain.event.UserEvent;
 import cm.g2s.uaa.domain.model.UserState;
 import cm.g2s.uaa.service.UserService;
+import cm.g2s.uaa.service.partner.dto.PartnerDto;
 import cm.g2s.uaa.shared.dto.UserDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,9 +24,9 @@ public class CreatePartnerPassedAction implements Action<UserState, UserEvent>  
         String userId = (String) context.getMessage().getHeaders().get(UaaConstantType.USER_ID_HEADER);
         String partnerId = (String) context.getMessage().getHeaders().get(UaaConstantType.PARTNER_ID_HEADER);
         UserDto userDto = userService.findById(userId);
-        userDto.setPartnerId(partnerId);
+        userDto.setPartnerDto(PartnerDto.builder().id(partnerId).build());
         log.info("updating user with partner id");
-        userService.update(null, userDto);
+        userService.update( userDto);
     }
 
 }

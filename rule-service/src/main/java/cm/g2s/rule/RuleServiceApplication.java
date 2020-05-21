@@ -9,12 +9,10 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 
-@EnableSwagger2
-@EnableJpaAuditing
+
+
 @EnableEurekaClient
-@EnableResourceServer
 @SpringBootApplication
-@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class RuleServiceApplication {
 
 	public static void main(String[] args) {

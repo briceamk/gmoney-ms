@@ -23,6 +23,8 @@ public class PartnerCategory extends BaseEntity {
     private BigDecimal creditLimit;
     private Boolean active;
     private Boolean defaultCategory;
+    @Column(nullable = false)
+    private String ruleId;
 
     @Builder
     public PartnerCategory(String id, String name, BigDecimal creditLimit, Boolean active, Boolean defaultCategory) {

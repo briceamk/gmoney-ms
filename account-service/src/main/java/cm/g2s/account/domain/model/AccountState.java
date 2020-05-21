@@ -1,5 +1,5 @@
 package cm.g2s.account.domain.model;
 
 public enum AccountState {
-    CREATED, ACTIVE, INACTIVE, BLOCKED
+    CREATED, PENDING, BLOCKED
 }

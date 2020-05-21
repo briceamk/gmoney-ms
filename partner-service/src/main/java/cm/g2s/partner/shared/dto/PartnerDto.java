@@ -1,6 +1,7 @@
 package cm.g2s.partner.shared.dto;
 
 import cm.g2s.partner.service.company.model.CompanyDto;
+import cm.g2s.partner.service.rule.RuleDto;
 import cm.g2s.partner.service.uaa.UserDto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
@@ -52,6 +53,7 @@ public class PartnerDto implements Serializable {
     private PartnerCategoryDto categoryDto;
     @NotNull(message = "user is required")
     private UserDto userDto;
+    private RuleDto ruleDto;
 
 
 }

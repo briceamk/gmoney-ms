@@ -7,7 +7,10 @@ import cm.g2s.uaa.infrastructure.repository.UserRepository;
 import cm.g2s.uaa.service.AuthService;
 import cm.g2s.uaa.service.RoleService;
 import cm.g2s.uaa.service.UserManagerService;
+import cm.g2s.uaa.service.company.model.CompanyDto;
+import cm.g2s.uaa.service.company.service.CompanyClientService;
 import cm.g2s.uaa.shared.dto.RoleDto;
+import cm.g2s.uaa.shared.exception.ResourceNotFoundException;
 import cm.g2s.uaa.shared.payload.SignUp;
 import cm.g2s.uaa.shared.dto.UserDto;
 import cm.g2s.uaa.shared.exception.ConflictException;
@@ -29,23 +32,25 @@ public class AuthServiceImpl implements AuthService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserManagerService userManagerService;
+    private final CompanyClientService companyClientService;
 
     @Override
     @Transactional
     public UserDto signUp(SignUp signUp) {
+
         // we check if username or email mobile is already used
         if (userRepository.existsByUsername(signUp.getUsername())) {
-            log.warn("Username {} already used.", signUp.getUsername());
+            log.error("Username {} already used.", signUp.getUsername());
             throw new ConflictException(String.format("Username %s already used.", signUp.getUsername()));
         }
 
         if (userRepository.existsByEmail(signUp.getEmail())) {
-            log.warn("Email {} already used.", signUp.getEmail());
+            log.error("Email {} already used.", signUp.getEmail());
             throw new ConflictException(String.format("Email %s already used.", signUp.getEmail()));
         }
 
         if (userRepository.existsByMobile(signUp.getMobile())) {
-            log.warn("Mobile {} already used.", signUp.getMobile());
+            log.error("Mobile {} already used.", signUp.getMobile());
             throw new ConflictException(String.format("Mobile %s already used.", signUp.getMobile()));
         }
 
@@ -58,14 +63,21 @@ public class AuthServiceImpl implements AuthService {
         user.setAccountNonExpired(true);
         user.setAccountNonLocked(true);
         user.setCredentialsNonExpired(true);
-        //TODO remove after test complete
         user.setCity(signUp.getCity());
         user.setPassword(passwordEncoder.encode(signUp.getPassword()));
         //Default sate
         user.setState(UserState.NEW);
         //We disable user. user should enable account by clicking link send to his mailbox
         user.setEnabled(false);
-
+        //We check company if user has send company code
+        if(signUp.getCompanyCode() != null && !signUp.getCompanyCode().isEmpty()) {
+            CompanyDto companyDto = companyClientService.findByCode(signUp.getCompanyCode());
+            if(companyDto.getId() == null) {
+                log.error("Company with provided code {} not found", signUp.getCompanyCode());
+                throw new ResourceNotFoundException(String.format("Company with provided code {} not found", signUp.getCompanyCode()));
+            }
+            user.setCompanyId(companyDto.getId());
+        }
         return userManagerService.createNewUser(user);
     }
 }

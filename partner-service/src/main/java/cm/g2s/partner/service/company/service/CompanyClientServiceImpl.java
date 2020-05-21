@@ -14,7 +14,7 @@ public class CompanyClientServiceImpl implements CompanyClientService {
 
     @Override
     public CompanyDto findById(String id) {
-        log.info("Calling company-service api");
+        log.info("Calling company-service api from partner-service.....");
         return companyClientService.findById(id);
     }
 

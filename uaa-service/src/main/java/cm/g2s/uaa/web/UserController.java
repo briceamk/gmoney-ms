@@ -24,7 +24,6 @@ import java.nio.file.attribute.UserPrincipal;
 @RestController
 @RequestMapping("/api/v1/users")
 @RequiredArgsConstructor
-@PreAuthorize("hasAuthority('ROLE_ADMIN')")
 @Api(value = "User", tags = "User End Points")
 public class UserController {
 
@@ -32,12 +31,12 @@ public class UserController {
     private final ValidationErrorService validationErrorService;
 
     @PostMapping
-    public ResponseEntity<?> create(@CurrentPrincipal UserPrincipal userPrincipal,
-                                    @Valid @RequestBody UserDto userDto, BindingResult result) {
+    @PreAuthorize("hasRole('ROLE_ADMIN') and hasAuthority('CRETE_USER')")
+    public ResponseEntity<?> create(@Valid @RequestBody UserDto userDto, BindingResult result) {
         ResponseEntity<?> errors = validationErrorService.process(result);
         if(errors != null)
             return errors;
-        userDto = userService.create(userPrincipal, userDto);
+        userDto = userService.create(userDto);
         URI uri = ServletUriComponentsBuilder
                 .fromCurrentContextPath().path("/uaa/users/{id}")
                 .buildAndExpand(userDto.getId()).toUri();
@@ -45,27 +44,28 @@ public class UserController {
     }
 
     @PutMapping
-    public ResponseEntity<?> updateUser(@CurrentPrincipal UserPrincipal userPrincipal,
-                                        @Valid @RequestBody UserDto userDto, BindingResult result) {
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANGER', 'ROLE_USER') and hasAuthority('UPDATE_USER')")
+    public ResponseEntity<?> updateUser(@Valid @RequestBody UserDto userDto, BindingResult result) {
         ResponseEntity<?> errors = validationErrorService.process(result);
         if(errors != null)
             return errors;
-        userService.update(userPrincipal, userDto);
+        userService.update(userDto);
         return ResponseEntity.ok().body(new ResponseApi(true, "user updated successfully!"));
     }
 
     @PutMapping("/reset-password/{userId}")
-    public ResponseEntity<?> resetPasswordUser(@CurrentPrincipal UserPrincipal userPrincipal,
-                                               @PathVariable String userId, @Valid @RequestBody ResetPassword resetPassword,
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANGER', 'ROLE_USER') and hasAuthority('UPDATE_USER')")
+    public ResponseEntity<?> resetPasswordUser(@PathVariable String userId, @Valid @RequestBody ResetPassword resetPassword,
                                         BindingResult result) {
         ResponseEntity<?> errors = validationErrorService.process(result);
         if(errors != null)
             return errors;
-        userService.resetPassword(userPrincipal, userId, resetPassword);
+        userService.resetPassword(userId, resetPassword);
         return ResponseEntity.ok().body(new ResponseApi(true, "password updated successfully!"));
     }
 
     @GetMapping
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANGER', 'ROLE_USER') and hasAuthority('READ_USER')")
     public @ResponseBody ResponseEntity<?> findAll(
             @RequestParam(value = "pageNumber", required = false) Integer pageNumber,
             @RequestParam(value = "pageSize", required = false) Integer pageSize,
@@ -84,15 +84,16 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANGER', 'ROLE_USER') and hasAuthority('READ_USER')")
     public ResponseEntity<?> getUserById(
                                          @PathVariable String id) {
         return ResponseEntity.ok(userService.findById( id));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteUser(@CurrentPrincipal UserPrincipal userPrincipal,
-                                        @PathVariable String id) {
-        userService.deleteById(userPrincipal, id);
+    @PreAuthorize("hasRole('ROLE_ADMIN') and hasAuthority('DELETE_USER')")
+    public ResponseEntity<?> deleteUser(@PathVariable String id) {
+        userService.deleteById(id);
         return ResponseEntity.ok().body(new ResponseApi(true, "user deleted successfully!"));
     }
 

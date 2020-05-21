@@ -2,6 +2,7 @@ package cm.g2s.partner.web;
 
 import cm.g2s.partner.constant.PartnerConstantType;
 import cm.g2s.partner.service.PartnerCategoryService;
+import cm.g2s.partner.service.ValidationErrorService;
 import cm.g2s.partner.shared.dto.PartnerCategoryDto;
 import cm.g2s.partner.shared.dto.PartnerCategoryDtoPage;
 import cm.g2s.partner.shared.payload.ResponseApi;
@@ -10,10 +11,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.validation.Valid;
 import java.net.URI;
 
 @RestController
@@ -23,9 +26,14 @@ import java.net.URI;
 public class PartnerCategoryController {
 
     private final PartnerCategoryService partnerCategoryService;
+    private final ValidationErrorService validationErrorService;
 
     @PostMapping
-    public ResponseEntity<?> create(@Validated @RequestBody PartnerCategoryDto categoryDto) {
+    @PreAuthorize("hasRole('ROLE_ADMIN') and hasAuthority('CREATE_PARTNER_CATEGORY')")
+    public ResponseEntity<?> create(@Valid @RequestBody PartnerCategoryDto categoryDto, BindingResult result) {
+        ResponseEntity<?> errors = validationErrorService.process(result);
+        if(errors != null)
+            return errors;
         categoryDto = partnerCategoryService.create(categoryDto);
         URI uri = ServletUriComponentsBuilder
                 .fromCurrentContextPath().path("/api/v1/partner-categories/{id}")
@@ -34,12 +42,17 @@ public class PartnerCategoryController {
     }
 
     @PutMapping
-    public ResponseEntity<?> update(@Validated @RequestBody PartnerCategoryDto categoryDto) {
+    @PreAuthorize("hasRole('ROLE_ADMIN') and hasAuthority('UPDATE_PARTNER_CATEGORY')")
+    public ResponseEntity<?> update(@Valid @RequestBody PartnerCategoryDto categoryDto, BindingResult result) {
+        ResponseEntity<?> errors = validationErrorService.process(result);
+        if(errors != null)
+            return errors;
         partnerCategoryService.update(categoryDto);
         return new ResponseEntity<>(new ResponseApi(true, "category updated successfully!"), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER','ROLE_USER') and hasAuthority('READ_PARTNER_CATEGORY')")
     public ResponseEntity<?> findById(@PathVariable String id) {
         return new ResponseEntity<>(partnerCategoryService.findById(id), HttpStatus.OK);
     }
@@ -62,6 +75,7 @@ public class PartnerCategoryController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN') and hasAuthority('READ_DELETE_CATEGORY')")
     public ResponseEntity<?> deleteById(@PathVariable String id) {
         partnerCategoryService.deleteById(id);
         return new ResponseEntity<>(new ResponseApi(true, "category deleted successfully!"), HttpStatus.OK);

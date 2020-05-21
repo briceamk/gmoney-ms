@@ -3,6 +3,8 @@ package cm.g2s.partner.shared.mapper;
 import cm.g2s.partner.domain.model.Partner;
 import cm.g2s.partner.service.company.model.CompanyDto;
 import cm.g2s.partner.service.company.service.CompanyClientService;
+import cm.g2s.partner.service.rule.RuleDto;
+import cm.g2s.partner.service.rule.service.RuleClientService;
 import cm.g2s.partner.service.uaa.UserDto;
 import cm.g2s.partner.service.uaa.service.UaaClientService;
 import cm.g2s.partner.shared.dto.PartnerDto;
@@ -14,7 +16,8 @@ public abstract class PartnerMapperDecorator implements PartnerMapper{
     private  PartnerCategoryMapper partnerCategoryMapper;
     private  WalletMapper walletMapper;
     private  CompanyClientService companyClientService;
-    private UaaClientService uaaClientService;
+    private  UaaClientService uaaClientService;
+    private RuleClientService ruleClientService;
 
     @Autowired
     public void setPartnerMapper(PartnerMapper partnerMapper) {
@@ -41,6 +44,11 @@ public abstract class PartnerMapperDecorator implements PartnerMapper{
         this.uaaClientService = uaaClientService;
     }
 
+    @Autowired
+    public void setRuleClientService(RuleClientService ruleClientService) {
+        this.ruleClientService = ruleClientService;
+    }
+
     @Override
     public Partner map(PartnerDto partnerDto) {
         Partner partner = partnerMapper.map(partnerDto);
@@ -50,6 +58,9 @@ public abstract class PartnerMapperDecorator implements PartnerMapper{
             partner.setCompanyId(partnerDto.getCompanyDto().getId());
         if(partnerDto.getUserDto() != null)
             partner.setUserId(partnerDto.getUserDto().getId());
+        if(partnerDto.getRuleDto() != null)
+            partner.setRuleId(partnerDto.getRuleDto().getId());
+
         partner.setCategory(partnerCategoryMapper.map(partnerDto.getCategoryDto()));
         partner.setWallets(walletMapper.mapListDto(partnerDto.getWalletDtos()));
         return partner;
@@ -69,6 +80,11 @@ public abstract class PartnerMapperDecorator implements PartnerMapper{
             UserDto userDto = uaaClientService.findById(partner.getUserId());
             if (userDto != null)
                 partnerDto.setUserDto(userDto);
+        }
+        if(partner.getRuleId() != null) {
+            RuleDto ruleDto = ruleClientService.findById(partner.getRuleId());
+            if (ruleDto != null)
+                partnerDto.setRuleDto(ruleDto);
         }
         partnerDto.setCategoryDto(partnerCategoryMapper.map(partner.getCategory()));
         partnerDto.setWalletDtos(walletMapper.mapListEntity(partner.getWallets()));

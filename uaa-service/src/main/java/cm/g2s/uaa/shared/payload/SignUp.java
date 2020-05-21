@@ -36,4 +36,5 @@ public class SignUp implements Serializable {
     @NotEmpty(message = "password is required")
     @Size(message = "password must have between 6 and 32 characters", min = 6, max = 32)
     private String password;
+    private String companyCode;
 }

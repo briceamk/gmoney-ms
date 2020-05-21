@@ -1,15 +1,22 @@
 package cm.g2s.partner.service.broker.service.consumer.impl;
 
+import cm.g2s.partner.domain.model.PartnerCategory;
 import cm.g2s.partner.domain.model.PartnerState;
 import cm.g2s.partner.domain.model.PartnerType;
 import cm.g2s.partner.domain.model.WalletType;
+import cm.g2s.partner.infrastructure.repository.PartnerCategoryRepository;
+import cm.g2s.partner.service.PartnerCategoryService;
 import cm.g2s.partner.service.PartnerService;
 import cm.g2s.partner.service.broker.payload.CreatePartnerResponse;
+import cm.g2s.partner.service.rule.RuleDto;
 import cm.g2s.partner.service.uaa.UserDto;
 import cm.g2s.partner.service.broker.service.consumer.PartnerEventConsumerService;
 import cm.g2s.partner.service.broker.service.producer.PartnerEventPublisherService;
+import cm.g2s.partner.shared.dto.PartnerCategoryDto;
 import cm.g2s.partner.shared.dto.PartnerDto;
 import cm.g2s.partner.shared.dto.WalletDto;
+import cm.g2s.partner.shared.exception.BadRequestException;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.stream.annotation.StreamListener;
@@ -23,6 +30,7 @@ import java.util.Arrays;
 public class PartnerEventConsumerServiceImpl implements PartnerEventConsumerService {
 
     private final PartnerService partnerService;
+    private final PartnerCategoryRepository categoryRepository;
     private final PartnerEventPublisherService publisherService;
 
     @Override
@@ -39,7 +47,7 @@ public class PartnerEventConsumerServiceImpl implements PartnerEventConsumerServ
                     .creationPartnerError(false);
             log.info("Creation Partner Request Successfully");
         } catch (Exception e) {
-            log.error("Error when creating partner with data from uaa-service");
+            log.error("Error when creating partner with data from uaa-service ", e.getMessage());
             builder.userDto(userDto)
                     .creationPartnerError(true);
         } finally {
@@ -57,13 +65,24 @@ public class PartnerEventConsumerServiceImpl implements PartnerEventConsumerServ
     }
 
     private PartnerDto userDtoToPartnerDto(UserDto userDto) {
-        return PartnerDto.builder()
+
+        PartnerCategory category = categoryRepository.findByDefaultCategory(true).orElseThrow(
+                () -> {
+                    log.error("Unable to find default category ofr partner!");
+                    throw new BadRequestException("Unable to find default category ofr partner!");
+                }
+        );
+
+
+        PartnerDto partnerDto = PartnerDto.builder()
                 .lastName(userDto.getFullName())
                 .email(userDto.getEmail())
                 .city(userDto.getCity())
-                .type(PartnerType.FREE.name())
+                .ruleDto(RuleDto.builder().id(category.getRuleId()).build())
+                .creditLimit(category.getCreditLimit())
                 .state(PartnerState.CREATE.name())
                 .userDto(userDto)
+                .categoryDto(PartnerCategoryDto.builder().id(category.getId()).build())
                 .walletDtos(
                         Arrays.asList(
                                 WalletDto.builder()
@@ -75,5 +94,8 @@ public class PartnerEventConsumerServiceImpl implements PartnerEventConsumerServ
                                         .build()
                         )
                 ).build();
+        if(userDto.getCompanyDto() != null)
+            partnerDto.setCompanyDto(userDto.getCompanyDto());
+        return partnerDto;
     }
 }

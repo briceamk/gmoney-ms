@@ -1,11 +1,13 @@
 package cm.g2s.partner.shared.dto;
 
+import cm.g2s.partner.service.rule.RuleDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -26,5 +28,7 @@ public class PartnerCategoryDto implements Serializable {
     private BigDecimal creditLimit;
     private Boolean active = true;
     private Boolean defaultCategory;
+    @NotNull(message = "rule is required")
+    private RuleDto ruleDto;
 
 }

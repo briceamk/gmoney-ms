@@ -1,5 +1,6 @@
 package cm.g2s.partner.service.uaa;
 
+import cm.g2s.partner.service.company.model.CompanyDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -30,6 +31,7 @@ public class UserDto implements Serializable {
     private String mobile;
     @NotEmpty(message = "city is required")
     private String city;
+    private CompanyDto companyDto;
 
 
 

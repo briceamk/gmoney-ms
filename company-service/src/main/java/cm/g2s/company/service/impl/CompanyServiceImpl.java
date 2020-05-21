@@ -106,7 +106,7 @@ public class CompanyServiceImpl implements CompanyService {
     }
 
     @Override
-    public CompanyDto findByCode(CustomPrincipal principal, String code) {
+    public CompanyDto findByCode(String code) {
         Company company = companyRepository.findByCodeIgnoreCase(code).orElseThrow(
                 () -> new ResourceNotFoundException(String.format("company with code %s not found!", code))
         );

@@ -1,5 +1,6 @@
 package cm.g2s.account.service.user.model;
 
+import cm.g2s.account.service.partner.model.PartnerDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,5 +16,5 @@ public class UserDto {
     private String username;
     private String email;
     private String mobile;
-    private String partnerId;
+    private PartnerDto partnerDto;
 }

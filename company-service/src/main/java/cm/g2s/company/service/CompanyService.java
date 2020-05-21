@@ -13,7 +13,7 @@ public interface CompanyService {
 
     CompanyDto findById(CustomPrincipal principal, String id);
 
-    CompanyDto findByCode(CustomPrincipal principal, String code);
+    CompanyDto findByCode(String code);
 
     CompanyDtoPage findAll(CustomPrincipal principal, String code, String name, String email, String phoneNumber, String mobileNumber, String vat, String trn, String street, String city, PageRequest of);
 

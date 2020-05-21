@@ -1,4 +1,4 @@
-package cm.g2s.uaa.service.broker.consumer.dto;
+package cm.g2s.account.service.broker.payload;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,8 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CompanyDto {
-    private String id;
-    private String code;
-    private String name;
+public class DebitAccountResponse {
+    private String loanId;
+    private Boolean debitAccountError;
 }

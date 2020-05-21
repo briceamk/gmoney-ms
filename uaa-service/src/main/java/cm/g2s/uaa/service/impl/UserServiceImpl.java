@@ -31,7 +31,7 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    public UserDto create(UserPrincipal userPrincipal, UserDto userDto) {
+    public UserDto create(UserDto userDto) {
         // we check if username or email mobile is already used
         if (userRepository.existsByUsername(userDto.getUsername())) {
             log.warn("Username {} already used.", userDto.getUsername());
@@ -56,7 +56,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void update(UserPrincipal userPrincipal, UserDto userDto) {
+    public void update(UserDto userDto) {
 
         if (userDto.getPassword() == null || userDto.getPassword().isEmpty()) {
             UserDto dbUserDto = findById( userDto.getId());
@@ -66,7 +66,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void resetPassword(UserPrincipal userPrincipal, String userId, ResetPassword resetPassword) {
+    public void resetPassword(String userId, ResetPassword resetPassword) {
         User user = userRepository.findById(userId).orElseThrow(
                 () -> {
                     log.error("User with id {} not found",userId);
@@ -78,7 +78,7 @@ public class UserServiceImpl implements UserService {
             throw new BadRequestException("your old password does't not matches!");
         }
         user.setPassword(passwordEncoder.encode(resetPassword.getNewPassword()));
-        update(userPrincipal, userMapper.map(user));
+        update(userMapper.map(user));
     }
 
     @Override
@@ -127,7 +127,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void deleteById(UserPrincipal userPrincipal, String id) {
+    public void deleteById(String id) {
         User user = userRepository.findById(id).orElseThrow(
                 () -> {
                     log.error("User with id {} not found",id);
