@@ -58,6 +58,7 @@ public class PartnerServiceImpl implements PartnerService {
                 throw new BadRequestException(String.format("Wallet with number %s already exist!", wallet.getName()));
             }
             wallet.setPartner(partner);
+            wallet.setActive(true);
         });
 
         // We set the type. ENTERPRISE if user has provided a valid company Code

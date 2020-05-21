@@ -46,6 +46,7 @@ public class RuleServiceImpl implements RuleService {
         }
         val rule = ruleMapper.map(ruleDto);
         rule.getRuleLines().forEach(ruleLine -> ruleLine.setRule(rule));
+        rule.setActive(true);
         return ruleMapper.map(ruleRepository.save(rule));
     }
 

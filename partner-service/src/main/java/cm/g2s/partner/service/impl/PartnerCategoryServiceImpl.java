@@ -43,6 +43,8 @@ public class PartnerCategoryServiceImpl implements PartnerCategoryService {
                 }
             }
         }
+        //We activate category
+        categoryDto.setActive(true);
 
         return categoryMapper.map(categoryRepository.save(categoryMapper.map(categoryDto)));
     }

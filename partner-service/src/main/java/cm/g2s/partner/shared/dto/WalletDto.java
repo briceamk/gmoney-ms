@@ -27,7 +27,7 @@ public class WalletDto implements Serializable {
     @NotEmpty(message = "Type is required")
     private String type;
     private Boolean isDefault;
-    private Boolean active = true;
+    private Boolean active;
     @JsonIgnore
     private PartnerDto partnerDto;
 

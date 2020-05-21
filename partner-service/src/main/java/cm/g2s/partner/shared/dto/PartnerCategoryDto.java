@@ -26,7 +26,7 @@ public class PartnerCategoryDto implements Serializable {
     private String name;
     @Positive(message = "Credit limit must greater than zero")
     private BigDecimal creditLimit;
-    private Boolean active = true;
+    private Boolean active;
     private Boolean defaultCategory;
     @NotNull(message = "rule is required")
     private RuleDto ruleDto;
