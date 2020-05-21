@@ -4,6 +4,7 @@ import cm.g2s.account.constant.AccountConstantType;
 import cm.g2s.account.security.CurrentPrincipal;
 import cm.g2s.account.security.CustomPrincipal;
 import cm.g2s.account.service.AccountService;
+import cm.g2s.account.service.ValidationErrorService;
 import cm.g2s.account.shared.dto.AccountDto;
 import cm.g2s.account.shared.dto.AccountDtoPage;
 import cm.g2s.account.shared.payload.ResponseApi;
@@ -13,6 +14,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -26,11 +28,17 @@ import java.net.URI;
 public class AccountController {
 
     private final AccountService accountService;
+    private final ValidationErrorService validationErrorService;
 
     @PostMapping
     @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER')  and hasAuthority('CREATE_ACCOUNT')")
     public ResponseEntity<?> create(@CurrentPrincipal CustomPrincipal principal,
-                                    @Validated @RequestBody AccountDto accountDto) {
+                                    @Validated @RequestBody AccountDto accountDto , BindingResult result) {
+
+        ResponseEntity<?> errors = validationErrorService.process(result);
+        if(errors != null)
+            return errors;
+
         accountDto = accountService.create(principal, accountDto);
         URI uri = ServletUriComponentsBuilder
                 .fromCurrentContextPath().path("/api/v1/accounts/{id}")
@@ -41,7 +49,12 @@ public class AccountController {
     @PutMapping
     @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER')  and hasAuthority('UPDATE_ACCOUNT')")
     public ResponseEntity<?> update(@CurrentPrincipal CustomPrincipal principal,
-                                    @Validated @RequestBody AccountDto accountDto) {
+                                    @Validated @RequestBody AccountDto accountDto, BindingResult result) {
+
+        ResponseEntity<?> errors = validationErrorService.process(result);
+        if(errors != null)
+            return errors;
+
         accountService.update(principal, accountDto);
         return new ResponseEntity<>(new ResponseApi(true, "Account updated successfully!"), HttpStatus.OK);
     }

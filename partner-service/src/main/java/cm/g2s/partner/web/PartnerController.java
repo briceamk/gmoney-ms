@@ -32,9 +32,11 @@ public class PartnerController {
     @PostMapping
     @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER') and hasAuthority('CREATE_PARTNER')")
     public ResponseEntity<?> create(@Valid @RequestBody PartnerDto partnerDto, BindingResult result) {
+
         ResponseEntity<?> errors = validationErrorService.process(result);
         if(errors != null)
             return errors;
+
         partnerDto = partnerService.create(partnerDto);
         URI uri = ServletUriComponentsBuilder
                 .fromCurrentContextPath().path("/api/v1/partners/{id}")

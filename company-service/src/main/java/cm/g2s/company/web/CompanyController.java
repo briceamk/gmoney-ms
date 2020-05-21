@@ -4,6 +4,7 @@ import cm.g2s.company.constant.CompanyConstantType;
 import cm.g2s.company.security.CurrentPrincipal;
 import cm.g2s.company.security.CustomPrincipal;
 import cm.g2s.company.service.CompanyService;
+import cm.g2s.company.service.ValidationErrorService;
 import cm.g2s.company.shared.dto.CompanyDto;
 import cm.g2s.company.shared.dto.CompanyDtoPage;
 import cm.g2s.company.shared.payload.ResponseApi;
@@ -16,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -30,11 +32,17 @@ import java.net.URI;
 public class CompanyController {
 
     private final CompanyService companyService;
+    private final ValidationErrorService validationErrorService;
 
     @PostMapping
     @PreAuthorize("hasRole('ROLE_ADMIN') or (hasRole('ROLE_MANAGER') and hasAuthority('CREATE_COMPANY'))")
     public ResponseEntity<?> create(@CurrentPrincipal CustomPrincipal principal,
-                                    @Validated @RequestBody CompanyDto companyDto) {
+                                    @Validated @RequestBody CompanyDto companyDto, BindingResult result) {
+
+        ResponseEntity<?> errors = validationErrorService.process(result);
+        if(errors != null)
+            return errors;
+
         companyDto = companyService.create(principal, companyDto);
         URI uri = ServletUriComponentsBuilder
                 .fromCurrentContextPath().path("/api/v1/companies/{id}")
@@ -45,7 +53,12 @@ public class CompanyController {
     @PutMapping
     @PreAuthorize("hasRole('ROLE_ADMIN') or (hasRole('ROLE_MANAGER') and hasAuthority('UPDATE_COMPANY'))")
     public ResponseEntity<?> update(@CurrentPrincipal CustomPrincipal principal,
-                                    @Validated @RequestBody CompanyDto companyDto) {
+                                    @Validated @RequestBody CompanyDto companyDto, BindingResult result) {
+
+        ResponseEntity<?> errors = validationErrorService.process(result);
+        if(errors != null)
+            return errors;
+
         companyService.update(principal, companyDto);
         return new ResponseEntity<>(new ResponseApi(true, "Company updated successfully!"), HttpStatus.OK);
     }

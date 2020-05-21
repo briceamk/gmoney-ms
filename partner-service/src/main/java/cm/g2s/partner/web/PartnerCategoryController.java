@@ -31,9 +31,11 @@ public class PartnerCategoryController {
     @PostMapping
     @PreAuthorize("hasRole('ROLE_ADMIN') and hasAuthority('CREATE_PARTNER_CATEGORY')")
     public ResponseEntity<?> create(@Valid @RequestBody PartnerCategoryDto categoryDto, BindingResult result) {
+
         ResponseEntity<?> errors = validationErrorService.process(result);
         if(errors != null)
             return errors;
+
         categoryDto = partnerCategoryService.create(categoryDto);
         URI uri = ServletUriComponentsBuilder
                 .fromCurrentContextPath().path("/api/v1/partner-categories/{id}")
