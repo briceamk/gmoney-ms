@@ -1,6 +1,7 @@
 package cm.g2s.loan.domain.model;
 
 import cm.g2s.loan.domain.data.BaseEntity;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -15,6 +16,8 @@ import java.sql.Timestamp;
 @Entity
 @NoArgsConstructor
 public class Loan extends BaseEntity {
+
+    static final long serialVersionUID = 8078564272751358347L;
 
     @Column(length = 32, nullable = false)
     private String number;
@@ -43,4 +46,25 @@ public class Loan extends BaseEntity {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private LoanState state;
+
+    @Builder
+    public Loan(String id, String number, String partnerId, String accountId,
+                String companyId, String userId, String mobile, String ruleId,
+                Timestamp creationDate, Timestamp issueDate, BigDecimal amount,
+                BigDecimal interest, LoanMode mode, LoanState state) {
+        super(id);
+        this.number = number;
+        this.partnerId = partnerId;
+        this.accountId = accountId;
+        this.companyId = companyId;
+        this.userId = userId;
+        this.mobile = mobile;
+        this.ruleId = ruleId;
+        this.creationDate = creationDate;
+        this.issueDate = issueDate;
+        this.amount = amount;
+        this.interest = interest;
+        this.mode = mode;
+        this.state = state;
+    }
 }

@@ -25,5 +25,7 @@ public interface UserRepository extends JpaRepository<User, String> {
 
     Page<User> findByUsername(String username, PageRequest pageRequest);
 
-    Page<User> findByFullName(String fullName, PageRequest pageRequest);
+    Page<User> findByFirstName(String firstName, PageRequest pageRequest);
+
+    Page<User> findByLastName(String lastName, PageRequest pageRequest);
 }

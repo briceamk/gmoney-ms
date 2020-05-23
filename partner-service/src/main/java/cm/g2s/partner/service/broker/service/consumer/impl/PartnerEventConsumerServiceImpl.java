@@ -1,21 +1,14 @@
 package cm.g2s.partner.service.broker.service.consumer.impl;
 
-import cm.g2s.partner.domain.model.PartnerCategory;
-import cm.g2s.partner.domain.model.PartnerState;
-import cm.g2s.partner.domain.model.PartnerType;
-import cm.g2s.partner.domain.model.WalletType;
+import cm.g2s.partner.domain.model.*;
 import cm.g2s.partner.infrastructure.repository.PartnerCategoryRepository;
-import cm.g2s.partner.service.PartnerCategoryService;
 import cm.g2s.partner.service.PartnerService;
+import cm.g2s.partner.service.broker.payload.CreatePartnerRequest;
 import cm.g2s.partner.service.broker.payload.CreatePartnerResponse;
-import cm.g2s.partner.service.rule.RuleDto;
-import cm.g2s.partner.service.uaa.UserDto;
+import cm.g2s.partner.service.broker.payload.RemovePartnerRequest;
 import cm.g2s.partner.service.broker.service.consumer.PartnerEventConsumerService;
 import cm.g2s.partner.service.broker.service.producer.PartnerEventPublisherService;
-import cm.g2s.partner.shared.dto.PartnerCategoryDto;
-import cm.g2s.partner.shared.dto.PartnerDto;
-import cm.g2s.partner.shared.dto.WalletDto;
-import cm.g2s.partner.shared.exception.BadRequestException;
+import cm.g2s.partner.exception.BadRequestException;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,20 +28,20 @@ public class PartnerEventConsumerServiceImpl implements PartnerEventConsumerServ
 
     @Override
     @StreamListener(target = "partnerCreatedChannel")
-    public void observePartnerCreateRequest(UserDto userDto) {
+    public void observePartnerCreateRequest(CreatePartnerRequest partnerRequest) {
 
         CreatePartnerResponse.CreatePartnerResponseBuilder builder = CreatePartnerResponse.builder();
         try{
             log.info("Receiving Create Partner Request from uaa-service");
-            PartnerDto partnerDto = userDtoToPartnerDto(userDto);
-            partnerDto = partnerService.create(partnerDto);
-            builder.userDto(userDto)
-                    .partnerDto(partnerDto)
+            Partner partner = transform(partnerRequest);
+            partner = partnerService.create(null, partner);
+            builder.userId(partner.getUserId())
+                    .partnerId(partner.getId())
                     .creationPartnerError(false);
             log.info("Creation Partner Request Successfully");
         } catch (Exception e) {
             log.error("Error when creating partner with data from uaa-service ", e.getMessage());
-            builder.userDto(userDto)
+            builder.userId(partnerRequest.getUserId())
                     .creationPartnerError(true);
         } finally {
             //Sending Response to uaa-service
@@ -58,13 +51,13 @@ public class PartnerEventConsumerServiceImpl implements PartnerEventConsumerServ
     }
 
     @Override
-    @StreamListener(target = "accountCreatedFailedChannel")
-    public void observeAccountCreateFailed(UserDto userDto) {
+    @StreamListener(target = "partnerRemoveChannel")
+    public void observePartnerRemoveRequest(RemovePartnerRequest partnerRequest) {
         log.info("Receiving Account Creation Failed  Request from uaa-service");
-        partnerService.deleteByUserId(userDto.getId());
+        partnerService.deleteByUserId(null, partnerRequest.getUserId());
     }
 
-    private PartnerDto userDtoToPartnerDto(UserDto userDto) {
+    private Partner transform(CreatePartnerRequest partnerRequest) {
 
         PartnerCategory category = categoryRepository.findByDefaultCategory(true).orElseThrow(
                 () -> {
@@ -74,28 +67,28 @@ public class PartnerEventConsumerServiceImpl implements PartnerEventConsumerServ
         );
 
 
-        PartnerDto partnerDto = PartnerDto.builder()
-                .lastName(userDto.getFullName())
-                .email(userDto.getEmail())
-                .city(userDto.getCity())
-                .ruleDto(RuleDto.builder().id(category.getRuleId()).build())
+        Partner partner = Partner.builder()
+                .firstName(partnerRequest.getFirstName()!= null? partnerRequest.getFirstName(): "")
+                .lastName(partnerRequest.getLastName())
+                .email(partnerRequest.getEmail())
+                .city(partnerRequest.getCity())
+                .ruleId(category.getRuleId())
                 .creditLimit(category.getCreditLimit())
-                .state(PartnerState.CREATE.name())
-                .userDto(userDto)
-                .categoryDto(PartnerCategoryDto.builder().id(category.getId()).build())
-                .walletDtos(
+                .state(PartnerState.CREATE)
+                .userId(partnerRequest.getUserId())
+                .category(PartnerCategory.builder().id(category.getId()).build())
+                .companyId(partnerRequest.getCompanyId()!= null? partnerRequest.getCompanyId(): "")
+                .wallets(
                         Arrays.asList(
-                                WalletDto.builder()
+                                Wallet.builder()
                                         .active(true)
                                         .isDefault(true)
-                                        .name(userDto.getMobile())
+                                        .name(partnerRequest.getMobile())
                                         //TODO write a function to determine the number type
-                                        .type(WalletType.ORANGE.name())
+                                        .type(WalletType.ORANGE)
                                         .build()
                         )
                 ).build();
-        if(userDto.getCompanyDto() != null)
-            partnerDto.setCompanyDto(userDto.getCompanyDto());
-        return partnerDto;
+        return partner;
     }
 }

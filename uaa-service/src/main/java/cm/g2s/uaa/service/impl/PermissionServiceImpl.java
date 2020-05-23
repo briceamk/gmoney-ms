@@ -3,9 +3,7 @@ package cm.g2s.uaa.service.impl;
 import cm.g2s.uaa.domain.model.Permission;
 import cm.g2s.uaa.infrastructure.repository.PermissionRepository;
 import cm.g2s.uaa.service.PermissionService;
-import cm.g2s.uaa.shared.dto.PermissionDto;
-import cm.g2s.uaa.shared.exception.ResourceNotFoundException;
-import cm.g2s.uaa.shared.mapper.PermissionMapper;
+import cm.g2s.uaa.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -16,27 +14,25 @@ import org.springframework.stereotype.Service;
 public class PermissionServiceImpl implements PermissionService {
 
     private final PermissionRepository permissionRepository;
-    private final PermissionMapper permissionMapper;
+
 
     @Override
-    public PermissionDto findById(String id) {
-        Permission permission = permissionRepository.findById(id).orElseThrow(
+    public Permission findById(String id) {
+        return permissionRepository.findById(id).orElseThrow(
                 () -> {
                     log.error("Permission with id {} ,ot found", id);
                     throw new ResourceNotFoundException(String.format("Permission with id %s ,ot found", id));
                 }
         );
-        return permissionMapper.map(permission);
     }
 
     @Override
-    public PermissionDto findByName(String name) {
-        Permission permission = permissionRepository.findByName(name).orElseThrow(
+    public Permission findByName(String name) {
+        return permissionRepository.findByName(name).orElseThrow(
                 () -> {
                     log.error("Permission with name {} ,ot found", name);
                     throw new ResourceNotFoundException(String.format("Permission with name %s ,ot found", name));
                 }
         );
-        return permissionMapper.map(permission);
     }
 }

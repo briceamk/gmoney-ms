@@ -2,6 +2,7 @@ package cm.g2s.account.infrastructure.repository;
 
 import cm.g2s.account.domain.model.Account;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -21,5 +22,11 @@ public interface AccountRepository extends JpaRepository<Account, String> {
 
     Page<Account> findByPartnerId(String partnerId, Pageable pageable);
 
+    Page<Account> findByNumberAndKey(String number, String key, Pageable pageable);
+
+    Page<Account> findByKey(String key, Pageable pageable);
+
     Boolean existsByPartnerId(String id);
+
+
 }

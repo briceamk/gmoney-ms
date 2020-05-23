@@ -33,6 +33,7 @@
           <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.12/lombok-1.18.12.jar" />
         </processorPath>
         <module name="account-service" />
+        <module name="transaction-service" />
         <module name="uaa-service" />
         <module name="rule-service" />
         <module name="company-service" />
@@ -50,6 +51,7 @@
       <module name="partner-service" target="1.8" />
       <module name="proxy-service" target="11" />
       <module name="rule-service" target="1.8" />
+      <module name="transaction-service" target="1.8" />
       <module name="uaa-service" target="1.8" />
     </bytecodeTargetLevel>
   </component>
@@ -64,6 +66,7 @@
       <module name="partner-service" options="-parameters -Amapstruct.defaultComponentModel=spring" />
       <module name="proxy-service" options="-parameters" />
       <module name="rule-service" options="-parameters -Amapstruct.defaultComponentModel=spring" />
+      <module name="transaction-service" options="-parameters -Amapstruct.defaultComponentModel=spring" />
       <module name="uaa-service" options="-parameters -Amapstruct.defaultComponentModel=spring" />
     </option>
   </component>

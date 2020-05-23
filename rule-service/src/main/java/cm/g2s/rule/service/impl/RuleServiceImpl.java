@@ -5,15 +5,11 @@ import cm.g2s.rule.domain.model.RuleLine;
 import cm.g2s.rule.repository.RuleRepository;
 import cm.g2s.rule.security.CustomPrincipal;
 import cm.g2s.rule.service.RuleService;
-import cm.g2s.rule.shared.dto.RuleDto;
-import cm.g2s.rule.shared.dto.RuleDtoPage;
-import cm.g2s.rule.shared.exception.BadRequestException;
-import cm.g2s.rule.shared.exception.ConflictException;
-import cm.g2s.rule.shared.exception.ResourceNotFoundException;
-import cm.g2s.rule.shared.mapper.RuleMapper;
+import cm.g2s.rule.exception.BadRequestException;
+import cm.g2s.rule.exception.ConflictException;
+import cm.g2s.rule.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import lombok.val;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -27,7 +23,6 @@ import java.math.RoundingMode;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -35,42 +30,39 @@ import java.util.stream.Collectors;
 public class RuleServiceImpl implements RuleService {
 
     private final RuleRepository ruleRepository;
-    private final RuleMapper ruleMapper;
 
     @Override
-    public RuleDto create(CustomPrincipal principal, RuleDto ruleDto) {
+    public Rule create(CustomPrincipal principal, Rule rule) {
         //We check if rules exist
-        if(ruleRepository.existsByCode(ruleDto.getCode())) {
-            log.error("provided code {} is already used!", ruleDto.getCode());
-            throw  new ConflictException(String.format("provided code %s is already used!", ruleDto.getCode()));
+        if(ruleRepository.existsByCode(rule.getCode())) {
+            log.error("provided code {} is already used!", rule.getCode());
+            throw  new ConflictException(String.format("provided code %s is already used!", rule.getCode()));
         }
-        val rule = ruleMapper.map(ruleDto);
         rule.getRuleLines().forEach(ruleLine -> ruleLine.setRule(rule));
         rule.setActive(true);
-        return ruleMapper.map(ruleRepository.save(rule));
+        return ruleRepository.save(rule);
     }
 
     @Override
-    public void update(CustomPrincipal principal, RuleDto ruleDto) {
+    public void update(CustomPrincipal principal, Rule rule) {
         //TODO validate unique fields
-        val rule = ruleMapper.map(ruleDto);
         rule.getRuleLines().forEach(ruleLine -> ruleLine.setRule(rule));
         ruleRepository.save(rule);
     }
 
     @Override
-    public RuleDto findById(CustomPrincipal principal, String id) {
-        val rule = ruleRepository.findById(id).orElseThrow(
+    public Rule findById(CustomPrincipal principal, String id) {
+        return ruleRepository.findById(id).orElseThrow(
                 () -> {
                     log.info("Rule with id {} not found", id);
                     throw new ResourceNotFoundException(String.format("Rule with id %s not found", id));
                 }
         );
-        return ruleMapper.map(rule);
+
     }
 
     @Override
-    public RuleDtoPage findAll(CustomPrincipal principal, String code, String name, PageRequest pageRequest) {
+    public Page<Rule> findAll(CustomPrincipal principal, String code, String name, PageRequest pageRequest) {
 
         Page<Rule> rulePage;
 
@@ -86,30 +78,19 @@ public class RuleServiceImpl implements RuleService {
             rulePage = ruleRepository.findAll(pageRequest);
         }
 
-        return new RuleDtoPage(
-                rulePage.getContent().stream().map(ruleMapper::map).collect(Collectors.toList()),
-                PageRequest.of(rulePage.getPageable().getPageNumber(),
-                        rulePage.getPageable().getPageSize()),
-                rulePage.getTotalElements()
-        );
+        return rulePage;
 
     }
 
     @Override
     public void deleteById(CustomPrincipal principal, String id) {
-        val rule = ruleRepository.findById(id).orElseThrow(
-                () -> {
-                    log.info("Rule with id {} not found", id);
-                    throw new ResourceNotFoundException(String.format("Rule with id %s not found", id));
-                }
-        );
-        ruleRepository.delete(rule);
+        ruleRepository.delete(findById(principal, id));
     }
 
     @Override
     public Map<String, BigDecimal> processInterest(CustomPrincipal principal, String ruleId,
                                                    Long numberOfDays, BigDecimal amount) throws ScriptException {
-        Rule rule = ruleMapper.map(findById(principal, ruleId));
+        Rule rule = findById(principal, ruleId);
         Map<String, BigDecimal> result = new HashMap<>();
         if(rule.getRuleLines().size() <= 0) {
             log.error("No rule line for given rule!");

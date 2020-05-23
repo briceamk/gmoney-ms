@@ -7,7 +7,8 @@ public class CompanyConstantType {
     public static final String DEFAULT_COMPANY_LOGO_FILE_NAME = "no_company_image.png";
     public static final String DEFAULT_COMPANY_LOGO_IMAGE_TYPE = "image/png";
 
-    public static final String FULL_NAME = "fullName";
+    public static final String FIRST_NAME = "firstName";
+    public static final String LAST_NAME = "lastName";
     public static final String MOBILE = "mobile";
     public static final String EMAIL = "email";
     public static final String JTI = "jti";

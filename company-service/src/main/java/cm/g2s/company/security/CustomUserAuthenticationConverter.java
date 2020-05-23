@@ -1,7 +1,5 @@
 package cm.g2s.company.security;
 
-
-
 import cm.g2s.company.constant.CompanyConstantType;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -43,8 +41,10 @@ public class CustomUserAuthenticationConverter implements UserAuthenticationConv
             principal.setUsername(map.get(USERNAME).toString());
             if(map.containsKey(CompanyConstantType.JTI) && map.get(CompanyConstantType.JTI) != null)
                 principal.setId(map.get(CompanyConstantType.JTI).toString());
-            if(map.containsKey(CompanyConstantType.FULL_NAME) && map.get(CompanyConstantType.FULL_NAME) != null)
-                principal.setFullName(map.get(CompanyConstantType.FULL_NAME).toString());
+            if(map.containsKey(CompanyConstantType.FIRST_NAME) && map.get(CompanyConstantType.FIRST_NAME) != null)
+                principal.setFirstName(map.get(CompanyConstantType.FIRST_NAME).toString());
+            if(map.containsKey(CompanyConstantType.LAST_NAME) && map.get(CompanyConstantType.LAST_NAME) != null)
+                principal.setLastName(map.get(CompanyConstantType.LAST_NAME).toString());
             if(map.containsKey(CompanyConstantType.MOBILE) && map.get(CompanyConstantType.MOBILE) != null)
                 principal.setMobile(map.get(CompanyConstantType.MOBILE).toString());
             if(map.containsKey(CompanyConstantType.EMAIL) && map.get(CompanyConstantType.EMAIL) != null)

@@ -3,13 +3,10 @@ package cm.g2s.uaa.service.impl;
 import cm.g2s.uaa.domain.model.User;
 import cm.g2s.uaa.infrastructure.repository.UserRepository;
 import cm.g2s.uaa.service.UserService;
-import cm.g2s.uaa.shared.dto.UserDto;
-import cm.g2s.uaa.shared.dto.UserDtoPage;
-import cm.g2s.uaa.shared.exception.BadRequestException;
-import cm.g2s.uaa.shared.exception.ConflictException;
-import cm.g2s.uaa.shared.exception.ResourceNotFoundException;
-import cm.g2s.uaa.shared.mapper.UserMapper;
-import cm.g2s.uaa.shared.payload.ResetPassword;
+import cm.g2s.uaa.exception.BadRequestException;
+import cm.g2s.uaa.exception.ConflictException;
+import cm.g2s.uaa.exception.ResourceNotFoundException;
+import cm.g2s.uaa.web.payload.ResetPassword;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -17,8 +14,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
-import java.nio.file.attribute.UserPrincipal;
-import java.util.stream.Collectors;
 
 
 @Slf4j
@@ -27,42 +22,37 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-    private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    public UserDto create(UserDto userDto) {
+    public User create(User user) {
         // we check if username or email mobile is already used
-        if (userRepository.existsByUsername(userDto.getUsername())) {
-            log.warn("Username {} already used.", userDto.getUsername());
-            throw new ConflictException(String.format("Username %s already used.", userDto.getUsername()));
+        if (userRepository.existsByUsername(user.getUsername())) {
+            log.warn("Username {} already used.", user.getUsername());
+            throw new ConflictException(String.format("Username %s already used.", user.getUsername()));
         }
 
-        if (userRepository.existsByEmail(userDto.getEmail())) {
-            log.warn("Email {} already used.", userDto.getEmail());
-            throw new ConflictException(String.format("Email %s already used.", userDto.getEmail()));
+        if (userRepository.existsByEmail(user.getEmail())) {
+            log.warn("Email {} already used.", user.getEmail());
+            throw new ConflictException(String.format("Email %s already used.", user.getEmail()));
         }
 
-        if (userRepository.existsByMobile(userDto.getMobile())) {
-            log.warn("Mobile {} already used.", userDto.getMobile());
-            throw new ConflictException(String.format("Mobile %s already used.", userDto.getMobile()));
+        if (userRepository.existsByMobile(user.getMobile())) {
+            log.warn("Mobile {} already used.", user.getMobile());
+            throw new ConflictException(String.format("Mobile %s already used.", user.getMobile()));
         }
 
-        // Creating user's account
-        User user = userMapper.map(userDto);
-
-        //TODO publish broker USER_CREATED to partner-service and notification-service
-        return userMapper.map(userRepository.save(user));
+        return userRepository.save(user);
     }
 
     @Override
-    public void update(UserDto userDto) {
+    public void update(User user) {
 
-        if (userDto.getPassword() == null || userDto.getPassword().isEmpty()) {
-            UserDto dbUserDto = findById( userDto.getId());
-            userDto.setPassword(dbUserDto.getPassword());
+        if (user.getPassword() == null || user.getPassword().isEmpty()) {
+            User dbUser = findById(user.getId());
+            user.setPassword(dbUser.getPassword());
         }
-        userRepository.save(userMapper.map(userDto));
+        userRepository.save(user);
     }
 
     @Override
@@ -78,17 +68,22 @@ public class UserServiceImpl implements UserService {
             throw new BadRequestException("your old password does't not matches!");
         }
         user.setPassword(passwordEncoder.encode(resetPassword.getNewPassword()));
-        update(userMapper.map(user));
+        update(user);
     }
 
     @Override
-    public UserDtoPage findAll( String fullName, String username, String email, String mobile, PageRequest pageRequest) {
+    public Page<User> findAll( String firstName, String lastName, String username, String email,
+                               String mobile, PageRequest pageRequest) {
 
         Page<User> userPage;
 
-        if (!StringUtils.isEmpty(fullName)) {
-            //search by full name
-            userPage = userRepository.findByFullName(fullName, pageRequest);
+        if (!StringUtils.isEmpty(firstName)) {
+            //search by first name
+            userPage = userRepository.findByFirstName(firstName, pageRequest);
+        }
+        else if(!StringUtils.isEmpty(lastName)) {
+            //search by last name
+            userPage = userRepository.findByLastName(lastName, pageRequest);
         }
         else if(!StringUtils.isEmpty(username)) {
             //search by username
@@ -107,34 +102,22 @@ public class UserServiceImpl implements UserService {
             userPage = userRepository.findAll(pageRequest);
         }
 
-        return new UserDtoPage(
-                userPage.getContent().stream().map(userMapper::map).collect(Collectors.toList()),
-                PageRequest.of(userPage.getPageable().getPageNumber(),
-                        userPage.getPageable().getPageSize()),
-                userPage.getTotalElements()
-        );
+        return userPage;
     }
 
     @Override
-    public UserDto findById( String id) {
-        User user = userRepository.findById(id).orElseThrow(
+    public User findById( String id) {
+        return userRepository.findById(id).orElseThrow(
                 () -> {
                     log.error("User with id {} not found",id);
                     throw  new ResourceNotFoundException(String.format("User with id %s not found",id));
                 }
         );
-        return userMapper.map(user);
     }
 
     @Override
     public void deleteById(String id) {
-        User user = userRepository.findById(id).orElseThrow(
-                () -> {
-                    log.error("User with id {} not found",id);
-                    throw  new ResourceNotFoundException(String.format("User with id %s not found",id));
-                }
-        );
-        userRepository.delete(user);
+        userRepository.delete(findById(id));
     }
 
 }

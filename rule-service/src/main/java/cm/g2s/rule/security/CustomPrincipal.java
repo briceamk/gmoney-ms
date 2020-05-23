@@ -9,8 +9,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
-import java.util.LinkedHashSet;
-import java.util.Set;
+
 
 @Setter
 @ToString
@@ -19,7 +18,8 @@ import java.util.Set;
 public class CustomPrincipal implements UserDetails {
 
     protected String id;
-    protected String fullName;
+    protected String firstName;
+    protected String lastName;
     protected String username;
     protected String email;
     protected String mobile;
@@ -70,8 +70,12 @@ public class CustomPrincipal implements UserDetails {
         return id;
     }
 
-    public String getFullName() {
-        return fullName;
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
     }
 
     public String getEmail() {

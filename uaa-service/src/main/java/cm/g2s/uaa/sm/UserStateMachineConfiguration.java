@@ -3,12 +3,10 @@ package cm.g2s.uaa.sm;
 import cm.g2s.uaa.domain.event.UserEvent;
 import cm.g2s.uaa.domain.model.UserState;
 import cm.g2s.uaa.sm.action.CreateAccountAction;
-import cm.g2s.uaa.sm.action.CreateAccountFailedAction;
+import cm.g2s.uaa.sm.action.RemovePartnerAction;
 import cm.g2s.uaa.sm.action.CreatePartnerAction;
-import cm.g2s.uaa.sm.action.CreatePartnerPassedAction;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.statemachine.action.Action;
 import org.springframework.statemachine.config.EnableStateMachineFactory;
 import org.springframework.statemachine.config.StateMachineConfigurerAdapter;
 import org.springframework.statemachine.config.builders.StateMachineStateConfigurer;
@@ -22,9 +20,8 @@ import java.util.EnumSet;
 public class UserStateMachineConfiguration extends StateMachineConfigurerAdapter<UserState, UserEvent> {
 
     private final CreatePartnerAction createPartnerAction;
-    private final CreatePartnerPassedAction createPartnerPassedAction;
     private final CreateAccountAction createAccountAction;
-    private final CreateAccountFailedAction createAccountFailedAction;
+    private final RemovePartnerAction removePartnerAction;
 
     @Override
     public void configure(StateMachineStateConfigurer<UserState, UserEvent> states) throws Exception {
@@ -47,7 +44,6 @@ public class UserStateMachineConfiguration extends StateMachineConfigurerAdapter
                 .source(UserState.PARTNER_CREATED_PENDING)
                 .target(UserState.PARTNER_CREATED)
                 .event(UserEvent.CREATE_PARTNER_PASSED)
-                .action(createPartnerPassedAction)
             .and().withExternal()
                 .source(UserState.PARTNER_CREATED_PENDING)
                 .target(UserState.PARTNER_CREATED_EXCEPTION)
@@ -65,7 +61,7 @@ public class UserStateMachineConfiguration extends StateMachineConfigurerAdapter
                 .source(UserState.ACCOUNT_CREATED_PENDING)
                 .target(UserState.ACCOUNT_CREATED_EXCEPTION)
                 .event(UserEvent.CREATED_ACCOUNT_FAILED)
-                .action(createAccountFailedAction)
+                .action(removePartnerAction)
             .and().withExternal()
                 .source(UserState.ACCOUNT_CREATED)
                 .target(UserState.USER_CREATED)

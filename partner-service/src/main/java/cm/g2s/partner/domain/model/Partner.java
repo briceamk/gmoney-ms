@@ -52,7 +52,7 @@ public class Partner extends BaseEntity {
     @Builder
     public Partner(String id, String firstName, String lastName, Date bornDate, String nicId, String email, Date nicIssueDate,
                    String nicIssuePlace, String city, String country, BigDecimal creditLimit, String companyId, String userId,
-                   PartnerType type, PartnerState state, List<Wallet> wallets, PartnerCategory category) {
+                   String ruleId, PartnerType type, PartnerState state, List<Wallet> wallets, PartnerCategory category) {
         super(id);
         this.firstName = firstName;
         this.lastName = lastName;
@@ -66,6 +66,7 @@ public class Partner extends BaseEntity {
         this.creditLimit = creditLimit;
         this.companyId = companyId;
         this.userId = userId;
+        this.ruleId = ruleId;
         this.type = type;
         this.state = state;
         this.wallets = wallets;

@@ -13,8 +13,10 @@ import java.util.Set;
 @Table(name = "users")
 @NoArgsConstructor
 public class User extends BaseEntity {
-    @Column(nullable = false, length = 128)
-    private String fullName;
+    @Column(length = 64)
+    private String firstName;
+    @Column(nullable = false, length = 64)
+    private String lastName;
     @Column(nullable = false, unique = true, length = 32, updatable = false)
     private String username;
     @Column(nullable = false, unique = true, length = 128)
@@ -42,12 +44,13 @@ public class User extends BaseEntity {
     private Set<Role> roles;
 
     @Builder
-    public User(String id, String fullName, String username, String email, String mobile, String city,
-                String partnerId, String companyId, String password, boolean accountNonExpired,
+    public User(String id, String firstName,String lastName, String username, String email, String mobile,
+                String city, String partnerId, String companyId, String password, boolean accountNonExpired,
                 boolean accountNonLocked, boolean credentialsNonExpired, UserState state,
                 boolean enabled, Set<Role> roles) {
         super(id);
-        this.fullName = fullName;
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.username = username;
         this.email = email;
         this.mobile = mobile;

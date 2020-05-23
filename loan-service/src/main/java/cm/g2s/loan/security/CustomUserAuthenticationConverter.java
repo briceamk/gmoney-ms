@@ -1,6 +1,5 @@
 package cm.g2s.loan.security;
 
-
 import cm.g2s.loan.constant.LoanConstantType;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -42,8 +41,10 @@ public class CustomUserAuthenticationConverter implements UserAuthenticationConv
             principal.setUsername(map.get(USERNAME).toString());
             if(map.containsKey(LoanConstantType.JTI) && map.get(LoanConstantType.JTI) != null)
                 principal.setId(map.get(LoanConstantType.JTI).toString());
-            if(map.containsKey(LoanConstantType.FULL_NAME) && map.get(LoanConstantType.FULL_NAME) != null)
-                principal.setFullName(map.get(LoanConstantType.FULL_NAME).toString());
+            if(map.containsKey(LoanConstantType.FIRST_NAME) && map.get(LoanConstantType.FIRST_NAME) != null)
+                principal.setFirstName(map.get(LoanConstantType.FIRST_NAME).toString());
+            if(map.containsKey(LoanConstantType.LAST_NAME) && map.get(LoanConstantType.LAST_NAME) != null)
+                principal.setLastName(map.get(LoanConstantType.LAST_NAME).toString());
             if(map.containsKey(LoanConstantType.MOBILE) && map.get(LoanConstantType.MOBILE) != null)
                 principal.setMobile(map.get(LoanConstantType.MOBILE).toString());
             if(map.containsKey(LoanConstantType.EMAIL) && map.get(LoanConstantType.EMAIL) != null)

@@ -1,20 +1,14 @@
 package cm.g2s.partner.service.impl;
 
 import cm.g2s.partner.domain.model.Partner;
-import cm.g2s.partner.domain.model.PartnerCategory;
 import cm.g2s.partner.domain.model.PartnerState;
 import cm.g2s.partner.domain.model.PartnerType;
 import cm.g2s.partner.infrastructure.repository.PartnerRepository;
 import cm.g2s.partner.infrastructure.repository.WalletRepository;
-import cm.g2s.partner.service.PartnerCategoryService;
+import cm.g2s.partner.security.CustomPrincipal;
 import cm.g2s.partner.service.PartnerService;
-import cm.g2s.partner.shared.dto.PartnerCategoryDto;
-import cm.g2s.partner.shared.dto.PartnerDto;
-import cm.g2s.partner.shared.dto.PartnerDtoPage;
-import cm.g2s.partner.shared.exception.BadRequestException;
-import cm.g2s.partner.shared.exception.ResourceNotFoundException;
-import cm.g2s.partner.shared.mapper.PartnerCategoryMapper;
-import cm.g2s.partner.shared.mapper.PartnerMapper;
+import cm.g2s.partner.exception.BadRequestException;
+import cm.g2s.partner.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -22,32 +16,27 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import java.util.stream.Collectors;
-
 @Slf4j
 @RequiredArgsConstructor
 @Service("partnerService")
 public class PartnerServiceImpl implements PartnerService {
 
     private final PartnerRepository partnerRepository;
-    private final PartnerMapper partnerMapper;
     private final WalletRepository walletRepository;
-    private final PartnerCategoryService categoryService;
-    private final PartnerCategoryMapper categoryMapper;
 
     @Override
-    public PartnerDto create(PartnerDto partnerDto) {
+    public Partner create(CustomPrincipal principal, Partner partner) {
         //we verify if database contains same nic  provided in payload
-        if(partnerDto.getNicId() != null && partnerRepository.existsByNicId(partnerDto.getNicId())) {
-            log.error("provided national identity card {} is already taken!", partnerDto.getNicId());
-            throw new BadRequestException(String.format("provided national identity card %s is already taken!", partnerDto.getNicId()));
+        if(partner.getNicId() != null && partnerRepository.existsByNicId(partner.getNicId())) {
+            log.error("provided national identity card {} is already taken!", partner.getNicId());
+            throw new BadRequestException(String.format("provided national identity card %s is already taken!", partner.getNicId()));
         }
         //We verify if email is unique
-        if(partnerRepository.existsByEmail(partnerDto.getEmail())) {
-            log.error("provided email {} is already taken!", partnerDto.getEmail());
-            throw new BadRequestException(String.format("provided email %s is already taken!", partnerDto.getEmail()));
+        if(partnerRepository.existsByEmail(partner.getEmail())) {
+            log.error("provided email {} is already taken!", partner.getEmail());
+            throw new BadRequestException(String.format("provided email %s is already taken!", partner.getEmail()));
         }
-        Partner partner = partnerMapper.map(partnerDto);
+
         // we set partner default state
         partner.setState(PartnerState.CREATE);
 
@@ -67,36 +56,30 @@ public class PartnerServiceImpl implements PartnerService {
         partner.setType(PartnerType.FREE);
 
 
-        return partnerMapper.map(partnerRepository.save(partner));
+        return partnerRepository.save(partner);
     }
 
     @Override
-    public void update(PartnerDto partnerDto) {
+    public void update(CustomPrincipal principal, Partner partner) {
         // TODO validate unique field
-        Partner partner = partnerMapper.map(partnerDto);
         partner.getWallets().forEach(wallet ->{
-            /*if(walletRepository.existsByName(wallet.getName())){
-                log.error("Wallet with number {} already exist!", wallet.getName());
-                throw new BadRequestException(String.format("Wallet with number %s already exist!", wallet.getName()));
-            }*/
             wallet.setPartner(partner);
         });
        partnerRepository.save(partner);
     }
 
     @Override
-    public PartnerDto findById(String id) {
-        Partner partner = partnerRepository.findById(id).orElseThrow(
+    public Partner findById(CustomPrincipal principal, String id) {
+        return partnerRepository.findById(id).orElseThrow(
                 () -> {
                     log.error("partner with provided id not found!");
                     throw new ResourceNotFoundException("partner with provided id not found!");
                 }
         );
-        return partnerMapper.map(partner);
     }
 
     @Override
-    public PartnerDtoPage findAll(String firstName, String lastName, String email, String nicId,
+    public Page<Partner> findAll(CustomPrincipal principal, String firstName, String lastName, String email, String nicId,
                                   String nicIssuePlace, String city, String type,
                                   String state, PageRequest pageRequest) {
 
@@ -120,27 +103,16 @@ public class PartnerServiceImpl implements PartnerService {
         else
             partnerPage = partnerRepository.findAll(pageRequest);
 
-        return new PartnerDtoPage(
-                partnerPage.getContent().stream().map(partnerMapper::map).collect(Collectors.toList()),
-                PageRequest.of(partnerPage.getPageable().getPageNumber(),
-                        partnerPage.getPageable().getPageSize()),
-                partnerPage.getTotalElements()
-        );
+        return partnerPage;
     }
 
     @Override
-    public void deleteById(String id) {
-        Partner partner = partnerRepository.findById(id).orElseThrow(
-                () -> {
-                    log.error("partner with id {} not found!", id);
-                    throw new ResourceNotFoundException(String.format("partner with id %s not found!", id));
-                }
-        );
-        partnerRepository.delete(partner);
+    public void deleteById(CustomPrincipal principal, String id) {
+        partnerRepository.delete(findById(principal, id));
     }
 
     @Override
-    public void deleteByUserId(String userId) {
+    public void deleteByUserId(CustomPrincipal principal, String userId) {
         Partner partner = partnerRepository.findByUserId(userId).orElseThrow(
                 () -> {
                     log.error("Partner with user id {} not found", userId);

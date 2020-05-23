@@ -1,8 +1,10 @@
 package cm.g2s.uaa.service.broker.publisher.impl;
 
 import cm.g2s.uaa.infrastructure.broker.UserEventSource;
+import cm.g2s.uaa.service.broker.payload.RemovePartnerRequest;
+import cm.g2s.uaa.service.broker.payload.CreateAccountRequest;
+import cm.g2s.uaa.service.broker.payload.CreatePartnerRequest;
 import cm.g2s.uaa.service.broker.publisher.UserEventPublisherService;
-import cm.g2s.uaa.shared.dto.UserDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.support.MessageBuilder;
@@ -18,23 +20,23 @@ public class UserEventPublisherServiceImpl implements UserEventPublisherService 
 
     @Override
     @TransactionalEventListener
-    public void onCreatePartnerEvent(UserDto userDto) {
-        log.info("Publishing User Partner creation  to RabbitMQ");
-        eventSource.partnerCreated().send(MessageBuilder.withPayload(userDto).build());
+    public void onCreatePartnerEvent(CreatePartnerRequest partnerRequest) {
+        log.info("Publishing User Partner creation  to rabbitmq");
+        eventSource.partnerCreated().send(MessageBuilder.withPayload(partnerRequest).build());
 
     }
 
     @Override
     @TransactionalEventListener
-    public void onCreateAccountEvent(UserDto userDto) {
-        log.info("Publishing User Account creation to  RabbitMQ");
-        eventSource.accountCreated().send(MessageBuilder.withPayload(userDto).build());
+    public void onCreateAccountEvent(CreateAccountRequest accountRequest) {
+        log.info("Publishing User Account creation to  rabbitmq");
+        eventSource.accountCreated().send(MessageBuilder.withPayload(accountRequest).build());
     }
 
     @Override
     @TransactionalEventListener
-    public void onCreateAccountFailedEvent(UserDto userDto) {
-        log.info("Publishing Create Account to RabbitMQ");
-        eventSource.accountCreatedFailed().send(MessageBuilder.withPayload(userDto).build());
+    public void onRemovePartnerEvent(RemovePartnerRequest accountFailedRequest) {
+        log.info("Publishing Create Account to rabbitmq");
+        eventSource.partnerRemoved().send(MessageBuilder.withPayload(accountFailedRequest).build());
     }
 }

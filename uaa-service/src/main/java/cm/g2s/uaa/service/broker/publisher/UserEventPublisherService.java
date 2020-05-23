@@ -1,11 +1,13 @@
 package cm.g2s.uaa.service.broker.publisher;
 
-import cm.g2s.uaa.shared.dto.UserDto;
+import cm.g2s.uaa.service.broker.payload.RemovePartnerRequest;
+import cm.g2s.uaa.service.broker.payload.CreateAccountRequest;
+import cm.g2s.uaa.service.broker.payload.CreatePartnerRequest;
 
 public interface UserEventPublisherService {
-    void onCreatePartnerEvent(UserDto userDto);
+    void onCreatePartnerEvent(CreatePartnerRequest createPartnerRequest);
 
-    void onCreateAccountEvent(UserDto userDto);
+    void onCreateAccountEvent(CreateAccountRequest accountRequest);
 
-    void onCreateAccountFailedEvent(UserDto userDto);
+    void onRemovePartnerEvent(RemovePartnerRequest removePartnerRequest);
 }

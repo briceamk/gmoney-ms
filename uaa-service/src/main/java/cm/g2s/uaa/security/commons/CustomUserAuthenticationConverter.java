@@ -41,8 +41,10 @@ public class CustomUserAuthenticationConverter implements UserAuthenticationConv
             principal.setUsername(map.get(USERNAME).toString());
             if(map.containsKey(UaaConstantType.JTI) && map.get(UaaConstantType.JTI) != null)
                 principal.setId(map.get(UaaConstantType.JTI).toString());
-            if(map.containsKey(UaaConstantType.FULL_NAME) && map.get(UaaConstantType.FULL_NAME) != null)
-                principal.setFullName(map.get(UaaConstantType.FULL_NAME).toString());
+            if(map.containsKey(UaaConstantType.FIRST_NAME) && map.get(UaaConstantType.FIRST_NAME) != null)
+                principal.setFirstName(map.get(UaaConstantType.FIRST_NAME).toString());
+            if(map.containsKey(UaaConstantType.LAST_NAME) && map.get(UaaConstantType.LAST_NAME) != null)
+                principal.setLastName(map.get(UaaConstantType.LAST_NAME).toString());
             if(map.containsKey(UaaConstantType.MOBILE) && map.get(UaaConstantType.MOBILE) != null)
                 principal.setMobile(map.get(UaaConstantType.MOBILE).toString());
             if(map.containsKey(UaaConstantType.EMAIL) && map.get(UaaConstantType.EMAIL) != null)

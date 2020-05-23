@@ -1,8 +1,8 @@
 package cm.g2s.uaa.service;
 
-import cm.g2s.uaa.shared.payload.SignUp;
-import cm.g2s.uaa.shared.dto.UserDto;
+import cm.g2s.uaa.domain.model.User;
+import cm.g2s.uaa.web.payload.SignUp;
 
 public interface AuthService {
-    UserDto signUp(SignUp signUp);
+    User signUp(SignUp signUp);
 }

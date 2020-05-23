@@ -1,27 +1,25 @@
 package cm.g2s.uaa.service.impl;
 
+
 import cm.g2s.uaa.constant.UaaConstantType;
+import cm.g2s.uaa.domain.model.Role;
 import cm.g2s.uaa.domain.model.User;
 import cm.g2s.uaa.domain.model.UserState;
 import cm.g2s.uaa.infrastructure.repository.UserRepository;
 import cm.g2s.uaa.service.AuthService;
 import cm.g2s.uaa.service.RoleService;
-import cm.g2s.uaa.service.UserManagerService;
 import cm.g2s.uaa.service.company.model.CompanyDto;
 import cm.g2s.uaa.service.company.service.CompanyClientService;
-import cm.g2s.uaa.shared.dto.RoleDto;
-import cm.g2s.uaa.shared.exception.ResourceNotFoundException;
-import cm.g2s.uaa.shared.payload.SignUp;
-import cm.g2s.uaa.shared.dto.UserDto;
-import cm.g2s.uaa.shared.exception.ConflictException;
-import cm.g2s.uaa.shared.mapper.RoleMapper;
-import cm.g2s.uaa.shared.mapper.UserMapper;
-
+import cm.g2s.uaa.exception.ConflictException;
+import cm.g2s.uaa.exception.ResourceNotFoundException;
+import cm.g2s.uaa.web.payload.SignUp;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Arrays;
+import java.util.LinkedHashSet;
 
 
 @Slf4j
@@ -31,12 +29,11 @@ public class AuthServiceImpl implements AuthService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final UserManagerService userManagerService;
     private final CompanyClientService companyClientService;
+    private final RoleService roleService;
 
     @Override
-    @Transactional
-    public UserDto signUp(SignUp signUp) {
+    public User signUp(SignUp signUp) {
 
         // we check if username or email mobile is already used
         if (userRepository.existsByUsername(signUp.getUsername())) {
@@ -56,7 +53,8 @@ public class AuthServiceImpl implements AuthService {
 
         // Creating user's account
         User user = new User();
-        user.setFullName(signUp.getFullName());
+        user.setFirstName(signUp.getFirstName() != null? signUp.getFirstName() :  "");
+        user.setLastName(signUp.getLastName());
         user.setUsername(signUp.getUsername());
         user.setEmail(signUp.getEmail());
         user.setMobile(signUp.getMobile());
@@ -78,6 +76,9 @@ public class AuthServiceImpl implements AuthService {
             }
             user.setCompanyId(companyDto.getId());
         }
-        return userManagerService.createNewUser(user);
+        user = userRepository.save(user);
+        Role role = roleService.findByName(UaaConstantType.DEFAULT_USER_ROLE);
+        user.setRoles(new LinkedHashSet<>(Arrays.asList(role)));
+        return userRepository.save(user);
     }
 }

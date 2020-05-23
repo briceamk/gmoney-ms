@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 
+
 @Setter
 @ToString
 @AllArgsConstructor
@@ -17,7 +18,8 @@ import java.util.Collection;
 public class CustomPrincipal implements UserDetails {
 
     protected String id;
-    protected String fullName;
+    protected String firstName;
+    protected String lastName;
     protected String username;
     protected String email;
     protected String mobile;
@@ -68,8 +70,12 @@ public class CustomPrincipal implements UserDetails {
         return id;
     }
 
-    public String getFullName() {
-        return fullName;
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
     }
 
     public String getEmail() {

@@ -1,9 +1,9 @@
 package cm.g2s.uaa.service;
 
-import cm.g2s.uaa.shared.dto.PermissionDto;
+import cm.g2s.uaa.domain.model.Permission;
 
 public interface PermissionService {
 
-    PermissionDto findById(String id);
-    PermissionDto findByName(String name);
+    Permission findById(String id);
+    Permission findByName(String name);
 }

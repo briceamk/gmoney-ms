@@ -1,14 +1,18 @@
 package cm.g2s.uaa.web;
 
 import cm.g2s.uaa.constant.UaaConstantType;
-import cm.g2s.uaa.security.commons.CurrentPrincipal;
+import cm.g2s.uaa.domain.model.User;
+import cm.g2s.uaa.service.UserManagerService;
 import cm.g2s.uaa.service.UserService;
 import cm.g2s.uaa.service.ValidationErrorService;
-import cm.g2s.uaa.shared.dto.UserDto;
-import cm.g2s.uaa.shared.payload.ResetPassword;
-import cm.g2s.uaa.shared.payload.ResponseApi;
+import cm.g2s.uaa.web.dto.UserDto;
+import cm.g2s.uaa.web.dto.UserDtoPage;
+import cm.g2s.uaa.web.mapper.UserMapper;
+import cm.g2s.uaa.web.payload.ResetPassword;
+import cm.g2s.uaa.web.payload.ResponseApi;
 import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -18,7 +22,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
-import java.nio.file.attribute.UserPrincipal;
+import java.util.stream.Collectors;
 
 
 @RestController
@@ -27,7 +31,9 @@ import java.nio.file.attribute.UserPrincipal;
 @Api(value = "User", tags = "User End Points")
 public class UserController {
 
+    private final UserManagerService userManagerService;
     private final UserService userService;
+    private final UserMapper userMapper;
     private final ValidationErrorService validationErrorService;
 
     @PostMapping
@@ -36,10 +42,10 @@ public class UserController {
         ResponseEntity<?> errors = validationErrorService.process(result);
         if(errors != null)
             return errors;
-        userDto = userService.create(userDto);
+        User user = userManagerService.createNewUser(userMapper.map(userDto), null);
         URI uri = ServletUriComponentsBuilder
                 .fromCurrentContextPath().path("/uaa/users/{id}")
-                .buildAndExpand(userDto.getId()).toUri();
+                .buildAndExpand(user.getId()).toUri();
         return ResponseEntity.created(uri).body(new ResponseApi(true, "user saved successfully!"));
     }
 
@@ -49,7 +55,7 @@ public class UserController {
         ResponseEntity<?> errors = validationErrorService.process(result);
         if(errors != null)
             return errors;
-        userService.update(userDto);
+        userService.update(userMapper.map(userDto));
         return ResponseEntity.ok().body(new ResponseApi(true, "user updated successfully!"));
     }
 
@@ -69,7 +75,8 @@ public class UserController {
     public @ResponseBody ResponseEntity<?> findAll(
             @RequestParam(value = "pageNumber", required = false) Integer pageNumber,
             @RequestParam(value = "pageSize", required = false) Integer pageSize,
-            @RequestParam(value = "fullName", required = false) String fullName,
+            @RequestParam(value = "firstName", required = false) String firstName,
+            @RequestParam(value = "lastName", required = false) String lastName,
             @RequestParam(value = "username", required = false) String username,
             @RequestParam(value = "email", required = false) String email,
             @RequestParam(value = "mobile", required = false) String mobile) {
@@ -80,14 +87,23 @@ public class UserController {
         if (pageSize == null || pageSize < 1) {
             pageSize = UaaConstantType.DEFAULT_PAGE_SIZE;
         }
-        return ResponseEntity.ok(userService.findAll( fullName, username, email, mobile, PageRequest.of(pageNumber, pageSize)));
+        Page<User> userPage = userService.findAll( firstName, lastName, username, email, mobile,
+                PageRequest.of(pageNumber, pageSize));
+        UserDtoPage userDtoPage = new UserDtoPage(
+                userPage.getContent().stream().map(userMapper::map).collect(Collectors.toList()),
+                PageRequest.of(userPage.getPageable().getPageNumber(),
+                        userPage.getPageable().getPageSize()),
+                userPage.getTotalElements()
+        );
+
+        return ResponseEntity.ok(userDtoPage);
     }
 
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANGER', 'ROLE_USER') and hasAuthority('READ_USER')")
     public ResponseEntity<?> getUserById(
                                          @PathVariable String id) {
-        return ResponseEntity.ok(userService.findById( id));
+        return ResponseEntity.ok(userMapper.map(userService.findById( id)));
     }
 
     @DeleteMapping("/{id}")

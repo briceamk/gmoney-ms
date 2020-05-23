@@ -1,23 +1,25 @@
 package cm.g2s.partner.service;
 
-import cm.g2s.partner.shared.dto.PartnerDto;
-import cm.g2s.partner.shared.dto.PartnerDtoPage;
+import cm.g2s.partner.domain.model.Partner;
+import cm.g2s.partner.security.CustomPrincipal;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
 public interface PartnerService {
-    PartnerDto create(PartnerDto partnerDto);
+    
+    Partner create(CustomPrincipal principal, Partner partner);
 
-    void update(PartnerDto partnerDto);
+    void update(CustomPrincipal principal, Partner partner);
 
-    PartnerDto findById(String id);
+    Partner findById(CustomPrincipal principal, String id);
 
-    PartnerDtoPage findAll(String firstName, String lastName, String email,
-                           String nicId, String nicIssuePlace, String city,
-                           String type, String state, PageRequest of);
+    Page<Partner> findAll(CustomPrincipal principal, String firstName, String lastName, String email,
+                 String nicId, String nicIssuePlace, String city,
+                 String type, String state, PageRequest of);
 
-    void deleteById(String id);
+    void deleteById(CustomPrincipal principal, String id);
 
-    void deleteByUserId(String userId);
+    void deleteByUserId(CustomPrincipal principal, String userId);
 
 
 }

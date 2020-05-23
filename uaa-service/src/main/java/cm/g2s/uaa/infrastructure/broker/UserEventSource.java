@@ -11,8 +11,8 @@ public interface UserEventSource {
     @Output(value = "partnerCreatedChannel")
     MessageChannel partnerCreated();
 
-    @Output(value = "accountCreatedFailedChannel")
-    MessageChannel accountCreatedFailed();
+    @Output(value = "partnerRemoveChannel")
+    MessageChannel partnerRemoved();
 
     @Output(value = "accountCreatedChannel")
     MessageChannel accountCreated();

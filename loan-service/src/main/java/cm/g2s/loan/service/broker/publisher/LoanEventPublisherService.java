@@ -1,9 +1,9 @@
 package cm.g2s.loan.service.broker.publisher;
 
-import cm.g2s.loan.service.broker.payload.DebitAccount;
-import cm.g2s.loan.shared.dto.LoanDto;
+import cm.g2s.loan.service.broker.payload.CreateTransactionRequest;
+import cm.g2s.loan.service.broker.payload.DebitAccountRequest;
 
 public interface LoanEventPublisherService {
-    void onSendMoneyEvent(LoanDto loanDto);
-    void onDebitAccountEvent(DebitAccount debitAccount);
+    void onTransactionCreatedEvent(CreateTransactionRequest transactionRequest);
+    void onDebitAccountEvent(DebitAccountRequest debitAccountRequest);
 }

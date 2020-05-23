@@ -19,7 +19,8 @@ public class CustomTokenEnhancer extends JwtAccessTokenConverter {
         CustomPrincipal principal = (CustomPrincipal) authentication.getPrincipal();
 
         Map<String, Object> info = new LinkedHashMap<>(accessToken.getAdditionalInformation());
-        info.put(UaaConstantType.FULL_NAME, principal.getFullName());
+        info.put(UaaConstantType.FIRST_NAME, principal.getFirstName());
+        info.put(UaaConstantType.LAST_NAME, principal.getLastName());
         info.put(UaaConstantType.USERNAME, principal.getUsername());
         info.put(UaaConstantType.EMAIL, principal.getEmail());
         info.put(UaaConstantType.MOBILE, principal.getMobile());

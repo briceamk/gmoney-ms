@@ -1,14 +1,18 @@
 package cm.g2s.rule.web;
 
 import cm.g2s.rule.constant.RuleConstantType;
+import cm.g2s.rule.domain.model.Rule;
 import cm.g2s.rule.security.CurrentPrincipal;
 import cm.g2s.rule.security.CustomPrincipal;
 import cm.g2s.rule.service.RuleService;
 import cm.g2s.rule.service.ValidationErrorService;
-import cm.g2s.rule.shared.dto.RuleDto;
-import cm.g2s.rule.shared.payload.ResponseApi;
+import cm.g2s.rule.web.dto.RuleDto;
+import cm.g2s.rule.web.dto.RuleDtoPage;
+import cm.g2s.rule.web.mapper.RuleMapper;
+import cm.g2s.rule.web.payload.ResponseApi;
 import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +26,7 @@ import javax.script.ScriptException;
 import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.net.URI;
+import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -30,6 +35,7 @@ import java.net.URI;
 public class RuleController {
 
     private final RuleService ruleService;
+    private final RuleMapper ruleMapper;
     private final ValidationErrorService validationErrorService;
 
     @PostMapping
@@ -39,7 +45,7 @@ public class RuleController {
         ResponseEntity<?> errors = validationErrorService.process(result);
         if(errors != null)
             return errors;
-        ruleDto = ruleService.create(principal, ruleDto);
+        ruleDto = ruleMapper.map(ruleService.create(principal, ruleMapper.map(ruleDto)));
         URI uri = ServletUriComponentsBuilder
                 .fromCurrentContextPath().path("/api/v1/rules/{id}")
                 .buildAndExpand(ruleDto.getId()).toUri();
@@ -53,7 +59,7 @@ public class RuleController {
         ResponseEntity<?> errors = validationErrorService.process(result);
         if(errors != null)
             return errors;
-        ruleService.update(principal, ruleDto);
+        ruleService.update(principal, ruleMapper.map(ruleDto));
         return new ResponseEntity<>(new ResponseApi(true, "Rule updated successfully!"), HttpStatus.OK);
     }
 
@@ -61,7 +67,7 @@ public class RuleController {
     @PreAuthorize("(hasAnyRole('ROLE_ADMIN','ROLE,MANAGER','ROLE_USER') and hasAuthority('READ_RULE'))")
     public ResponseEntity<?> findById(@CurrentPrincipal CustomPrincipal principal,
                                       @PathVariable String id) {
-        return new ResponseEntity<>(ruleService.findById(principal, id), HttpStatus.OK);
+        return new ResponseEntity<>(ruleMapper.map(ruleService.findById(principal, id)), HttpStatus.OK);
     }
 
     @GetMapping("/interest/amount/{amount}/numberOfDays/{numberOfDays}/id/{id}")
@@ -85,8 +91,14 @@ public class RuleController {
         if (pageSize == null || pageSize < 1) {
             pageSize = RuleConstantType.DEFAULT_PAGE_SIZE;
         }
-
-        return new ResponseEntity<>(ruleService.findAll(principal, code, name, PageRequest.of(pageNumber, pageSize)), HttpStatus.OK);
+        Page<Rule> rulePage = ruleService.findAll(principal, code, name, PageRequest.of(pageNumber, pageSize));
+        RuleDtoPage ruleDtoPage = new RuleDtoPage(
+                rulePage.getContent().stream().map(ruleMapper::map).collect(Collectors.toList()),
+                PageRequest.of(rulePage.getPageable().getPageNumber(),
+                        rulePage.getPageable().getPageSize()),
+                rulePage.getTotalElements()
+        );
+        return new ResponseEntity<>(ruleDtoPage, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")

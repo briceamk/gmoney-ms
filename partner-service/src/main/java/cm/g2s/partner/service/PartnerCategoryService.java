@@ -1,21 +1,23 @@
 package cm.g2s.partner.service;
 
 
-import cm.g2s.partner.shared.dto.PartnerCategoryDto;
-import cm.g2s.partner.shared.dto.PartnerCategoryDtoPage;
+
+import cm.g2s.partner.domain.model.PartnerCategory;
+import cm.g2s.partner.security.CustomPrincipal;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
 
 public interface PartnerCategoryService {
-    PartnerCategoryDto create(PartnerCategoryDto categoryDto);
+    PartnerCategory create(CustomPrincipal principal, PartnerCategory category);
 
-    void update(PartnerCategoryDto categoryDto);
+    void update(CustomPrincipal principal, PartnerCategory category);
 
-    PartnerCategoryDto findById(String id);
+    PartnerCategory findById(CustomPrincipal principal, String id);
 
-    PartnerCategoryDto findByDefaultCategory(Boolean defaultCategory);
+    PartnerCategory findByDefaultCategory(CustomPrincipal principal, Boolean defaultCategory);
 
-    void deleteById(String id);
+    void deleteById(CustomPrincipal principal, String id);
 
-    PartnerCategoryDtoPage findAll(String name, PageRequest of);
+    Page<PartnerCategory> findAll(CustomPrincipal principal, String name, PageRequest pageRequest);
 }

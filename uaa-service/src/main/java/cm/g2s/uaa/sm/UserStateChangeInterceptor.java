@@ -2,10 +2,9 @@ package cm.g2s.uaa.sm;
 
 import cm.g2s.uaa.constant.UaaConstantType;
 import cm.g2s.uaa.domain.event.UserEvent;
+import cm.g2s.uaa.domain.model.User;
 import cm.g2s.uaa.domain.model.UserState;
 import cm.g2s.uaa.service.UserService;
-import cm.g2s.uaa.service.partner.dto.PartnerDto;
-import cm.g2s.uaa.shared.dto.UserDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.Message;
@@ -31,14 +30,14 @@ public class UserStateChangeInterceptor extends StateMachineInterceptorAdapter<U
         String partnerId = (String) message.getHeaders().getOrDefault(UaaConstantType.PARTNER_ID_HEADER, "");
         if(!userId.isEmpty()) {
             log.info("Saving state for userId: {} Status: {}", userId, state.getId());
-            UserDto userDto = userService.findById(userId);
-            userDto.setState(state.getId().name());
+            User user = userService.findById(userId);
+            user.setState(state.getId());
             if(!partnerId.isEmpty()) {
                 log.info("We set partnerId with id: {}", partnerId);
-                userDto.setPartnerDto(PartnerDto.builder().id(partnerId).build());
+                user.setPartnerId(partnerId);
             }
 
-            userService.update( userDto);
+            userService.update(user);
         }
 
     }

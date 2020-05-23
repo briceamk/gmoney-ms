@@ -11,6 +11,7 @@
       <module fileurl="file://$PROJECT_DIR$/partner-service/partner-service.iml" filepath="$PROJECT_DIR$/partner-service/partner-service.iml" />
       <module fileurl="file://$PROJECT_DIR$/proxy-service/proxy-service.iml" filepath="$PROJECT_DIR$/proxy-service/proxy-service.iml" />
       <module fileurl="file://$PROJECT_DIR$/rule-service/rule-service.iml" filepath="$PROJECT_DIR$/rule-service/rule-service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/transaction-service/transaction-service.iml" filepath="$PROJECT_DIR$/transaction-service/transaction-service.iml" />
       <module fileurl="file://$PROJECT_DIR$/uaa-service/uaa-service.iml" filepath="$PROJECT_DIR$/uaa-service/uaa-service.iml" />
     </modules>
   </component>

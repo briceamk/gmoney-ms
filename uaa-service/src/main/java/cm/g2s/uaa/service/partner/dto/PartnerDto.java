@@ -2,7 +2,7 @@ package cm.g2s.uaa.service.partner.dto;
 
 
 import cm.g2s.uaa.service.company.model.CompanyDto;
-import cm.g2s.uaa.shared.dto.UserDto;
+import cm.g2s.uaa.web.dto.UserDto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

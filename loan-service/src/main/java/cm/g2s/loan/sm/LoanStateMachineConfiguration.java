@@ -3,7 +3,7 @@ package cm.g2s.loan.sm;
 import cm.g2s.loan.domain.event.LoanEvent;
 import cm.g2s.loan.domain.model.LoanState;
 import cm.g2s.loan.sm.action.DebitAccountAction;
-import cm.g2s.loan.sm.action.SendMoneyAction;
+import cm.g2s.loan.sm.action.CreateTransactionAction;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.statemachine.config.EnableStateMachineFactory;
@@ -18,7 +18,7 @@ import java.util.EnumSet;
 @EnableStateMachineFactory
 public class LoanStateMachineConfiguration extends StateMachineConfigurerAdapter<LoanState, LoanEvent> {
 
-    private final SendMoneyAction sendMoneyAction;
+    private final CreateTransactionAction createTransactionAction;
     private final DebitAccountAction debitAccountAction;
 
     @Override
@@ -29,7 +29,8 @@ public class LoanStateMachineConfiguration extends StateMachineConfigurerAdapter
                 .end(LoanState.DONE)
                 .end(LoanState.VALID_EXCEPTION)
                 .end(LoanState.ACCOUNT_DEBIT_EXCEPTION)
-                .end(LoanState.MONEY_SEND_EXCEPTION)
+                .end(LoanState.TRANSACTION_CREATED_EXCEPTION)
+                .end(LoanState.TRANSACTION_SEND_EXCEPTION)
                 .end(LoanState.CONFIRM_DEBIT_EXCEPTION)
                 .end(LoanState.NOTIFICATION_EXCEPTION);
     }
@@ -51,35 +52,43 @@ public class LoanStateMachineConfiguration extends StateMachineConfigurerAdapter
             .and().withExternal()
                 .source(LoanState.VALID)
                 .target(LoanState.ACCOUNT_DEBIT_PENDING)
-                .event(LoanEvent.ACCOUNT_DEBIT)
+                .event(LoanEvent.DEBIT_ACCOUNT)
                 .action(debitAccountAction)
             .and().withExternal()
                 .source(LoanState.ACCOUNT_DEBIT_PENDING)
                 .target(LoanState.ACCOUNT_DEBIT)
-                .event(LoanEvent.ACCOUNT_DEBIT_PASSED)
+                .event(LoanEvent.DEBIT_ACCOUNT_PASSED)
             .and().withExternal()
                 .source(LoanState.ACCOUNT_DEBIT_PENDING)
                 .target(LoanState.ACCOUNT_DEBIT_EXCEPTION)
-                .event(LoanEvent.ACCOUNT_DEBIT_FAILED)
+                .event(LoanEvent.DEBIT_ACCOUNT_FAILED)
             .and().withExternal()
                 .source(LoanState.ACCOUNT_DEBIT)
-                .target(LoanState.MONEY_SEND_PENDING)
-                .event(LoanEvent.MONEY_SEND)
-                .action(sendMoneyAction)
+                .target(LoanState.TRANSACTION_CREATED_PENDING)
+                .event(LoanEvent.CREATE_TRANSACTION)
+                .action(createTransactionAction)
             .and().withExternal()
-                .source(LoanState.MONEY_SEND_PENDING)
-                .target(LoanState.MONEY_SEND)
-                .event(LoanEvent.MONEY_SEND_PASSED)
+                .source(LoanState.TRANSACTION_CREATED_PENDING)
+                .target(LoanState.TRANSACTION_CREATED)
+                .event(LoanEvent.CREATE_TRANSACTION_PASSED)
             .and().withExternal()
-                .source(LoanState.MONEY_SEND_PENDING)
-                .target(LoanState.MONEY_SEND_EXCEPTION)
-                .event(LoanEvent.MONEY_SEND_FAILED)
+                .source(LoanState.TRANSACTION_CREATED_PENDING)
+                .target(LoanState.TRANSACTION_CREATED_EXCEPTION)
+                .event(LoanEvent.CREATE_TRANSACTION_FAILED)
             .and().withExternal()
-                .source(LoanState.MONEY_SEND)
-                .target(LoanState.CONFIRM_DEBIT_PENDING)
-                .event(LoanEvent.CONFIRM_DEBIT)
+                .source(LoanState.TRANSACTION_CREATED)
+                .target(LoanState.TRANSACTION_SEND_PENDING)
+                .event(LoanEvent.SEND_TRANSACTION)
             .and().withExternal()
-                .source(LoanState.CONFIRM_DEBIT_PENDING)
+                .source(LoanState.TRANSACTION_SEND_PENDING)
+                .target(LoanState.TRANSACTION_SEND)
+                .event(LoanEvent.SEND_TRANSACTION_PASSED)
+            .and().withExternal()
+                .source(LoanState.TRANSACTION_SEND_PENDING)
+                .target(LoanState.TRANSACTION_SEND_EXCEPTION)
+                .event(LoanEvent.SEND_TRANSACTION_FAILED)
+            .and().withExternal()
+                .source(LoanState.TRANSACTION_SEND)
                 .target(LoanState.CONFIRM_DEBIT)
                 .event(LoanEvent.CONFIRM_DEBIT_PASSED)
             .and().withExternal()

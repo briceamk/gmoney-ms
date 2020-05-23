@@ -10,8 +10,8 @@ public interface PartnerEventSource {
     @Input(value = "partnerCreatedChannel")
     SubscribableChannel partnerCreated();
 
-    @Input(value = "accountCreatedFailedChannel")
-    SubscribableChannel accountCreatedFailed();
+    @Input(value = "partnerRemoveChannel")
+    SubscribableChannel partnerRemoved();
 
     @Output(value = "partnerCreatedResponseChannel")
     MessageChannel partnerCreatedResponse();

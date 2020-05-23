@@ -1,6 +1,5 @@
 package cm.g2s.rule.security;
 
-
 import cm.g2s.rule.constant.RuleConstantType;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -42,8 +41,10 @@ public class CustomUserAuthenticationConverter implements UserAuthenticationConv
             principal.setUsername(map.get(USERNAME).toString());
             if(map.containsKey(RuleConstantType.JTI) && map.get(RuleConstantType.JTI) != null)
                 principal.setId(map.get(RuleConstantType.JTI).toString());
-            if(map.containsKey(RuleConstantType.FULL_NAME) && map.get(RuleConstantType.FULL_NAME) != null)
-                principal.setFullName(map.get(RuleConstantType.FULL_NAME).toString());
+            if(map.containsKey(RuleConstantType.FIRST_NAME) && map.get(RuleConstantType.FIRST_NAME) != null)
+                principal.setFirstName(map.get(RuleConstantType.FIRST_NAME).toString());
+            if(map.containsKey(RuleConstantType.LAST_NAME) && map.get(RuleConstantType.LAST_NAME) != null)
+                principal.setLastName(map.get(RuleConstantType.LAST_NAME).toString());
             if(map.containsKey(RuleConstantType.MOBILE) && map.get(RuleConstantType.MOBILE) != null)
                 principal.setMobile(map.get(RuleConstantType.MOBILE).toString());
             if(map.containsKey(RuleConstantType.EMAIL) && map.get(RuleConstantType.EMAIL) != null)

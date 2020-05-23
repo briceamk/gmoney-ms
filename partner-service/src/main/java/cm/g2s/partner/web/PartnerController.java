@@ -1,13 +1,18 @@
 package cm.g2s.partner.web;
 
 import cm.g2s.partner.constant.PartnerConstantType;
+import cm.g2s.partner.domain.model.Partner;
+import cm.g2s.partner.security.CurrentPrincipal;
+import cm.g2s.partner.security.CustomPrincipal;
 import cm.g2s.partner.service.PartnerService;
 import cm.g2s.partner.service.ValidationErrorService;
-import cm.g2s.partner.shared.dto.PartnerDto;
-import cm.g2s.partner.shared.dto.PartnerDtoPage;
-import cm.g2s.partner.shared.payload.ResponseApi;
+import cm.g2s.partner.web.dto.PartnerDto;
+import cm.g2s.partner.web.dto.PartnerDtoPage;
+import cm.g2s.partner.web.mapper.PartnerMapper;
+import cm.g2s.partner.web.payload.ResponseApi;
 import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +24,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1/partners")
@@ -28,41 +34,46 @@ public class PartnerController {
 
     private final PartnerService partnerService;
     private final ValidationErrorService validationErrorService;
+    private final PartnerMapper partnerMapper;
 
     @PostMapping
     @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER') and hasAuthority('CREATE_PARTNER')")
-    public ResponseEntity<?> create(@Valid @RequestBody PartnerDto partnerDto, BindingResult result) {
+    public ResponseEntity<?> create(@CurrentPrincipal CustomPrincipal principal,
+                                    @Valid @RequestBody PartnerDto partnerDto, BindingResult result) {
 
         ResponseEntity<?> errors = validationErrorService.process(result);
         if(errors != null)
             return errors;
 
-        partnerDto = partnerService.create(partnerDto);
+        Partner partner = partnerService.create(principal, partnerMapper.map(partnerDto));
         URI uri = ServletUriComponentsBuilder
                 .fromCurrentContextPath().path("/api/v1/partners/{id}")
-                .buildAndExpand(partnerDto.getId()).toUri();
+                .buildAndExpand(partner.getId()).toUri();
         return ResponseEntity.created(uri).body(new ResponseApi(true, "Partner saved successfully!"));
     }
 
     @PutMapping
     @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER','ROLE_USER') and hasAuthority('UPDATE_PARTNER')")
-    public ResponseEntity<?> update(@Validated @RequestBody PartnerDto partnerDto, BindingResult result) {
+    public ResponseEntity<?> update(@CurrentPrincipal CustomPrincipal principal,
+                                    @Validated @RequestBody PartnerDto partnerDto, BindingResult result) {
         ResponseEntity<?> errors = validationErrorService.process(result);
         if(errors != null)
             return errors;
-        partnerService.update(partnerDto);
+        partnerService.update(principal, partnerMapper.map(partnerDto));
         return new ResponseEntity<>(new ResponseApi(true, "Partner updated successfully!"), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER','ROLE_USER') and hasAuthority('READ_PARTNER')")
-    public ResponseEntity<?> findById(@PathVariable String id) {
-        return new ResponseEntity<>(partnerService.findById(id), HttpStatus.OK);
+    public ResponseEntity<?> findById(@CurrentPrincipal CustomPrincipal principal,
+                                      @PathVariable String id) {
+        return new ResponseEntity<>(partnerMapper.map(partnerService.findById(principal, id)), HttpStatus.OK);
     }
 
     @GetMapping
     @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER','ROLE_USER') and hasAuthority('READ_PARTNER')")
-    public ResponseEntity<PartnerDtoPage> findAll(@RequestParam(value = "pageNumber", required = false) Integer pageNumber,
+    public ResponseEntity<?> findAll(@CurrentPrincipal CustomPrincipal principal,
+                                     @RequestParam(value = "pageNumber", required = false) Integer pageNumber,
                                                   @RequestParam(value = "pageSize", required = false) Integer pageSize,
                                                   @RequestParam(value = "firstName", required = false) String firstName,
                                                   @RequestParam(value = "lastName", required = false) String lastName,
@@ -81,14 +92,23 @@ public class PartnerController {
             pageSize = PartnerConstantType.DEFAULT_PAGE_SIZE;
         }
 
-        return new ResponseEntity<>(partnerService.findAll(firstName, lastName, email, nicId, nicIssuePlace,
-                city, type, state, PageRequest.of(pageNumber, pageSize)), HttpStatus.OK);
+        Page<Partner> partnerPage = partnerService.findAll(principal, firstName, lastName, email, nicId, nicIssuePlace,
+                city, type, state, PageRequest.of(pageNumber, pageSize));
+
+        PartnerDtoPage partnerDtoPage = new PartnerDtoPage(
+                partnerPage.getContent().stream().map(partnerMapper::map).collect(Collectors.toList()),
+                PageRequest.of(partnerPage.getPageable().getPageNumber(),
+                        partnerPage.getPageable().getPageSize()),
+                partnerPage.getTotalElements()
+        );
+        return new ResponseEntity<>(partnerDtoPage, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN') and hasAuthority('DELETE_PARTNER')")
-    public ResponseEntity<?> deleteById(@PathVariable String id) {
-        partnerService.deleteById(id);
+    public ResponseEntity<?> deleteById(@CurrentPrincipal CustomPrincipal principal,
+                                        @PathVariable String id) {
+        partnerService.deleteById(principal, id);
         return new ResponseEntity<>(new ResponseApi(true, "Partner deleted successfully!"), HttpStatus.OK);
     }
 }

@@ -1,27 +1,28 @@
 package cm.g2s.account.service;
 
+import cm.g2s.account.domain.model.Account;
 import cm.g2s.account.security.CustomPrincipal;
-import cm.g2s.account.shared.dto.AccountDto;
-import cm.g2s.account.shared.dto.AccountDtoPage;
+import cm.g2s.account.service.partner.model.PartnerDto;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
 import java.math.BigDecimal;
 
 public interface AccountService {
-    AccountDto create(CustomPrincipal principal, AccountDto accountDto);
+    Account create(CustomPrincipal principal, Account account, PartnerDto partnerDto);
 
-    void update(CustomPrincipal principal, AccountDto accountDto);
+    void update(CustomPrincipal principal, Account account);
 
-    AccountDto findById(CustomPrincipal principal, String id);
+    Account findById(CustomPrincipal principal, String id);
 
-    AccountDto findByNumber(CustomPrincipal principal, String number);
+    Account findByNumber(CustomPrincipal principal, String number);
 
-    AccountDto findByPartnerId(CustomPrincipal principal, String partnerId);
+    Account findByPartnerId(CustomPrincipal principal, String partnerId);
 
-    AccountDtoPage findAll(CustomPrincipal principal, String number, String partnerId, PageRequest of);
+    Page<Account> findAll(CustomPrincipal principal, String number, String key, String partnerId, PageRequest pageRequest);
 
     void deleteById(CustomPrincipal principal, String id);
 
-    void debitAccount(String accountId, BigDecimal debitAmount);
+    void debitAccount(CustomPrincipal principal, String accountId, BigDecimal debitAmount);
 
 }
