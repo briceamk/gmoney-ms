@@ -1,8 +1,8 @@
 package cm.g2s.partner.web.dto;
 
 import cm.g2s.partner.service.company.model.CompanyDto;
-import cm.g2s.partner.service.rule.RuleDto;
-import cm.g2s.partner.service.uaa.UserDto;
+import cm.g2s.partner.service.rule.model.RuleDto;
+import cm.g2s.partner.service.uaa.model.UserDto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

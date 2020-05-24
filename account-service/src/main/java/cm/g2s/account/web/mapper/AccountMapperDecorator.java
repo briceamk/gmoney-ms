@@ -52,9 +52,16 @@ public abstract  class AccountMapperDecorator implements AccountMapper{
                 accountDto.setPartnerDto(partnerDto);
         }
         if(account.getUserId() != null) {
-            UserDto userDto = userClientService.findById(account.getUserId());
-            if (userDto != null)
-                accountDto.setUserDto(userDto);
+            // if we have user dto from partner dto, we are not calling anymore uaa service
+            if(accountDto.getPartnerDto() != null && accountDto.getPartnerDto().getUserDto() != null) {
+                accountDto.setUserDto(accountDto.getPartnerDto().getUserDto());
+            }  else {
+                UserDto userDto = userClientService.findById(account.getUserId());
+                if (userDto != null)
+                    accountDto.setUserDto(userDto);
+            }
+
+
         }
         return accountDto;
     }

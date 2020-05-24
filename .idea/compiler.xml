@@ -9,6 +9,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="documentation-service" />
         <module name="proxy-service" />
+        <module name="cron-service" />
         <module name="configuration-service" />
         <module name="discovery-service" />
       </profile>
@@ -45,6 +46,7 @@
       <module name="account-service" target="1.8" />
       <module name="company-service" target="1.8" />
       <module name="configuration-service" target="11" />
+      <module name="cron-service" target="11" />
       <module name="discovery-service" target="11" />
       <module name="documentation-service" target="11" />
       <module name="loan-service" target="1.8" />
@@ -60,6 +62,7 @@
       <module name="account-service" options="-parameters -Amapstruct.defaultComponentModel=spring" />
       <module name="company-service" options="-parameters -Amapstruct.defaultComponentModel=spring" />
       <module name="configuration-service" options="-parameters" />
+      <module name="cron-service" options="-parameters" />
       <module name="discovery-service" options="-parameters" />
       <module name="documentation-service" options="-parameters" />
       <module name="loan-service" options="-parameters -Amapstruct.defaultComponentModel=spring" />

@@ -1,7 +1,7 @@
 package cm.g2s.partner.service.uaa.service;
 
 
-import cm.g2s.partner.service.uaa.UserDto;
+import cm.g2s.partner.service.uaa.model.UserDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

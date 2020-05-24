@@ -1,6 +1,6 @@
 package cm.g2s.partner.web.dto;
 
-import cm.g2s.partner.service.rule.RuleDto;
+import cm.g2s.partner.service.rule.model.RuleDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

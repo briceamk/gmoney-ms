@@ -48,6 +48,12 @@ public abstract class LoanMapperDecorator implements LoanMapper{
     @Override
     public LoanDto map(Loan loan) {
         LoanDto loanDto = loanMapper.map(loan);
+        if(loan.getAccountId() != null) {
+            AccountDto accountDto = accountClientService.findById(loan.getAccountId());
+            if(accountDto != null) {
+                loanDto.setAccountDto(accountDto);
+            }
+        }
         if(loan.getPartnerId() != null) {
             PartnerDto partnerDto = partnerClientService.findById(loan.getPartnerId());
             if(partnerDto != null) {
@@ -65,12 +71,7 @@ public abstract class LoanMapperDecorator implements LoanMapper{
                 }
             }
         }
-        if(loan.getAccountId() != null) {
-            AccountDto accountDto = accountClientService.findById(loan.getAccountId());
-            if(accountDto != null) {
-                loanDto.setAccountDto(accountDto);
-            }
-        }
+
         return loanDto;
     }
 }

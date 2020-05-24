@@ -1,5 +1,6 @@
 package cm.g2s.account.service.partner.model;
 
+import cm.g2s.account.service.user.model.UserDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,4 +17,5 @@ public class PartnerDto {
     private String firstName;
     @NotEmpty(message = "Last name is required")
     private String lastName;
+    private UserDto userDto;
 }

@@ -1,4 +1,4 @@
-package cm.g2s.partner.service.rule;
+package cm.g2s.partner.service.rule.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

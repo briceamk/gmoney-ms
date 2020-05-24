@@ -10,9 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 @FeignClient(value = "company", fallback = CompanyClientServiceFallBack.class)
 public interface CompanyClientService {
-    @GetMapping("/api/v1/companies/code/{code}")
-    CompanyDto findByCode(@PathVariable String code);
 
-    @GetMapping("/api/v1/companies/{id}")
-    CompanyDto findById(@PathVariable String id);
+    @GetMapping("/company/api/v1/companies/code/{code}")
+    CompanyDto findByCode(@PathVariable String code);
 }

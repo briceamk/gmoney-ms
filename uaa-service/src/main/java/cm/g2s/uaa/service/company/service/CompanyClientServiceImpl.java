@@ -1,6 +1,5 @@
 package cm.g2s.uaa.service.company.service;
 
-
 import cm.g2s.uaa.service.company.model.CompanyDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,14 +14,8 @@ public class CompanyClientServiceImpl implements CompanyClientService {
 
     @Override
     public CompanyDto findByCode(String code) {
-        log.info("Calling company-service api from uaa-service.....");
+        log.info("Calling company-service api from partner-service.....");
         return companyClientService.findByCode(code);
-    }
-
-    @Override
-    public CompanyDto findById(String id) {
-        log.info("Calling company-service api from uaa-service.....");
-        return companyClientService.findById(id);
     }
 
 }

@@ -7,6 +7,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 @FeignClient(value = "uaa", fallback = UserClientServiceFallBack.class)
 public interface UserClientService {
-    @GetMapping("/api/v1/users")
+    @GetMapping("/uaa/api/v1/users/{id}")
     UserDto findById(@PathVariable String id);
 }

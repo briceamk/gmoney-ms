@@ -6,7 +6,6 @@ import cm.g2s.uaa.domain.model.User;
 import cm.g2s.uaa.domain.model.UserState;
 import cm.g2s.uaa.service.UserManagerService;
 import cm.g2s.uaa.service.UserService;
-import cm.g2s.uaa.service.partner.dto.PartnerDto;
 import cm.g2s.uaa.service.broker.payload.CreatePartnerResponse;
 import cm.g2s.uaa.web.payload.SignUp;
 import cm.g2s.uaa.sm.UserStateChangeInterceptor;
@@ -55,21 +54,20 @@ public class UserManagerServiceImpl implements UserManagerService {
     public void processPartnerCreationResponse(String userId, Boolean creationPartnerError, CreatePartnerResponse response) {
         log.info("Process partner creation action result");
         User user = userService.findById(userId);
-        PartnerDto partnerDto = PartnerDto.builder().id(response.getPartnerId()).build();
 
         if(user != null) {
             if(!creationPartnerError) {
                 // Change state and update partnerId in User Object
-                sendUserEvent(user, UserEvent.CREATE_PARTNER_PASSED, partnerDto);
+                sendUserEvent(user, UserEvent.CREATE_PARTNER_PASSED, response);
                 // Wait for status change
                 awaitForStatus(userId, UserState.PARTNER_CREATED);
 
                 User savedUser = userService.findById(userId);
 
-                sendUserEvent(savedUser, UserEvent.CREATE_ACCOUNT, partnerDto);
+                sendUserEvent(savedUser, UserEvent.CREATE_ACCOUNT, response);
 
             } else {
-                sendUserEvent(user, UserEvent.CREATE_PARTNER_FAILED, partnerDto);
+                sendUserEvent(user, UserEvent.CREATE_PARTNER_FAILED, response);
 
                 // Wait for status change
                 awaitForStatus(userId, UserState.PARTNER_CREATED_EXCEPTION);
@@ -150,16 +148,16 @@ public class UserManagerServiceImpl implements UserManagerService {
 
     private void sendUserEvent(User user, UserEvent userEvent, Object payload) {
         StateMachine<UserState, UserEvent> machine = build(user);
-        PartnerDto partnerDto = null;
+        CreatePartnerResponse partnerResponse = null;
 
-        if(payload instanceof PartnerDto)
-            partnerDto = (PartnerDto) payload;
+        if(payload instanceof CreatePartnerResponse)
+            partnerResponse = (CreatePartnerResponse) payload;
 
         MessageBuilder messageBuilder = MessageBuilder.withPayload(userEvent)
                 .setHeader(UaaConstantType.USER_ID_HEADER, user.getId());
 
-        if(partnerDto != null) {
-            messageBuilder.setHeader(UaaConstantType.PARTNER_ID_HEADER, partnerDto.getId());
+        if(partnerResponse != null) {
+            messageBuilder.setHeader(UaaConstantType.PARTNER_ID_HEADER, partnerResponse.getPartnerId());
         }
 
 

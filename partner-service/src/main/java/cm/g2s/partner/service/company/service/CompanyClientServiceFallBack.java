@@ -11,6 +11,6 @@ public class CompanyClientServiceFallBack implements CompanyClientService{
     @Override
     public CompanyDto findById(String id) {
         log.error("Error when calling company-service api from partner-service");
-        return new CompanyDto();
+        return null;
     }
 }

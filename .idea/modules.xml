@@ -5,6 +5,7 @@
       <module fileurl="file://$PROJECT_DIR$/account-service/account-service.iml" filepath="$PROJECT_DIR$/account-service/account-service.iml" />
       <module fileurl="file://$PROJECT_DIR$/company-service/company-service.iml" filepath="$PROJECT_DIR$/company-service/company-service.iml" />
       <module fileurl="file://$PROJECT_DIR$/configuration-service/configuration-service.iml" filepath="$PROJECT_DIR$/configuration-service/configuration-service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/cron-service/cron-service.iml" filepath="$PROJECT_DIR$/cron-service/cron-service.iml" />
       <module fileurl="file://$PROJECT_DIR$/discovery-service/discovery-service.iml" filepath="$PROJECT_DIR$/discovery-service/discovery-service.iml" />
       <module fileurl="file://$PROJECT_DIR$/documentation-service/documentation-service.iml" filepath="$PROJECT_DIR$/documentation-service/documentation-service.iml" />
       <module fileurl="file://$PROJECT_DIR$/loan-service/loan-service.iml" filepath="$PROJECT_DIR$/loan-service/loan-service.iml" />

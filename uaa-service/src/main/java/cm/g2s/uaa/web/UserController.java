@@ -50,7 +50,7 @@ public class UserController {
     }
 
     @PutMapping
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANGER', 'ROLE_USER') and hasAuthority('UPDATE_USER')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER', 'ROLE_USER') and hasAuthority('UPDATE_USER')")
     public ResponseEntity<?> updateUser(@Valid @RequestBody UserDto userDto, BindingResult result) {
         ResponseEntity<?> errors = validationErrorService.process(result);
         if(errors != null)
@@ -60,7 +60,7 @@ public class UserController {
     }
 
     @PutMapping("/reset-password/{userId}")
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANGER', 'ROLE_USER') and hasAuthority('UPDATE_USER')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER', 'ROLE_USER') and hasAuthority('UPDATE_USER')")
     public ResponseEntity<?> resetPasswordUser(@PathVariable String userId, @Valid @RequestBody ResetPassword resetPassword,
                                         BindingResult result) {
         ResponseEntity<?> errors = validationErrorService.process(result);
@@ -71,7 +71,7 @@ public class UserController {
     }
 
     @GetMapping
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANGER', 'ROLE_USER') and hasAuthority('READ_USER')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER', 'ROLE_USER') and hasAuthority('READ_USER')")
     public @ResponseBody ResponseEntity<?> findAll(
             @RequestParam(value = "pageNumber", required = false) Integer pageNumber,
             @RequestParam(value = "pageSize", required = false) Integer pageSize,
@@ -100,7 +100,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANGER', 'ROLE_USER') and hasAuthority('READ_USER')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER', 'ROLE_USER') and hasAuthority('READ_USER')")
     public ResponseEntity<?> getUserById(
                                          @PathVariable String id) {
         return ResponseEntity.ok(userMapper.map(userService.findById( id)));

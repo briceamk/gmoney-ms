@@ -1,6 +1,6 @@
 package cm.g2s.partner.service.rule.service;
 
-import cm.g2s.partner.service.rule.RuleDto;
+import cm.g2s.partner.service.rule.model.RuleDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

@@ -2,7 +2,7 @@ package cm.g2s.partner.web.mapper;
 
 
 import cm.g2s.partner.domain.model.PartnerCategory;
-import cm.g2s.partner.service.rule.RuleDto;
+import cm.g2s.partner.service.rule.model.RuleDto;
 import cm.g2s.partner.service.rule.service.RuleClientService;
 import cm.g2s.partner.web.dto.PartnerCategoryDto;
 import org.springframework.beans.factory.annotation.Autowired;

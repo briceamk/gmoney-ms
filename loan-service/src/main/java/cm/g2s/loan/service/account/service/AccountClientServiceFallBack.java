@@ -10,6 +10,6 @@ public class AccountClientServiceFallBack implements AccountClientService {
     @Override
     public AccountDto findById(String id) {
         log.error("Error when call account-service api from loan service...");
-        return new AccountDto();
+        return null;
     }
 }

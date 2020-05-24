@@ -7,6 +7,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 @FeignClient(value = "loan", fallback = LoanClientServiceFallBack.class)
 public interface LoanClientService {
-    @GetMapping("/api/v1/loans/{id}")
+    @GetMapping("/loan/api/v1/loans/{id}")
     LoanDto findById(@PathVariable String id);
 }

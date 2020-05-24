@@ -10,7 +10,7 @@ import java.util.Map;
 
 @FeignClient(value = "rule", fallback = RuleClientServiceFallBack.class)
 public interface RuleClientService {
-    @GetMapping("/api/v1/rules/interest/amount/{amount}/numberOfDays/{numberOfDays}/id/{id}")
+    @GetMapping("/rule/api/v1/rules/interest/amount/{amount}/numberOfDays/{numberOfDays}/id/{id}")
     Map<String, BigDecimal>  processInterest(@PathVariable String id, @PathVariable Long numberOfDays,
                                              @PathVariable BigDecimal amount) throws ScriptException;
 }

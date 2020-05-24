@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 public class UserClientServiceFallBack implements UserClientService{
     @Override
     public UserDto findById(String id) {
-        log.error("Error with uaa-service");
-        return new UserDto();
+        log.error("Error when calling uaa-service from account-service");
+        return null;
     }
 }

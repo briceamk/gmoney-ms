@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 public class PartnerClientServiceFallBack implements PartnerClientService{
     @Override
     public PartnerDto findById(String id) {
-        log.error("Problem with partner-service");
-        return new PartnerDto();
+        log.error("Error when calling partner-service from account-service");
+        return null;
     }
 }

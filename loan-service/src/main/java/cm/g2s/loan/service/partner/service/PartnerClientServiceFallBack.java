@@ -10,6 +10,6 @@ public class PartnerClientServiceFallBack implements PartnerClientService{
     @Override
     public PartnerDto findById(String id) {
         log.error("Error when call partner-service api from loan service...");
-        return new PartnerDto();
+        return null;
     }
 }
