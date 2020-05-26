@@ -2,6 +2,7 @@ package cm.g2s.loan.sm;
 
 import cm.g2s.loan.domain.event.LoanEvent;
 import cm.g2s.loan.domain.model.LoanState;
+import cm.g2s.loan.sm.action.ConfirmDebitAccountAction;
 import cm.g2s.loan.sm.action.DebitAccountAction;
 import cm.g2s.loan.sm.action.CreateTransactionAction;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,7 @@ public class LoanStateMachineConfiguration extends StateMachineConfigurerAdapter
 
     private final CreateTransactionAction createTransactionAction;
     private final DebitAccountAction debitAccountAction;
+    private final ConfirmDebitAccountAction confirmDebitAccountAction;
 
     @Override
     public void configure(StateMachineStateConfigurer<LoanState, LoanEvent> states) throws Exception {
@@ -89,6 +91,11 @@ public class LoanStateMachineConfiguration extends StateMachineConfigurerAdapter
                 .event(LoanEvent.SEND_TRANSACTION_FAILED)
             .and().withExternal()
                 .source(LoanState.TRANSACTION_SEND)
+                .target(LoanState.CONFIRM_DEBIT_PENDING)
+                .event(LoanEvent.CONFIRM_DEBIT)
+                .action(confirmDebitAccountAction)
+            .and().withExternal()
+                .source(LoanState.CONFIRM_DEBIT_PENDING)
                 .target(LoanState.CONFIRM_DEBIT)
                 .event(LoanEvent.CONFIRM_DEBIT_PASSED)
             .and().withExternal()
@@ -99,15 +106,15 @@ public class LoanStateMachineConfiguration extends StateMachineConfigurerAdapter
                 .source(LoanState.CONFIRM_DEBIT)
                 .target(LoanState.NOTIFICATION_SEND_PENDING)
                 .event(LoanEvent.SEND_NOTIFICATION)
-                .and().withExternal()
+            .and().withExternal()
                 .source(LoanState.NOTIFICATION_SEND_PENDING)
                 .target(LoanState.NOTIFICATION_SEND)
                 .event(LoanEvent.SEND_NOTIFICATION_PASSED)
-                .and().withExternal()
+            .and().withExternal()
                 .source(LoanState.NOTIFICATION_SEND_PENDING)
                 .target(LoanState.NOTIFICATION_EXCEPTION)
                 .event(LoanEvent.SEND_NOTIFICATION_FAILED)
-                .and().withExternal()
+            .and().withExternal()
                 .source(LoanState.NOTIFICATION_SEND)
                 .target(LoanState.DONE)
                 .event(LoanEvent.TERMINATE);

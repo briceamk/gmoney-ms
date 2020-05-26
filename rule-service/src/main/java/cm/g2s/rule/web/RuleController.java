@@ -45,10 +45,10 @@ public class RuleController {
         ResponseEntity<?> errors = validationErrorService.process(result);
         if(errors != null)
             return errors;
-        ruleDto = ruleMapper.map(ruleService.create(principal, ruleMapper.map(ruleDto)));
+        Rule rule = ruleService.create(principal, ruleMapper.map(ruleDto));
         URI uri = ServletUriComponentsBuilder
                 .fromCurrentContextPath().path("/api/v1/rules/{id}")
-                .buildAndExpand(ruleDto.getId()).toUri();
+                .buildAndExpand(rule.getId()).toUri();
         return ResponseEntity.created(uri).body(new ResponseApi(true, "Rule saved successfully!"));
     }
 

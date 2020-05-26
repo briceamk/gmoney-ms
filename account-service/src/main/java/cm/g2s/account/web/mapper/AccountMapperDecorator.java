@@ -52,7 +52,7 @@ public abstract  class AccountMapperDecorator implements AccountMapper{
                 accountDto.setPartnerDto(partnerDto);
         }
         if(account.getUserId() != null) {
-            // if we have user dto from partner dto, we are not calling anymore uaa service
+            // if we have user payload from partner payload, we are not calling anymore uaa service
             if(accountDto.getPartnerDto() != null && accountDto.getPartnerDto().getUserDto() != null) {
                 accountDto.setUserDto(accountDto.getPartnerDto().getUserDto());
             }  else {

@@ -10,6 +10,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface TransactionRepository extends JpaRepository<Transaction, String> {
     Page<Transaction> findByNumber(String number, Pageable pageable);
@@ -23,4 +25,6 @@ public interface TransactionRepository extends JpaRepository<Transaction, String
     Page<Transaction> findByPartnerId(String partnerId, Pageable pageable);
 
     Page<Transaction> findByAccountId(String accountId, Pageable pageable);
+
+    List<Transaction> findByState(TransactionState toSend);
 }

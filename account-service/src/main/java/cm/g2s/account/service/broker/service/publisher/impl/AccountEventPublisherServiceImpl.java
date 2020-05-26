@@ -1,6 +1,7 @@
 package cm.g2s.account.service.broker.service.publisher.impl;
 
 import cm.g2s.account.infrastructure.broker.AccountEventSource;
+import cm.g2s.account.service.broker.payload.ConfirmDebitAccountResponse;
 import cm.g2s.account.service.broker.payload.CreateAccountResponse;
 import cm.g2s.account.service.broker.payload.DebitAccountResponse;
 import cm.g2s.account.service.broker.service.publisher.AccountEventPublisherService;
@@ -30,5 +31,12 @@ public class AccountEventPublisherServiceImpl implements AccountEventPublisherSe
     public void onDebitAccountResponseEvent(DebitAccountResponse response) {
         log.info("Sending debit account response to loan-service");
         eventSource.accountDebitedResponse().send(MessageBuilder.withPayload(response).build());
+    }
+
+    @Override
+    @TransactionalEventListener
+    public void onConfirmDebitAccountResponseEvent(ConfirmDebitAccountResponse response) {
+        log.info("Sending confirm debit account response to loan-service");
+        eventSource.confirmAccountDebitResponse().send(MessageBuilder.withPayload(response).build());
     }
 }

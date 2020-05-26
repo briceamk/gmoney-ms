@@ -1,6 +1,7 @@
 package cm.g2s.loan.service.broker.publisher.impl;
 
 import cm.g2s.loan.infrastructure.broker.LoanEventSource;
+import cm.g2s.loan.service.broker.payload.ConfirmDebitAccountRequest;
 import cm.g2s.loan.service.broker.payload.CreateTransactionRequest;
 import cm.g2s.loan.service.broker.publisher.LoanEventPublisherService;
 import cm.g2s.loan.service.broker.payload.DebitAccountRequest;
@@ -31,5 +32,12 @@ public class LoanEventPublisherServiceImpl implements LoanEventPublisherService 
     public void onDebitAccountEvent(@Payload DebitAccountRequest debitAccountRequest) {
         log.info("Publishing Debit Account action to rabbitmq");
         eventSource.accountDebited().send(MessageBuilder.withPayload(debitAccountRequest).build());
+    }
+
+    @Override
+    @TransactionalEventListener
+    public void onConfirmDebitAccountEvent(ConfirmDebitAccountRequest confirmDebitAccountRequest) {
+        log.info("Publishing Confirm Debit Account action to rabbitmq");
+        eventSource.confirmAccountDebit().send(MessageBuilder.withPayload(confirmDebitAccountRequest).build());
     }
 }

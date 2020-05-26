@@ -13,9 +13,18 @@ public interface LoanEventSource {
     @Output(value = "accountDebitedChannel")
     MessageChannel accountDebited();
 
+    @Output(value = "confirmAccountDebitChannel")
+    MessageChannel confirmAccountDebit();
+
     @Input(value = "accountDebitedResponseChannel")
     SubscribableChannel accountDebitedResponse();
 
     @Input(value = "transactionCreatedResponseChannel")
     SubscribableChannel transactionCreatedResponse();
+
+    @Input(value = "sendMoneyResponseChannel")
+    SubscribableChannel sendMoneyResponse();
+
+    @Input(value = "confirmAccountDebitResponseChannel")
+    SubscribableChannel confirmAccountDebitResponse();
 }

@@ -3,6 +3,8 @@ package cm.g2s.loan.service;
 import cm.g2s.loan.domain.model.Loan;
 import cm.g2s.loan.security.CustomPrincipal;
 import cm.g2s.loan.service.account.model.AccountDto;
+import cm.g2s.loan.service.broker.payload.ConfirmDebitAccountResponse;
+import cm.g2s.loan.service.broker.payload.SendMoneyResponse;
 import cm.g2s.loan.service.partner.model.PartnerDto;
 
 public interface LoanManagerService {
@@ -11,4 +13,9 @@ public interface LoanManagerService {
     void processDebitAccountResponse(CustomPrincipal principal, String loanId, Boolean debitAccountError);
 
     void processCreateTransactionResponse(CustomPrincipal principal, String loanId, Boolean createTransactionError);
+
+    void processSendMoneyResponse(CustomPrincipal principal, String loanId, SendMoneyResponse response);
+
+    void processConfirmAccountDebitResponse(CustomPrincipal principal, String loanId,
+                                            ConfirmDebitAccountResponse confirmDebitAccountResponse);
 }

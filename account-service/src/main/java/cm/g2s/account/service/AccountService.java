@@ -1,6 +1,7 @@
 package cm.g2s.account.service;
 
 import cm.g2s.account.domain.model.Account;
+import cm.g2s.account.domain.model.AccountState;
 import cm.g2s.account.security.CustomPrincipal;
 import cm.g2s.account.service.partner.model.PartnerDto;
 import org.springframework.data.domain.Page;
@@ -24,5 +25,7 @@ public interface AccountService {
     void deleteById(CustomPrincipal principal, String id);
 
     void debitAccount(CustomPrincipal principal, String accountId, BigDecimal debitAmount);
+
+    void confirmDeBitAccount(CustomPrincipal principal, String accountId, AccountState state);
 
 }

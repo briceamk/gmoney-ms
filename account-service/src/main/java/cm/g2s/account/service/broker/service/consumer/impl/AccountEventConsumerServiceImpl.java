@@ -2,6 +2,7 @@ package cm.g2s.account.service.broker.service.consumer.impl;
 
 
 import cm.g2s.account.domain.model.Account;
+import cm.g2s.account.domain.model.AccountState;
 import cm.g2s.account.service.AccountService;
 import cm.g2s.account.service.broker.payload.*;
 import cm.g2s.account.service.broker.service.consumer.AccountEventConsumerService;
@@ -61,8 +62,27 @@ public class AccountEventConsumerServiceImpl implements AccountEventConsumerServ
             log.error("Error when debiting account with data from loan-service");
             builder.debitAccountError(true).loanId(debitAccountRequest.getLoanId());
         } finally {
-            //Sending Response to uaa-service
+            //Sending Response to loan-service
             publisherService.onDebitAccountResponseEvent(builder.build());
+        }
+    }
+
+    @Override
+    @StreamListener(target = "confirmAccountDebitChannel")
+    public void observeConfirmAccountDebitRequest(@Payload ConfirmDebitAccountRequest confirmDebitAccountRequest) {
+        log.info("Receiving Confirm Debit Account Request from loan-service");
+        ConfirmDebitAccountResponse.ConfirmDebitAccountResponseBuilder builder = ConfirmDebitAccountResponse.builder();
+        try {
+            accountService.confirmDeBitAccount(null, confirmDebitAccountRequest.getAccountId(),
+                    AccountState.valueOf(confirmDebitAccountRequest.getNextAccountState()));
+            builder.confirmDebitAccountError(false).loanId(confirmDebitAccountRequest.getLoanId());
+            log.info("Confirm Debit Account Request Successfully");
+        }catch (Exception e) {
+            log.error("Error when confirming debiting account with data from loan-service");
+            builder.confirmDebitAccountError(true).loanId(confirmDebitAccountRequest.getLoanId());
+        } finally {
+            //Sending Response to loan-service
+            publisherService.onConfirmDebitAccountResponseEvent(builder.build());
         }
     }
 

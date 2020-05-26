@@ -2,7 +2,8 @@ package cm.g2s.transaction.service.impl;
 
 import cm.g2s.transaction.domain.model.*;
 import cm.g2s.transaction.infrastructure.repository.TransactionRepository;
-import cm.g2s.transaction.security.CurrentPrincipal;
+import cm.g2s.transaction.security.CustomPrincipal;
+import cm.g2s.transaction.security.CustomPrincipal;
 import cm.g2s.transaction.service.TransactionService;
 import cm.g2s.transaction.exception.BadRequestException;
 import cm.g2s.transaction.web.mapper.TransactionMapper;
@@ -15,6 +16,7 @@ import org.springframework.util.StringUtils;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -25,7 +27,7 @@ public class TransactionServiceImpl implements TransactionService {
     private final TransactionMapper transactionMapper;
 
     @Override
-    public Transaction create(CurrentPrincipal currentPrincipal, Transaction transaction) {
+    public Transaction create(CustomPrincipal principal, Transaction transaction) {
 
         //TODO implement default values for order Type of transactions
         transaction.setState(TransactionState.TO_SEND);
@@ -48,12 +50,13 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public void update(CurrentPrincipal currentPrincipal, Transaction transaction) {
+    public void update(CustomPrincipal principal, Transaction transaction) {
         //TODO implement
+        transactionRepository.save(transaction);
     }
 
     @Override
-    public Transaction findById(CurrentPrincipal currentPrincipal, String id) {
+    public Transaction findById(CustomPrincipal principal, String id) {
         return transactionRepository.findById(id).orElseThrow(
                 () -> {
                     log.info("Transaction with id {} not found!", id);
@@ -64,7 +67,7 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public Page<Transaction> findAll(CurrentPrincipal currentPrincipal, String number, String type,
+    public Page<Transaction> findAll(CustomPrincipal principal, String number, String type,
                                       String mode, String origin, String state,
                                       String partnerId, String accountId, PageRequest pageRequest) {
         Page<Transaction> transactionPage;
@@ -104,7 +107,7 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public void deleteById(CurrentPrincipal currentPrincipal, String id) {
+    public void deleteById(CustomPrincipal principal, String id) {
         Transaction transaction = transactionRepository.findById(id).orElseThrow(
                 () -> {
                     log.info("Transaction with id {} not found!", id);
@@ -113,5 +116,18 @@ public class TransactionServiceImpl implements TransactionService {
         );
 
         transactionRepository.delete(transaction);
+    }
+
+    @Override
+    public List<Transaction> findReadyToSend(CustomPrincipal principal, TransactionState toSend) {
+        return transactionRepository.findByState(toSend);
+    }
+
+    @Override
+    public Boolean sendMoney(CustomPrincipal principal, Transaction transaction) {
+        //TODO implement this method
+        transaction.setState(TransactionState.SEND);
+        update(principal, transaction);
+        return true;
     }
 }

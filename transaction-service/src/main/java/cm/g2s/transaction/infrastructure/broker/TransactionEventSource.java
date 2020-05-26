@@ -10,6 +10,12 @@ public interface TransactionEventSource {
     @Input(value = "transactionCreatedChannel")
     SubscribableChannel transactionCreated();
 
+    @Input(value = "sendMoneyChannel")
+    SubscribableChannel sendMoney();
+
+    @Output(value = "sendMoneyResponseChannel")
+    SubscribableChannel sendMoneyResponse();
+
     @Output(value = "transactionCreatedResponseChannel")
     MessageChannel transactionCreatedResponse();
 

@@ -21,7 +21,7 @@ public class SwaggerConfiguration {
     public Docket commandAPI(){
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("cm.g2s.partner.web"))
+                .apis(RequestHandlerSelectors.basePackage("cm.g2s.partner.cm.g2s.cron.web"))
                 .paths(PathSelectors.any())
                 .build()
                 .apiInfo(getApiInfo());

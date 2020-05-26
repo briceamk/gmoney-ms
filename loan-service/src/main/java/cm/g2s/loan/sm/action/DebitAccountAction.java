@@ -29,7 +29,7 @@ public class DebitAccountAction implements Action<LoanState, LoanEvent> {
             Loan loan = loanService.findById(null, loanId);
             if(loan != null) {
                 DebitAccountRequest accountRequest = transform(loan);
-                log.info("Sending Validated passed actions request to the queue for loanId: {}", loanId);
+                log.info("Sending Debit Account action request to the queue for loanId: {}", loanId);
                 publisherService.onDebitAccountEvent(accountRequest);
             }
 

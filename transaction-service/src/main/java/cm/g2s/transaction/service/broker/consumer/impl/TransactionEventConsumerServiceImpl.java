@@ -2,10 +2,10 @@ package cm.g2s.transaction.service.broker.consumer.impl;
 
 import cm.g2s.transaction.domain.model.Transaction;
 import cm.g2s.transaction.domain.model.TransactionMode;
+import cm.g2s.transaction.domain.model.TransactionState;
 import cm.g2s.transaction.service.TransactionService;
 import cm.g2s.transaction.service.broker.consumer.TransactionEventConsumerService;
-import cm.g2s.transaction.service.broker.payload.CreateTransactionRequest;
-import cm.g2s.transaction.service.broker.payload.CreateTransactionResponse;
+import cm.g2s.transaction.service.broker.payload.*;
 import cm.g2s.transaction.service.broker.publisher.TransactionEventPublisherService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -40,6 +40,29 @@ public class TransactionEventConsumerServiceImpl implements TransactionEventCons
             //Sending Response to uaa-service
             publisherService.onCreateTransactionResponseEvent(builder.build());
         }
+    }
+
+    @Override
+    @StreamListener("sendMoneyChannel")
+    public void observeSendMoneyRequest(@Payload  SendMoneyRequest sendMoneyRequest) {
+
+        if(sendMoneyRequest.getEventType().equals(JobEventType.SEND_MONEY)) {
+            SendMoneyResponse.SendMoneyResponseBuilder builder = SendMoneyResponse.builder();
+            transactionService.findReadyToSend(null, TransactionState.TO_SEND).forEach(transaction -> {
+                builder.loanId(transaction.getLoanId());
+                Boolean result  = transactionService.sendMoney(null, transaction);
+                if(result) {
+                    builder.sendMoneyError(false);
+                } else {
+                    builder.sendMoneyError(true)
+                            .errorMessage("Failed to send your money! we will retry later");
+                }
+
+                publisherService.onSendMoneyResponseEvent(builder.build());
+            });
+
+        }
+
     }
 
     private Transaction transform(CreateTransactionRequest transactionRequest) {

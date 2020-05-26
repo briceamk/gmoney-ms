@@ -129,15 +129,16 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public void debitAccount(CustomPrincipal principal, String accountId, BigDecimal debitAmount) {
-        Account account = accountRepository.findById(accountId).orElseThrow(
-                () -> {
-                    log.error("Account with id {} not found",accountId);
-                    throw new ResourceNotFoundException(String.format("Account with id %s not found",accountId));
-                }
-        );
-
+        Account account = findById(principal, accountId);
         account.setBalance(account.getBalance().add(debitAmount));
         account.setState(AccountState.PENDING);
+        accountRepository.save(account);
+    }
+
+    @Override
+    public void confirmDeBitAccount(CustomPrincipal principal, String accountId, AccountState state) {
+        Account account = findById(principal, accountId);
+        account.setState(state);
         accountRepository.save(account);
     }
 

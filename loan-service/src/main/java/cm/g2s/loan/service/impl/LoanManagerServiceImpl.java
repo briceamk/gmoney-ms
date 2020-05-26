@@ -8,6 +8,8 @@ import cm.g2s.loan.security.CustomPrincipal;
 import cm.g2s.loan.service.LoanManagerService;
 import cm.g2s.loan.service.LoanService;
 import cm.g2s.loan.service.account.model.AccountDto;
+import cm.g2s.loan.service.broker.payload.ConfirmDebitAccountResponse;
+import cm.g2s.loan.service.broker.payload.SendMoneyResponse;
 import cm.g2s.loan.service.partner.model.PartnerDto;
 import cm.g2s.loan.exception.BadRequestException;
 import cm.g2s.loan.sm.LoanStateChangeInterceptor;
@@ -131,6 +133,76 @@ public class LoanManagerServiceImpl implements LoanManagerService {
                 sendEvent(loan, LoanEvent.CREATE_TRANSACTION_FAILED, null, null);
 
                 //TODO execute compensations actions
+                //1 - We send event to Credit Account and set state account to ACTIVE
+                //2- We set error message and state of transaction
+
+
+            }
+        }
+    }
+
+    @Override
+    public void processSendMoneyResponse(CustomPrincipal principal, String loanId, SendMoneyResponse response) {
+        log.info("Process send money action result");
+        Loan loan = loanService.findById(null, loanId);
+
+        if(loan != null) {
+            if(!response.getSendMoneyError()) {
+                //We send event to change the state from TRANSACTION_SEND_PENDING to TRANSACTION_SEND
+                // not action needed
+                sendEvent(loan, LoanEvent.SEND_TRANSACTION_PASSED, null, null);
+
+                //await for status change
+                awaitForStatusChange(null, loanId, LoanState.TRANSACTION_SEND);
+
+                Loan sendCreatedLoan = loanService.findById(null, loan.getId());
+
+                //We send event to change the state from TRANSACTION_SEND to CONFIRM_DEBIT_PENDING
+                // CreateTransactionAction needed
+                sendEvent(sendCreatedLoan, LoanEvent.CONFIRM_DEBIT, null, null);
+
+            } else {
+                sendEvent(loan, LoanEvent.SEND_TRANSACTION_FAILED, null, null);
+
+                //TODO execute compensations actions:
+                //1 - We send event to Credit Account and set state account to ACTIVE
+
+                //2- We set error message and state of transaction
+
+
+            }
+        }
+    }
+
+    @Override
+    public void processConfirmAccountDebitResponse(CustomPrincipal principal, String loanId, ConfirmDebitAccountResponse response) {
+        log.info("Process confirm debit account action result");
+        Loan loan = loanService.findById(null, loanId);
+
+        if(loan != null) {
+            if(!response.getConfirmDebitAccountError()) {
+                //We send event to change the state from CONFIRM_DEBIT_PENDING to CONFIRM_DEBIT
+                // not action needed
+                sendEvent(loan, LoanEvent.CONFIRM_DEBIT_PASSED, null, null);
+
+                //await for status change
+                awaitForStatusChange(null, loanId, LoanState.CONFIRM_DEBIT);
+
+                Loan confirmedLoan = loanService.findById(null, loan.getId());
+
+                //We send event to change the state from CONFIRM_DEBIT to SEND_NOTIFICATION_PENDING
+                // CreateTransactionAction needed
+                sendEvent(confirmedLoan, LoanEvent.SEND_NOTIFICATION, null, null);
+
+            } else {
+                sendEvent(loan, LoanEvent.CONFIRM_DEBIT_FAILED, null, null);
+
+                //TODO execute compensations actions:
+                //1 - We send a notification to manager to manually activate the account
+
+                //2- We set error message and state of transaction
+
+
             }
         }
     }
