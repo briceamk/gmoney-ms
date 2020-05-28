@@ -92,7 +92,7 @@ public class LoanServiceImpl implements LoanService {
         Page<Loan> loanPage;
 
         if (!StringUtils.isEmpty(number)) {
-            //search by category number
+            //search by number
             loanPage = loanRepository.findByNumber(number, pageRequest);
         } else if (!StringUtils.isEmpty(state)) {
             //search by state
