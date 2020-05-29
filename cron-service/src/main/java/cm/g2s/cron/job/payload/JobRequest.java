@@ -1,6 +1,6 @@
-package cm.g2s.cron.job.money.payload;
+package cm.g2s.cron.job.payload;
 
-import cm.g2s.cron.job.JobEventType;
+import cm.g2s.cron.job.payload.JobType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class SendMoneyRequest {
+public class JobRequest {
     private String jobId;
-    private JobEventType eventType;
+    private JobType eventType;
 }

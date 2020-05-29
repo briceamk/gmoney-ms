@@ -1,8 +1,8 @@
-package cm.g2s.cron.job.money;
+package cm.g2s.cron.job;
 
 import cm.g2s.cron.infratructure.broker.CronEventSource;
-import cm.g2s.cron.job.JobEventType;
-import cm.g2s.cron.job.money.payload.SendMoneyRequest;
+import cm.g2s.cron.job.payload.JobRequest;
+import cm.g2s.cron.job.payload.JobType;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.DisallowConcurrentExecution;
 import org.quartz.JobExecutionContext;
@@ -14,7 +14,7 @@ import org.springframework.scheduling.quartz.QuartzJobBean;
 
 @Slf4j
 @DisallowConcurrentExecution
-public class TransactionSendMoneyCronJob extends QuartzJobBean {
+public class SendMoneyCronJob extends QuartzJobBean {
 
     private CronEventSource cronEventSource;
 
@@ -25,13 +25,13 @@ public class TransactionSendMoneyCronJob extends QuartzJobBean {
 
     @Override
     protected void executeInternal(JobExecutionContext context) throws JobExecutionException {
-        log.info("Transaction SendMoney Cron Job Start................");
+        log.info("SendMoney Cron Job Start................");
         cronEventSource.sendMoney().send(MessageBuilder.withPayload(
-                SendMoneyRequest.builder()
-                        .eventType(JobEventType.SEND_MONEY)
+                JobRequest.builder()
+                        .eventType(JobType.SEND_MONEY)
                         .jobId(context.getFireInstanceId())
                         .build()
         ).build());
-        log.info("Transaction SendMoney Cron Job End................");
+        log.info("SendMoney Cron Job End................");
     }
 }

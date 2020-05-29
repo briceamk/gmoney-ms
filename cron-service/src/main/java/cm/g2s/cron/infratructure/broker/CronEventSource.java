@@ -8,4 +8,7 @@ public interface CronEventSource {
     @Output("sendMoneyChannel")
     MessageChannel sendMoney();
 
+    @Output("sendMailChannel")
+    MessageChannel sendMail();
+
 }
