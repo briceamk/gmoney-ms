@@ -44,9 +44,9 @@ public class TransactionEventConsumerServiceImpl implements TransactionEventCons
 
     @Override
     @StreamListener("sendMoneyChannel")
-    public void observeSendMoneyRequest(@Payload  SendMoneyRequest sendMoneyRequest) {
+    public void observeSendMoneyRequest(@Payload JobRequest jobRequest) {
 
-        if(sendMoneyRequest.getEventType().equals(JobEventType.SEND_MONEY)) {
+        if(jobRequest.getEventType().equals(JobType.SEND_MONEY)) {
             SendMoneyResponse.SendMoneyResponseBuilder builder = SendMoneyResponse.builder();
             transactionService.findReadyToSend(null, TransactionState.TO_SEND).forEach(transaction -> {
                 builder.loanId(transaction.getLoanId());

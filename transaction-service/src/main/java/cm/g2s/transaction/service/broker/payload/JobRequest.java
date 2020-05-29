@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class SendMoneyRequest {
+public class JobRequest {
     private String jobId;
-    private JobEventType eventType;
+    private JobType eventType;
 }

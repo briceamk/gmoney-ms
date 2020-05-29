@@ -1,5 +1,5 @@
 package cm.g2s.transaction.service.broker.payload;
 
-public enum JobEventType {
+public enum JobType {
     SEND_MONEY
 }
