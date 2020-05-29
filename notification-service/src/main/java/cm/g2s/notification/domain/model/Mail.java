@@ -19,14 +19,12 @@ public class Mail extends BaseEntity {
     static final long serialVersionUID = 3913125620645474768L;
 
     @Column(nullable = false)
-    private String object;
-    @Column(nullable = false)
-    private String emailFrom;
+    private String subject;
     @Column(nullable = false)
     private String emailTo;
     private String emailCc;
     private String emailCci;
-    @Column(nullable = false)
+    @Column(columnDefinition = "text")
     private String content;
     private String relatedClass;
     private String relatedObjectId;
@@ -37,11 +35,10 @@ public class Mail extends BaseEntity {
     private MailState state;
 
     @Builder
-    public Mail(String id, String emailFrom, String object, String emailTo, String emailCc, String emailCci, String content,
+    public Mail(String id, String subject, String emailTo, String emailCc, String emailCci, String content,
                 String relatedClass, String relatedObjectId, String reference, Timestamp sendDate, MailState state) {
         super(id);
-        this.emailFrom = emailFrom;
-        this.object = object;
+        this.subject = subject;
         this.emailTo = emailTo;
         this.emailCc = emailCc;
         this.emailCci = emailCci;

@@ -1,5 +1,6 @@
 package cm.g2s.notification.service.impl;
 
+import cm.g2s.notification.constant.NotificationConstantType;
 import cm.g2s.notification.domain.model.*;
 import cm.g2s.notification.exception.ResourceNotFoundException;
 import cm.g2s.notification.infrastructure.repository.MailRepository;
@@ -12,9 +13,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -47,29 +51,30 @@ public class MailServiceImpl implements MailService {
 
         JavaMailSender mailSender = mailServerService.getSenderServer(principal, mailServer);
 
-        SimpleMailMessage message = new SimpleMailMessage();
-
-        message.setFrom(mailServer.getUsername());
-
-        message.setTo(mail.getEmailTo());
-
-        message.setSubject(mail.getObject());
-
-        message.setText(mail.getContent());
-
-        if(mail.getEmailCc() != null && !mail.getEmailCc().isEmpty())
-            message.setBcc(mail.getEmailCc());
-
-        if(mail.getEmailCci() != null && !mail.getEmailCci().isEmpty())
-            message.setCc(mail.getEmailCci());
+        MimeMessage message = mailSender.createMimeMessage();
 
         try {
+            MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(message, true);
+
+            mimeMessageHelper.setFrom(mailServer.getUsername());
+
+            mimeMessageHelper.setTo(mail.getEmailTo().split(NotificationConstantType.MAIL_SEPARATOR));
+
+            mimeMessageHelper.setSubject(mail.getSubject());
+
+            mimeMessageHelper.setText(mail.getContent(), true);
+
+            if(mail.getEmailCc() != null && !mail.getEmailCc().isEmpty())
+                mimeMessageHelper.setBcc(mail.getEmailCc().split(NotificationConstantType.MAIL_SEPARATOR));
+
+            if(mail.getEmailCci() != null && !mail.getEmailCci().isEmpty())
+                mimeMessageHelper.setCc(mail.getEmailCci().split(NotificationConstantType.MAIL_SEPARATOR));
             mailSender.send(message);
             mailServer.setState(MailServerState.ACTIVE);
             mail.setState(MailState.SEND);
             mail.setSendDate(Timestamp.valueOf(LocalDateTime.now()));
 
-        } catch (Exception e) {
+        } catch (MessagingException e) {
             log.error("error when sending the mail. invalid parameter!, {}", e.getMessage());
             mail.setState(MailState.SEND_EXCEPTION);
         }

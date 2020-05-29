@@ -24,4 +24,5 @@ public class NotificationConstantType {
     public static final String EMAIL_AUTH_KEY = "mail.smtp.auth";
     public static final String EMAIL_START_TLS_ENABLE = "mail.smtp.starttls.enable";
     public static final String DEFAULT_EMAIL_TEST = "brice.mbiandji@g2snet.com";
+    public static final String MAIL_SEPARATOR = ";";
 }

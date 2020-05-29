@@ -22,7 +22,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import javax.script.ScriptException;
+
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
@@ -70,7 +70,7 @@ public class MailController {
     @PutMapping("/send")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER') and hasAuthority('SEND_MAIL')")
     public ResponseEntity<?> send(@CurrentPrincipal CustomPrincipal principal,
-                                    @Validated @RequestBody MailDto mailDto, BindingResult result) throws ScriptException {
+                                    @Validated @RequestBody MailDto mailDto, BindingResult result) {
 
         ResponseEntity<?> errors = validationErrorService.process(result);
         if(errors != null)
@@ -82,7 +82,7 @@ public class MailController {
     @PutMapping("/send/all")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER') and hasAuthority('SEND_ALL_MAIL')")
     public ResponseEntity<?> sendAll(@CurrentPrincipal CustomPrincipal principal,
-                                      BindingResult result) throws ScriptException {
+                                      BindingResult result) {
 
         ResponseEntity<?> errors = validationErrorService.process(result);
         if(errors != null)
