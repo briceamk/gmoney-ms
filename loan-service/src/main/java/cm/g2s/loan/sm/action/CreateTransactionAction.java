@@ -7,7 +7,7 @@ import cm.g2s.loan.domain.model.LoanMode;
 import cm.g2s.loan.domain.model.LoanState;
 import cm.g2s.loan.service.LoanService;
 import cm.g2s.loan.service.broker.payload.CreateTransactionRequest;
-import cm.g2s.loan.service.broker.publisher.LoanEventPublisherService;
+import cm.g2s.loan.service.broker.service.publisher.LoanEventPublisherService;
 import cm.g2s.loan.exception.BadRequestException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

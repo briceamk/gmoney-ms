@@ -5,10 +5,8 @@ import org.springframework.messaging.MessageChannel;
 
 public interface CronEventSource {
 
-    @Output("sendMoneyChannel")
-    MessageChannel sendMoney();
+    @Output("cronChannel")
+    MessageChannel cronChannel();
 
-    @Output("sendMailChannel")
-    MessageChannel sendMail();
 
 }

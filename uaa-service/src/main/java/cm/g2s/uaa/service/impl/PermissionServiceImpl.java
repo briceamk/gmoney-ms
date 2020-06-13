@@ -1,9 +1,9 @@
 package cm.g2s.uaa.service.impl;
 
 import cm.g2s.uaa.domain.model.Permission;
+import cm.g2s.uaa.exception.ResourceNotFoundException;
 import cm.g2s.uaa.infrastructure.repository.PermissionRepository;
 import cm.g2s.uaa.service.PermissionService;
-import cm.g2s.uaa.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

@@ -4,7 +4,7 @@ import cm.g2s.uaa.constant.UaaConstantType;
 import cm.g2s.uaa.domain.event.UserEvent;
 import cm.g2s.uaa.domain.model.UserState;
 import cm.g2s.uaa.service.broker.payload.RemovePartnerRequest;
-import cm.g2s.uaa.service.broker.publisher.UserEventPublisherService;
+import cm.g2s.uaa.service.broker.publisher.UaaEventPublisherService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.statemachine.StateContext;
@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class RemovePartnerAction implements Action<UserState, UserEvent> {
 
-    private final UserEventPublisherService publisherService;
+    private final UaaEventPublisherService publisherService;
 
     @Override
     public void execute(StateContext<UserState, UserEvent> context) {

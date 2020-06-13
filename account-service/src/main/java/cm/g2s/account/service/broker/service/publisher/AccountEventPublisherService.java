@@ -7,9 +7,9 @@ import cm.g2s.account.service.broker.payload.DebitAccountResponse;
 
 public interface AccountEventPublisherService {
 
-    void onCreateAccountResponseEvent(CreateAccountResponse response);
+    void onCreateAccountResponseEvent(CreateAccountResponse createAccountResponse);
 
-    void onDebitAccountResponseEvent(DebitAccountResponse response);
+    void onDebitAccountResponseEvent(DebitAccountResponse debitAccountResponse);
 
-    void onConfirmDebitAccountResponseEvent(ConfirmDebitAccountResponse response);
+    void onConfirmDebitAccountResponseEvent(ConfirmDebitAccountResponse confirmDebitAccountResponse);
 }

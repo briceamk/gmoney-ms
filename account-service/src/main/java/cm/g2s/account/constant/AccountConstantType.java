@@ -19,4 +19,10 @@ public class AccountConstantType {
 
     public static final String AUTHORIZATION_HEADER = "Authorization";
     public static final String BEARER_TOKEN_TYPE = "Bearer";
+
+    public static final String ROUTING_KEY_EXPRESSION = "account";
+
+    public static final String ROUTING_KEY_CREATE_ACCOUNT_RESPONSE = "createAccountResponse";
+    public static final String ROUTING_KEY_DEBIT_ACCOUNT_RESPONSE = "debitAccountResponse";
+    public static final String ROUTING_KEY_CONFIRM_DEBIT_ACCOUNT_RESPONSE = "confirmDebitAccountResponse";
 }

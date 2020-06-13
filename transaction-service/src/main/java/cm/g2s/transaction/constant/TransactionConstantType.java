@@ -22,4 +22,8 @@ public class TransactionConstantType {
     public static final String BEARER_TOKEN_TYPE = "Bearer";
 
 
+    public static final String ROUTING_KEY_EXPRESSION = "transaction";
+
+    public static final String ROUTING_KEY_CREATE_TRANSACTION_RESPONSE = "createTransactionResponse";
+    public static final String ROUTING_KEY_SEND_MONEY_RESPONSE = "sendMoneyResponse";
 }

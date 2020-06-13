@@ -23,14 +23,14 @@ public class AccountEventConsumerServiceImpl implements AccountEventConsumerServ
     private final AccountEventPublisherService publisherService;
 
     @Override
-    @StreamListener(target = "accountCreatedChannel")
-    public void observeAccountCreateRequest(@Payload CreateAccountRequest accountRequest) {
+    @StreamListener(target = "uaaChannel", condition = "headers['uaa']=='createAccount'")
+    public void observeAccountCreateRequest(@Payload CreateAccountRequest createAccountRequest) {
         log.info("Receiving Create Account Request from uaa-service");
         CreateAccountResponse.CreateAccountResponseBuilder builder = CreateAccountResponse.builder();
         try{
-            Account account = transform(accountRequest);
+            Account account = transform(createAccountRequest);
             PartnerDto partnerDto = PartnerDto.builder()
-                    .id(accountRequest.getPartnerId())
+                    .id(createAccountRequest.getPartnerId())
                     .build();
             account = accountService.create(null, account, partnerDto);
             //We Set PartnerDto in  response
@@ -39,7 +39,7 @@ public class AccountEventConsumerServiceImpl implements AccountEventConsumerServ
             log.info("Creation Account Request Successfully");
         } catch (Exception e) {
             log.error("Error when creating account with data from uaa-service");
-            builder.userId(accountRequest.getUserId())
+            builder.userId(createAccountRequest.getUserId())
                     .creationAccountError(true);
         } finally {
             //Sending Response to uaa-service
@@ -49,7 +49,7 @@ public class AccountEventConsumerServiceImpl implements AccountEventConsumerServ
     }
 
     @Override
-    @StreamListener(target = "accountDebitedChannel")
+    @StreamListener(target = "loanChannel", condition = "headers['loan']=='debitAccount'")
     public void observeAccountDebitRequest(@Payload DebitAccountRequest debitAccountRequest) {
 
         log.info("Receiving Debit Account Request from loan-service");
@@ -68,7 +68,7 @@ public class AccountEventConsumerServiceImpl implements AccountEventConsumerServ
     }
 
     @Override
-    @StreamListener(target = "confirmAccountDebitChannel")
+    @StreamListener(target = "loanChannel", condition = "headers['loan']=='confirmDebitAccount'")
     public void observeConfirmAccountDebitRequest(@Payload ConfirmDebitAccountRequest confirmDebitAccountRequest) {
         log.info("Receiving Confirm Debit Account Request from loan-service");
         ConfirmDebitAccountResponse.ConfirmDebitAccountResponseBuilder builder = ConfirmDebitAccountResponse.builder();

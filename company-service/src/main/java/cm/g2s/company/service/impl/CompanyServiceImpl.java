@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -46,6 +47,7 @@ public class CompanyServiceImpl implements CompanyService {
     }
 
     @Override
+    @Transactional
     public Company create(CustomPrincipal principal,  Company company) {
         // we check if code, name, phoneNumber, mobileNumber, email, vatNumber, tradeRegister exist
         if(companyRepository.existsByCode(company.getCode())) {
@@ -168,7 +170,7 @@ public class CompanyServiceImpl implements CompanyService {
                     CompanyConstantType.DEFAULT_COMPANY_LOGO_FILE_NAME, CompanyConstantType.DEFAULT_COMPANY_LOGO_IMAGE_TYPE, content);
             return multipartFile;
         } catch (IOException ioe) {
-            throw new FileStorageException("can't find default workflow logo image!");
+            throw new FileStorageException("can't find default company logo image!");
         }
     }
 }

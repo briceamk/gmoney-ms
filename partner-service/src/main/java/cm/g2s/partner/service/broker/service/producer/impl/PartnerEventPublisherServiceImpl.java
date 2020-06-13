@@ -1,5 +1,6 @@
 package cm.g2s.partner.service.broker.service.producer.impl;
 
+import cm.g2s.partner.constant.PartnerConstantType;
 import cm.g2s.partner.infrastructure.broker.PartnerEventSource;
 import cm.g2s.partner.service.broker.payload.CreatePartnerResponse;
 import cm.g2s.partner.service.broker.service.producer.PartnerEventPublisherService;
@@ -18,9 +19,14 @@ public class PartnerEventPublisherServiceImpl implements PartnerEventPublisherSe
 
     @Override
     @TransactionalEventListener
-    public void onCreatePartnerResponseEvent(CreatePartnerResponse response) {
+    public void onCreatePartnerResponseEvent(CreatePartnerResponse createPartnerResponse) {
         log.info("Sending creation partner response to uaa-service");
-        eventSource.partnerCreatedResponse().send(MessageBuilder.withPayload(response).build());
+        eventSource.partnerChannel().send(
+                MessageBuilder
+                        .withPayload(createPartnerResponse)
+                        .setHeader(PartnerConstantType.ROUTING_KEY_EXPRESSION, PartnerConstantType.ROUTING_KEY_CREATE_PARTNER_RESPONSE)
+                        .build()
+        );
 
     }
 }

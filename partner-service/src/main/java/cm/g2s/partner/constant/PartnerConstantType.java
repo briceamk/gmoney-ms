@@ -19,4 +19,8 @@ public class PartnerConstantType {
 
     public static final String AUTHORIZATION_HEADER = "Authorization";
     public static final String BEARER_TOKEN_TYPE = "Bearer";
+
+    public static final String ROUTING_KEY_EXPRESSION = "partner";
+    public static final String ROUTING_KEY_CREATE_PARTNER_RESPONSE = "createPartnerResponse";
+
 }

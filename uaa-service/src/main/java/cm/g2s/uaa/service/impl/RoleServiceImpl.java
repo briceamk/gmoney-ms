@@ -1,9 +1,9 @@
 package cm.g2s.uaa.service.impl;
 
 import cm.g2s.uaa.domain.model.Role;
+import cm.g2s.uaa.exception.ResourceNotFoundException;
 import cm.g2s.uaa.infrastructure.repository.RoleRepository;
 import cm.g2s.uaa.service.RoleService;
-import cm.g2s.uaa.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;

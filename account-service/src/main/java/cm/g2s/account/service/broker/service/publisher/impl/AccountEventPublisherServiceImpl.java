@@ -1,5 +1,6 @@
 package cm.g2s.account.service.broker.service.publisher.impl;
 
+import cm.g2s.account.constant.AccountConstantType;
 import cm.g2s.account.infrastructure.broker.AccountEventSource;
 import cm.g2s.account.service.broker.payload.ConfirmDebitAccountResponse;
 import cm.g2s.account.service.broker.payload.CreateAccountResponse;
@@ -8,7 +9,6 @@ import cm.g2s.account.service.broker.service.publisher.AccountEventPublisherServ
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.support.MessageBuilder;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.event.TransactionalEventListener;
 
@@ -21,22 +21,36 @@ public class AccountEventPublisherServiceImpl implements AccountEventPublisherSe
 
     @Override
     @TransactionalEventListener
-    public void onCreateAccountResponseEvent(CreateAccountResponse response) {
-        eventSource.accountCreatedResponse().send(MessageBuilder.withPayload(response).build());
+    public void onCreateAccountResponseEvent(CreateAccountResponse createAccountResponse) {
+        eventSource.accountChannel().send(
+                MessageBuilder
+                        .withPayload(createAccountResponse)
+                        .setHeader(AccountConstantType.ROUTING_KEY_EXPRESSION, AccountConstantType.ROUTING_KEY_CREATE_ACCOUNT_RESPONSE)
+                        .build()
+        );
 
     }
 
     @Override
     @TransactionalEventListener
-    public void onDebitAccountResponseEvent(DebitAccountResponse response) {
+    public void onDebitAccountResponseEvent(DebitAccountResponse debitAccountResponse) {
         log.info("Sending debit account response to loan-service");
-        eventSource.accountDebitedResponse().send(MessageBuilder.withPayload(response).build());
+        eventSource.accountChannel().send(
+                MessageBuilder
+                        .withPayload(debitAccountResponse)
+                        .setHeader(AccountConstantType.ROUTING_KEY_EXPRESSION, AccountConstantType.ROUTING_KEY_DEBIT_ACCOUNT_RESPONSE)
+                        .build()
+        );
     }
 
     @Override
     @TransactionalEventListener
-    public void onConfirmDebitAccountResponseEvent(ConfirmDebitAccountResponse response) {
+    public void onConfirmDebitAccountResponseEvent(ConfirmDebitAccountResponse confirmDebitAccountResponse) {
         log.info("Sending confirm debit account response to loan-service");
-        eventSource.confirmAccountDebitResponse().send(MessageBuilder.withPayload(response).build());
+        eventSource.accountChannel().send(
+                MessageBuilder
+                        .withPayload(confirmDebitAccountResponse)
+                        .setHeader(AccountConstantType.ROUTING_KEY_EXPRESSION, AccountConstantType.ROUTING_KEY_CONFIRM_DEBIT_ACCOUNT_RESPONSE)
+                        .build());
     }
 }

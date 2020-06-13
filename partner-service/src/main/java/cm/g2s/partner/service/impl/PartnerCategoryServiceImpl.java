@@ -1,10 +1,10 @@
 package cm.g2s.partner.service.impl;
 
 import cm.g2s.partner.domain.model.PartnerCategory;
+import cm.g2s.partner.exception.BadRequestException;
 import cm.g2s.partner.infrastructure.repository.PartnerCategoryRepository;
 import cm.g2s.partner.security.CustomPrincipal;
 import cm.g2s.partner.service.PartnerCategoryService;
-import cm.g2s.partner.exception.BadRequestException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;

@@ -1,6 +1,7 @@
 package cm.g2s.partner.service.broker.service.consumer.impl;
 
 import cm.g2s.partner.domain.model.*;
+import cm.g2s.partner.exception.BadRequestException;
 import cm.g2s.partner.infrastructure.repository.PartnerCategoryRepository;
 import cm.g2s.partner.service.PartnerService;
 import cm.g2s.partner.service.broker.payload.CreatePartnerRequest;
@@ -8,11 +9,10 @@ import cm.g2s.partner.service.broker.payload.CreatePartnerResponse;
 import cm.g2s.partner.service.broker.payload.RemovePartnerRequest;
 import cm.g2s.partner.service.broker.service.consumer.PartnerEventConsumerService;
 import cm.g2s.partner.service.broker.service.producer.PartnerEventPublisherService;
-import cm.g2s.partner.exception.BadRequestException;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.stream.annotation.StreamListener;
+import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
@@ -27,21 +27,21 @@ public class PartnerEventConsumerServiceImpl implements PartnerEventConsumerServ
     private final PartnerEventPublisherService publisherService;
 
     @Override
-    @StreamListener(target = "partnerCreatedChannel")
-    public void observePartnerCreateRequest(CreatePartnerRequest partnerRequest) {
+    @StreamListener(target = "uaaChannel", condition = "headers['uaa']=='createPartner'")
+    public void observePartnerCreateRequest(@Payload CreatePartnerRequest createPartnerRequest) {
 
         CreatePartnerResponse.CreatePartnerResponseBuilder builder = CreatePartnerResponse.builder();
         try{
             log.info("Receiving Create Partner Request from uaa-service");
-            Partner partner = transform(partnerRequest);
+            Partner partner = transform(createPartnerRequest);
             partner = partnerService.create(null, partner);
             builder.userId(partner.getUserId())
                     .partnerId(partner.getId())
                     .creationPartnerError(false);
             log.info("Creation Partner Request Successfully");
         } catch (Exception e) {
-            log.error("Error when creating partner with data from uaa-service ", e.getMessage());
-            builder.userId(partnerRequest.getUserId())
+            log.error("Error when creating partner with data from uaa-service. {} ", e.getMessage());
+            builder.userId(createPartnerRequest.getUserId())
                     .creationPartnerError(true);
         } finally {
             //Sending Response to uaa-service
@@ -51,10 +51,10 @@ public class PartnerEventConsumerServiceImpl implements PartnerEventConsumerServ
     }
 
     @Override
-    @StreamListener(target = "partnerRemoveChannel")
-    public void observePartnerRemoveRequest(RemovePartnerRequest partnerRequest) {
+    @StreamListener(target = "uaaChannel", condition = "headers['uaa']=='removePartner'")
+    public void observePartnerRemoveRequest(@Payload RemovePartnerRequest removePartnerRequest) {
         log.info("Receiving Account Creation Failed  Request from uaa-service");
-        partnerService.deleteByUserId(null, partnerRequest.getUserId());
+        partnerService.deleteByUserId(null, removePartnerRequest.getUserId());
     }
 
     private Partner transform(CreatePartnerRequest partnerRequest) {

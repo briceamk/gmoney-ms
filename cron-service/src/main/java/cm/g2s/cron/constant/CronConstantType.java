@@ -15,4 +15,8 @@ public class CronConstantType {
             "/actuator/**",
             "/v2/api-docs/**"
     };
+    public static final String ROUTING_KEY_EXPRESSION = "cron";
+
+    public static final String ROUTING_KEY_SEND_MAIL = "sendMail";
+    public static final String ROUTING_KEY_SEND_MONEY = "sendMoney";
 }

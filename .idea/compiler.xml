@@ -12,7 +12,7 @@
         <module name="configuration-service" />
         <module name="discovery-service" />
       </profile>
-      <profile name="Annotation profile for company-service" enabled="true">
+      <profile name="Annotation profile for cron-service" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
@@ -37,10 +37,10 @@
         <module name="notification-service" />
         <module name="company-service" />
         <module name="uaa-service" />
-        <module name="transaction-service" />
+        <module name="account-service" />
         <module name="loan-service" />
         <module name="partner-service" />
-        <module name="account-service" />
+        <module name="transaction-service" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>

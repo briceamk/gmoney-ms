@@ -1,11 +1,11 @@
 package cm.g2s.uaa.service.impl;
 
 import cm.g2s.uaa.domain.model.User;
-import cm.g2s.uaa.infrastructure.repository.UserRepository;
-import cm.g2s.uaa.service.UserService;
 import cm.g2s.uaa.exception.BadRequestException;
 import cm.g2s.uaa.exception.ConflictException;
 import cm.g2s.uaa.exception.ResourceNotFoundException;
+import cm.g2s.uaa.infrastructure.repository.UserRepository;
+import cm.g2s.uaa.service.UserService;
 import cm.g2s.uaa.web.payload.ResetPassword;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

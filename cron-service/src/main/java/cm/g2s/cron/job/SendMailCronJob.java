@@ -1,5 +1,6 @@
 package cm.g2s.cron.job;
 
+import cm.g2s.cron.constant.CronConstantType;
 import cm.g2s.cron.infratructure.broker.CronEventSource;
 import cm.g2s.cron.job.payload.JobRequest;
 import cm.g2s.cron.job.payload.JobType;
@@ -26,12 +27,17 @@ public class SendMailCronJob extends QuartzJobBean {
     @Override
     protected void executeInternal(JobExecutionContext context) throws JobExecutionException {
         log.info("SendMail Cron Job Start................");
-        cronEventSource.sendMail().send(MessageBuilder.withPayload(
-                JobRequest.builder()
-                        .eventType(JobType.SEND_MAIL)
-                        .jobId(context.getFireInstanceId())
+        cronEventSource.cronChannel().send(
+                MessageBuilder
+                        .withPayload(
+                                JobRequest.builder()
+                                        .eventType(JobType.SEND_MAIL)
+                                        .jobId(context.getFireInstanceId())
+                                        .build()
+                        )
+                        .setHeader(CronConstantType.ROUTING_KEY_EXPRESSION, CronConstantType.ROUTING_KEY_SEND_MAIL)
                         .build()
-        ).build());
+        );
         log.info("SendMail Cron Job End................");
     }
 }

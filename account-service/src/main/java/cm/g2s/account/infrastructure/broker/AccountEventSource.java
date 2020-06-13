@@ -5,25 +5,16 @@ import org.springframework.cloud.stream.annotation.Output;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.SubscribableChannel;
 
-import java.net.DatagramSocket;
 
 
 public interface AccountEventSource {
-    @Input(value = "accountCreatedChannel")
-    SubscribableChannel accountCreated();
+    @Input(value = "uaaChannel")
+    SubscribableChannel uaaChannel();
 
-    @Input(value = "accountDebitedChannel")
-    SubscribableChannel accountDebited();
+    @Input(value = "loanChannel")
+    SubscribableChannel loanChannel();
 
-    @Input(value = "confirmAccountDebitChannel")
-    SubscribableChannel confirmAccountDebit();
 
-    @Output(value = "accountCreatedResponseChannel")
-    MessageChannel accountCreatedResponse();
-
-    @Output(value = "accountDebitedResponseChannel")
-    MessageChannel accountDebitedResponse();
-
-    @Output(value = "confirmAccountDebitResponseChannel")
-    MessageChannel confirmAccountDebitResponse();
+    @Output(value = "accountChannel")
+    MessageChannel accountChannel();
 }

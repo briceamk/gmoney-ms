@@ -7,16 +7,13 @@ import org.springframework.messaging.SubscribableChannel;
 
 public interface TransactionEventSource {
 
-    @Input(value = "transactionCreatedChannel")
-    SubscribableChannel transactionCreated();
+    @Input(value = "loanChannel")
+    SubscribableChannel loanChannel();
 
-    @Input(value = "sendMoneyChannel")
-    SubscribableChannel sendMoney();
+    @Input(value = "cronChannel")
+    SubscribableChannel cronChannel();
 
-    @Output(value = "sendMoneyResponseChannel")
-    SubscribableChannel sendMoneyResponse();
-
-    @Output(value = "transactionCreatedResponseChannel")
-    MessageChannel transactionCreatedResponse();
+    @Output(value = "transactionChannel")
+    MessageChannel transactionChannel();
 
 }

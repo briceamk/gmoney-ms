@@ -3,4 +3,4 @@ spring:
     config:
       server:
         git:
-          uri: file:///home/ubuntu/Projets/Spring/gmoney-ms-configuration
+          uri: file:///home/ubuntu/Projects/Spring/gmoney-ms-configuration

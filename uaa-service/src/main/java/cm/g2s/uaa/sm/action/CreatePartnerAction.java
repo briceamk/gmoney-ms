@@ -6,7 +6,7 @@ import cm.g2s.uaa.domain.model.User;
 import cm.g2s.uaa.domain.model.UserState;
 import cm.g2s.uaa.service.UserService;
 import cm.g2s.uaa.service.broker.payload.CreatePartnerRequest;
-import cm.g2s.uaa.service.broker.publisher.UserEventPublisherService;
+import cm.g2s.uaa.service.broker.publisher.UaaEventPublisherService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.statemachine.StateContext;
@@ -19,7 +19,7 @@ import org.springframework.stereotype.Component;
 public class CreatePartnerAction implements Action<UserState, UserEvent> {
 
     private final UserService userService;
-    private final UserEventPublisherService publisherService;
+    private final UaaEventPublisherService publisherService;
 
     @Override
     public void execute(StateContext<UserState, UserEvent> context) {

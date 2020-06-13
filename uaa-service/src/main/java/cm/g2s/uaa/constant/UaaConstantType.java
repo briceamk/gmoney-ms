@@ -26,4 +26,12 @@ public class UaaConstantType {
 
     public static final String USER_ID_HEADER = "userId";
     public static final String PARTNER_ID_HEADER = "partnerId";
+
+
+    public static final String ROUTING_KEY_EXPRESSION = "uaa";
+
+    public static final String ROUTING_KEY_CREATE_ACCOUNT = "createAccount";
+    public static final String ROUTING_KEY_CREATE_PARTNER = "createPartner";
+    public static final String ROUTING_KEY_REMOVE_PARTNER = "removePartner";
+
 }

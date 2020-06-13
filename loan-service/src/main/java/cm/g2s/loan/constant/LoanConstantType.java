@@ -12,7 +12,6 @@ public class LoanConstantType {
     public static final String JTI = "jti";
 
     public static final String[] PUBLIC_MATCHERS = {
-            "/api/v1/auth/**",
             "/actuator/**",
             "/v2/api-docs/**"
     };
@@ -25,4 +24,9 @@ public class LoanConstantType {
     public static final String LOAN_ID_HEADER = "loanId";
     public static final String PRINCIPAL_ID_HEADER = "principal";
     public static final String TRANSACTION_MODE_LOAN = "LOAN";
+
+    public static final String ROUTING_KEY_EXPRESSION = "loan";
+    public static final String ROUTING_KEY_CREATE_TRANSACTION = "createTransaction";
+    public static final String ROUTING_KEY_DEBIT_ACCOUNT = "debitAccount";
+    public static final String ROUTING_KEY_CONFIRM_DEBIT_ACCOUNT = "confirmDebitAccount";
 }

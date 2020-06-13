@@ -1,6 +1,5 @@
 package cm.g2s.partner.service.rule.model;
 
-import cm.g2s.partner.service.rule.model.RuleDto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
