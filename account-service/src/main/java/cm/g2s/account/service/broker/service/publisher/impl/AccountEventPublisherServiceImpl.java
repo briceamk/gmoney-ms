@@ -22,6 +22,7 @@ public class AccountEventPublisherServiceImpl implements AccountEventPublisherSe
     @Override
     @TransactionalEventListener
     public void onCreateAccountResponseEvent(CreateAccountResponse createAccountResponse) {
+        log.info("Sending create account response to uaa-service");
         eventSource.accountChannel().send(
                 MessageBuilder
                         .withPayload(createAccountResponse)
