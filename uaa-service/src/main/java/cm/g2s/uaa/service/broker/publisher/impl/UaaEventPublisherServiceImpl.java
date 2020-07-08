@@ -40,7 +40,8 @@ public class UaaEventPublisherServiceImpl implements UaaEventPublisherService {
                 MessageBuilder
                         .withPayload(createAccountRequest)
                         .setHeader(UaaConstantType.ROUTING_KEY_EXPRESSION, UaaConstantType.ROUTING_KEY_CREATE_ACCOUNT)
-                        .build());
+                        .build()
+        );
     }
 
     @Override

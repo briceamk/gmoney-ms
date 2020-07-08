@@ -52,6 +52,7 @@ public class AccountEventPublisherServiceImpl implements AccountEventPublisherSe
                 MessageBuilder
                         .withPayload(confirmDebitAccountResponse)
                         .setHeader(AccountConstantType.ROUTING_KEY_EXPRESSION, AccountConstantType.ROUTING_KEY_CONFIRM_DEBIT_ACCOUNT_RESPONSE)
-                        .build());
+                        .build()
+        );
     }
 }
