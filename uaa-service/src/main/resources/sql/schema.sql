@@ -73,6 +73,7 @@ CREATE TABLE IF NOT EXISTS users
     mobile character varying(12)  NOT NULL,
     password character varying(255)  NOT NULL,
     username character varying(32)  NOT NULL,
+    state character varying(128)  NOT NULL,
     CONSTRAINT users_pkey PRIMARY KEY (id),
     CONSTRAINT uk_63cf888pmqtt5tipcne79xsbm UNIQUE (mobile)
 ,

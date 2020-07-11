@@ -23,6 +23,7 @@ public class TransactionEventConsumerServiceImpl implements TransactionEventCons
 
     @Override
     @StreamListener(value = "loanChannel", condition = "headers['loan'] == 'createTransaction'")
+    //@StreamListener(value = "loanChannel")
     public void observeCreateTransactionRequest(@Payload  CreateTransactionRequest createTransactionRequest) {
         CreateTransactionResponse.CreateTransactionResponseBuilder builder = CreateTransactionResponse.builder();
         log.info("Receiving Create Transaction Request from loan-service");
@@ -44,6 +45,7 @@ public class TransactionEventConsumerServiceImpl implements TransactionEventCons
 
     @Override
     @StreamListener(value = "cronChannel", condition = "headers['cron'] == 'sendMoney'")
+    //@StreamListener(value = "cronChannel")
     public void observeSendMoneyRequest(@Payload JobRequest jobRequest) {
         log.info("Receiving Send Money Request from cron-service");
         if(jobRequest.getEventType().equals(JobType.SEND_MONEY)) {

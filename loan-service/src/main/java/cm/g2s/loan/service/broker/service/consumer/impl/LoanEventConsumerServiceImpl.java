@@ -20,7 +20,8 @@ public class LoanEventConsumerServiceImpl implements LoanEventConsumerService {
     private final LoanManagerService loanManagerService;
 
     @Override
-    @StreamListener(target = "accountChannel")
+    @StreamListener(target = "accountChannel", condition = "headers['account'] == 'debitAccountResponse'")
+    //@StreamListener(target = "accountChannel")
     public void observeDebitAccountResponse(@Payload DebitAccountResponse debitAccountResponse) {
         log.info("Receiving Debit Account response from account-service");
         loanManagerService.processDebitAccountResponse(null, debitAccountResponse.getLoanId(),
@@ -29,6 +30,7 @@ public class LoanEventConsumerServiceImpl implements LoanEventConsumerService {
 
     @Override
     @StreamListener(target = "transactionChannel", condition = "headers['transaction'] == 'createTransactionResponse'")
+    //@StreamListener(target = "transactionChannel")
     public void observeTransactionCreateResponse(@Payload CreateTransactionResponse createTransactionResponse) {
         log.info("Receiving Create Transaction response from transaction-service");
         loanManagerService.processCreateTransactionResponse(null, createTransactionResponse.getLoanId(),
@@ -37,6 +39,7 @@ public class LoanEventConsumerServiceImpl implements LoanEventConsumerService {
 
     @Override
     @StreamListener(target = "transactionChannel", condition = "headers['transaction'] == 'sendMoneyResponse'")
+    //@StreamListener(target = "transactionChannel")
     public void observeSendMoneyResponse(@Payload SendMoneyResponse sendMoneyResponse) {
         log.info("Receiving Send Money response from transaction-service");
         loanManagerService.processSendMoneyResponse(null, sendMoneyResponse.getLoanId(), sendMoneyResponse);
@@ -45,8 +48,9 @@ public class LoanEventConsumerServiceImpl implements LoanEventConsumerService {
 
     @Override
     @StreamListener(target = "accountChannel", condition = "headers['account'] == 'confirmDebitAccountResponse'")
+    //@StreamListener(target = "accountChannel")
     public void observeConfirmAccountDebitResponse(@Payload ConfirmDebitAccountResponse confirmDebitAccountResponse) {
-        log.info("Receiving Confirm Debit Account response from account-service");
+        log.info("Receiving Debit Account response from account-service");
         loanManagerService.processConfirmAccountDebitResponse(null, confirmDebitAccountResponse.getLoanId(),
                 confirmDebitAccountResponse);
     }

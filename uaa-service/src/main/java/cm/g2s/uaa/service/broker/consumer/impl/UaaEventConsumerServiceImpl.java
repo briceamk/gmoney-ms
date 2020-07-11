@@ -19,6 +19,7 @@ public class UaaEventConsumerServiceImpl implements UaaEventConsumerService {
 
     @Override
     @StreamListener(target = "partnerChannel", condition = "headers['partner'] == 'createPartnerResponse'")
+    //@StreamListener(target = "partnerChannel")
     public void observeCreatePartnerResponse(@Payload  CreatePartnerResponse createPartnerResponse) {
         log.info("Receiving Partner creation response from partner-service");
         userManagerService.processPartnerCreationResponse(createPartnerResponse.getUserId(),
@@ -27,6 +28,7 @@ public class UaaEventConsumerServiceImpl implements UaaEventConsumerService {
 
     @Override
     @StreamListener(target = "accountChannel", condition = "headers['account'] == 'createAccountResponse'")
+    //@StreamListener(target = "accountChannel")
     public void observeCreateAccountResponse(@Payload CreateAccountResponse createAccountResponse) {
         log.info("Receiving Account creation response from account-service");
         userManagerService.processAccountCreationResponse(createAccountResponse.getUserId(),

@@ -2,9 +2,9 @@
 TABLE USER
 ***************************************/
 
-INSERT INTO users (id, created_date, first_name, last_name, username, password, email, mobile, enabled, account_non_expired, credentials_non_expired, account_non_locked)
+INSERT INTO users (id, created_date, first_name, last_name, username, password, email, mobile, enabled, account_non_expired, credentials_non_expired, account_non_locked, state)
  SELECT
-    '767cd8d7-9b42-44f9-b2b6-1a55b464d776', current_timestamp, '', 'Administrator', 'admin','{bcrypt}$2y$12$yHR0HI7sArOLPhWo385gd.FBDFIEqGhCnXUW4coWH.4dpO9Gg/q5.', 'brice.mbiandji@g2snet.com', '697649589', '1', '1', '1', '1'
+    '767cd8d7-9b42-44f9-b2b6-1a55b464d776', current_timestamp, '', 'Administrator', 'admin','{bcrypt}$2y$12$yHR0HI7sArOLPhWo385gd.FBDFIEqGhCnXUW4coWH.4dpO9Gg/q5.', 'brice.mbiandji@g2snet.com', '697649589', '1', '1', '1', '1', 'USER_CREATED'
 WHERE NOT EXISTS (
     SELECT * FROM users WHERE id = '767cd8d7-9b42-44f9-b2b6-1a55b464d776'
 );
