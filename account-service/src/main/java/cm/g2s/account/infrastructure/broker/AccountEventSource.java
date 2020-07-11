@@ -8,11 +8,14 @@ import org.springframework.messaging.SubscribableChannel;
 
 
 public interface AccountEventSource {
-    @Input(value = "uaaChannel")
-    SubscribableChannel uaaChannel();
+    @Input(value = "uaaCreateAccountChannel")
+    SubscribableChannel uaaCreateAccountChannel();
 
-    @Input(value = "loanChannel")
-    SubscribableChannel loanChannel();
+    @Input(value = "loanDebitAccountChannel")
+    SubscribableChannel loanDebitAccountChannel();
+
+    @Input(value = "loanConfirmDebitAccountChannel")
+    SubscribableChannel loanConfirmDebitAccountChannel();
 
 
     @Output(value = "accountChannel")

@@ -23,8 +23,8 @@ public class AccountEventConsumerServiceImpl implements AccountEventConsumerServ
     private final AccountEventPublisherService publisherService;
 
     @Override
-    @StreamListener(target = "uaaChannel", condition = "headers['uaa'] == 'createAccount'")
-    //@StreamListener(target = "uaaChannel")
+    //@StreamListener(target = "uaaChannel", condition = "headers['uaa'] == 'createAccount'")
+    @StreamListener(target = "uaaCreateAccountChannel")
     public void observeAccountCreateRequest(@Payload CreateAccountRequest createAccountRequest) {
         log.info("Receiving Create Account Request from uaa-service");
         CreateAccountResponse.CreateAccountResponseBuilder builder = CreateAccountResponse.builder();
@@ -50,8 +50,8 @@ public class AccountEventConsumerServiceImpl implements AccountEventConsumerServ
     }
 
     @Override
-    @StreamListener(target = "loanChannel", condition = "headers['loan'] == 'debitAccount'")
-    //@StreamListener(target = "loanChannel")
+    //@StreamListener(target = "loanChannel", condition = "headers['loan'] == 'debitAccount'")
+    @StreamListener(target = "loanDebitAccountChannel")
     public void observeAccountDebitRequest(@Payload DebitAccountRequest debitAccountRequest) {
 
         log.info("Receiving Debit Account Request from loan-service");
@@ -70,8 +70,8 @@ public class AccountEventConsumerServiceImpl implements AccountEventConsumerServ
     }
 
     @Override
-    @StreamListener(target = "loanChannel", condition = "headers['loan'] == 'confirmDebitAccount'")
-    //@StreamListener(target = "loanChannel")
+    //@StreamListener(target = "loanChannel", condition = "headers['loan'] == 'confirmDebitAccount'")
+    @StreamListener(target = "loanConfirmDebitAccountChannel")
     public void observeConfirmAccountDebitRequest(@Payload ConfirmDebitAccountRequest confirmDebitAccountRequest) {
         log.info("Receiving Confirm Debit Account Request from loan-service");
         ConfirmDebitAccountResponse.ConfirmDebitAccountResponseBuilder builder = ConfirmDebitAccountResponse.builder();

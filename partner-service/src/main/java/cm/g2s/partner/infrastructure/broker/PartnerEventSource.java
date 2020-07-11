@@ -7,8 +7,11 @@ import org.springframework.messaging.SubscribableChannel;
 
 public interface PartnerEventSource {
 
-    @Input(value = "uaaChannel")
-    SubscribableChannel uaaChannel();
+    @Input(value = "uaaCreatePartnerChannel")
+    SubscribableChannel uaaCreatePartnerChannel();
+
+    @Input(value = "uaaRemovePartnerChannel")
+    SubscribableChannel uaaRemovePartnerChannel();
 
     @Output(value = "partnerChannel")
     MessageChannel partnerChannel();

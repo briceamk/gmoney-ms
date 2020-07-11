@@ -14,10 +14,10 @@ public interface UaaEventSource {
     MessageChannel   uaaChannel();
 
     //Input channel
-    @Input(value = "partnerChannel")
-    SubscribableChannel partnerChannel();
+    @Input(value = "partnerCreatePartnerResponseChannel")
+    SubscribableChannel partnerCreatePartnerResponseChannel();
 
-    @Input(value = "accountChannel")
-    SubscribableChannel accountChannel();
+    @Input(value = "accountCreateAccountResponseChannel")
+    SubscribableChannel accountCreateAccountResponseChannel();
 
 }

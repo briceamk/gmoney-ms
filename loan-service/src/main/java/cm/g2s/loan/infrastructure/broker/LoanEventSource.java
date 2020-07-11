@@ -10,10 +10,16 @@ public interface LoanEventSource {
     @Output(value = "loanChannel")
     MessageChannel loanChannel();
 
-    @Input(value = "accountChannel")
-    SubscribableChannel accountChannel();
+    @Input(value = "accountDebitAccountResponseChannel")
+    SubscribableChannel accountDebitAccountResponseChannel();
 
-    @Input(value = "transactionChannel")
-    SubscribableChannel transactionChannel();
+    @Input(value = "accountConfirmDebitAccountResponseChannel")
+    SubscribableChannel accountConfirmDebitAccountResponseChannel();
+
+    @Input(value = "transactionCreateTransactionResponseChannel")
+    SubscribableChannel transactionCreateTransactionResponseChannel();
+
+    @Input(value = "transactionSendMoneyResponseChannel")
+    SubscribableChannel transactionSendMoneyResponseChannel();
 
 }
