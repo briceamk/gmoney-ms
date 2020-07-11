@@ -47,7 +47,7 @@ public class AccountEventPublisherServiceImpl implements AccountEventPublisherSe
     @Override
     @TransactionalEventListener
     public void onConfirmDebitAccountResponseEvent(ConfirmDebitAccountResponse confirmDebitAccountResponse) {
-        log.info("Sending confirm debit account response to loan-service");
+        log.info("Sending confirm debit account response to loan-service {}", confirmDebitAccountResponse.toString());
         eventSource.accountChannel().send(
                 MessageBuilder
                         .withPayload(confirmDebitAccountResponse)

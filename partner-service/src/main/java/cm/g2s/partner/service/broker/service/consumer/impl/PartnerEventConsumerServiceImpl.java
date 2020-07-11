@@ -28,7 +28,7 @@ public class PartnerEventConsumerServiceImpl implements PartnerEventConsumerServ
 
     @Override
     //@StreamListener(target = "uaaChannel", condition = "headers['uaa'] == 'createPartner'")
-    @StreamListener(target = "uaaCreatePartnerChannel")
+    @StreamListener(target = "uaaCreatePartnerChannel", condition = "headers['uaa'] == 'createPartner'")
     public void observePartnerCreateRequest(@Payload CreatePartnerRequest createPartnerRequest) {
 
         CreatePartnerResponse.CreatePartnerResponseBuilder builder = CreatePartnerResponse.builder();
@@ -53,7 +53,7 @@ public class PartnerEventConsumerServiceImpl implements PartnerEventConsumerServ
 
     @Override
     //@StreamListener(target = "uaaChannel", condition = "headers['uaa'] == 'removePartner'")
-    @StreamListener(target = "uaaRemovePartnerChannel")
+    @StreamListener(target = "uaaRemovePartnerChannel", condition = "headers['uaa'] == 'removePartner'")
     public void observePartnerRemoveRequest(@Payload RemovePartnerRequest removePartnerRequest) {
         log.info("Receiving Account Creation Failed  Request from uaa-service");
         partnerService.deleteByUserId(null, removePartnerRequest.getUserId());
