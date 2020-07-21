@@ -11,6 +11,7 @@ import org.quartz.JobExecutionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.scheduling.quartz.QuartzJobBean;
+import org.springframework.transaction.event.TransactionalEventListener;
 
 
 @Slf4j
@@ -25,6 +26,7 @@ public class SendMoneyCronJob extends QuartzJobBean {
     }
 
     @Override
+    @TransactionalEventListener
     protected void executeInternal(JobExecutionContext context) throws JobExecutionException {
         log.info("SendMoney Cron Job Start................");
         cronEventSource.cronChannel().send(

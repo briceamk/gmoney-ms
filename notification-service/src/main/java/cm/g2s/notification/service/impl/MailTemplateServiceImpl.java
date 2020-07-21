@@ -3,6 +3,7 @@ package cm.g2s.notification.service.impl;
 import cm.g2s.notification.domain.model.Mail;
 import cm.g2s.notification.domain.model.MailState;
 import cm.g2s.notification.domain.model.MailTemplate;
+import cm.g2s.notification.domain.model.MailTemplateType;
 import cm.g2s.notification.exception.ConflictException;
 import cm.g2s.notification.exception.ResourceNotFoundException;
 import cm.g2s.notification.infrastructure.repository.MailTemplateRepository;
@@ -33,7 +34,7 @@ public class MailTemplateServiceImpl implements MailTemplateService {
 
     @Override
     public void update(CustomPrincipal principal, MailTemplate mailTemplate) {
-        //todo validate uniaue field
+        //todo validate unique field
         mailTemplateRepository.save(mailTemplate);
     }
 
@@ -53,6 +54,16 @@ public class MailTemplateServiceImpl implements MailTemplateService {
                 () -> {
                     log.error("Mail template with name {} not found", name);
                     throw new ResourceNotFoundException(String.format("Mail template with name %s not found", name));
+                }
+        );
+    }
+
+    @Override
+    public MailTemplate findByType(CustomPrincipal principal, MailTemplateType type) {
+        return mailTemplateRepository.findByType(type).orElseThrow(
+                () -> {
+                    log.error("Mail template for type {} not found", type.name());
+                    throw new ResourceNotFoundException(String.format("Mail template for type %s not found", type.name()));
                 }
         );
     }

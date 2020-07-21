@@ -9,6 +9,7 @@ import cm.g2s.loan.service.LoanManagerService;
 import cm.g2s.loan.service.LoanService;
 import cm.g2s.loan.service.account.model.AccountDto;
 import cm.g2s.loan.service.broker.payload.ConfirmDebitAccountResponse;
+import cm.g2s.loan.service.broker.payload.CreateSendMoneySuccessEmailResponse;
 import cm.g2s.loan.service.broker.payload.SendMoneyResponse;
 import cm.g2s.loan.service.partner.model.PartnerDto;
 import cm.g2s.loan.exception.BadRequestException;
@@ -16,6 +17,8 @@ import cm.g2s.loan.sm.LoanStateChangeInterceptor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.support.MessageBuilder;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.statemachine.StateMachine;
 import org.springframework.statemachine.config.StateMachineFactory;
 import org.springframework.statemachine.support.DefaultStateMachineContext;
@@ -39,6 +42,11 @@ public class LoanManagerServiceImpl implements LoanManagerService {
     @Override
     @Transactional
     public void validateLoan(CustomPrincipal principal, Loan loan, AccountDto accountDto, PartnerDto partnerDto) {
+        //We first check if account is not in PENDING state. In this state, loan can't be create
+        if(accountDto.getState().equals(LoanConstantType.ACCOUNT_STATE_PENDING)) {
+            log.info("You can not send a request when your account is in pending state");
+            throw new BadRequestException("You can not send a request when your account is in pending state");
+        }
 
         loan = loanService.validateLoan(principal, loan);
 
@@ -83,25 +91,25 @@ public class LoanManagerServiceImpl implements LoanManagerService {
     @Transactional
     public void processDebitAccountResponse(CustomPrincipal principal, String loanId, Boolean debitAccountError) {
         log.info("Process debit account action result");
-        Loan loan = loanService.findById(null, loanId);
+        Loan loan = loanService.findById(principal, loanId);
 
         if(loan != null) {
             if(!debitAccountError) {
                 //We send event to change the state from ACCOUNT_DEBIT_PENDING to ACCOUNT_DEBIT
                 // not action needed
-                sendEvent(loan, LoanEvent.DEBIT_ACCOUNT_PASSED, null, null);
+                sendEvent(loan, LoanEvent.DEBIT_ACCOUNT_PASSED, principal, null);
 
                 //await for status change
-                awaitForStatusChange(null, loanId, LoanState.ACCOUNT_DEBIT);
+                awaitForStatusChange(principal, loanId, LoanState.ACCOUNT_DEBIT);
 
-                Loan debitedLoan = loanService.findById(null, loan.getId());
+                Loan debitedLoan = loanService.findById(principal, loan.getId());
 
                 //We send event to change the state from ACCOUNT_DEBIT to TRANSACTION_CREATED_PENDING
                 // CreateTransactionAction needed
-                sendEvent(debitedLoan, LoanEvent.CREATE_TRANSACTION, null, null);
+                sendEvent(debitedLoan, LoanEvent.CREATE_TRANSACTION, principal, null);
 
             } else {
-                sendEvent(loan, LoanEvent.DEBIT_ACCOUNT_FAILED, null, null);
+                sendEvent(loan, LoanEvent.DEBIT_ACCOUNT_FAILED, principal, null);
 
                 //TODO execute compensations actions
             }
@@ -110,27 +118,27 @@ public class LoanManagerServiceImpl implements LoanManagerService {
     }
 
     @Override
+    @Transactional
     public void processCreateTransactionResponse(CustomPrincipal principal, String loanId, Boolean createTransactionError) {
         log.info("Process debit account action result");
-        Loan loan = loanService.findById(null, loanId);
+        Loan loan = loanService.findById(principal, loanId);
 
         if(loan != null) {
             if(!createTransactionError) {
                 //We send event to change the state from TRANSACTION_CREATED_PENDING to TRANSACTION_CREATED
                 // not action needed
-                sendEvent(loan, LoanEvent.CREATE_TRANSACTION_PASSED, null, null);
+                sendEvent(loan, LoanEvent.CREATE_TRANSACTION_PASSED, principal, null);
 
                 //await for status change
-                awaitForStatusChange(null, loanId, LoanState.TRANSACTION_CREATED);
+                awaitForStatusChange(principal, loanId, LoanState.TRANSACTION_CREATED);
 
-                Loan transactionCreatedLoan = loanService.findById(null, loan.getId());
+                Loan transactionCreatedLoan = loanService.findById(principal, loan.getId());
 
                 //We send event to change the state from TRANSACTION_CREATED to TRANSACTION_SEND_PENDING
-                // CreateTransactionAction needed
-                sendEvent(transactionCreatedLoan, LoanEvent.SEND_TRANSACTION, null, null);
+                sendEvent(transactionCreatedLoan, LoanEvent.SEND_TRANSACTION, principal, null);
 
             } else {
-                sendEvent(loan, LoanEvent.CREATE_TRANSACTION_FAILED, null, null);
+                sendEvent(loan, LoanEvent.CREATE_TRANSACTION_FAILED, principal, null);
 
                 //TODO execute compensations actions
                 //1 - We send event to Credit Account and set state account to ACTIVE
@@ -142,27 +150,27 @@ public class LoanManagerServiceImpl implements LoanManagerService {
     }
 
     @Override
+    @Transactional
     public void processSendMoneyResponse(CustomPrincipal principal, String loanId, SendMoneyResponse response) {
         log.info("Process send money action result");
-        Loan loan = loanService.findById(null, loanId);
+        Loan loan = loanService.findById(principal, loanId);
 
         if(loan != null) {
             if(!response.getSendMoneyError()) {
                 //We send event to change the state from TRANSACTION_SEND_PENDING to TRANSACTION_SEND
                 // not action needed
-                sendEvent(loan, LoanEvent.SEND_TRANSACTION_PASSED, null, null);
+                sendEvent(loan, LoanEvent.SEND_TRANSACTION_PASSED, principal, null);
 
                 //await for status change
-                awaitForStatusChange(null, loanId, LoanState.TRANSACTION_SEND);
+                awaitForStatusChange(principal, loanId, LoanState.TRANSACTION_SEND);
 
-                Loan sendCreatedLoan = loanService.findById(null, loan.getId());
+                Loan sendCreatedLoan = loanService.findById(principal, loan.getId());
 
                 //We send event to change the state from TRANSACTION_SEND to CONFIRM_DEBIT_PENDING
-                // CreateTransactionAction needed
-                sendEvent(sendCreatedLoan, LoanEvent.CONFIRM_DEBIT, null, null);
+                sendEvent(sendCreatedLoan, LoanEvent.CONFIRM_DEBIT, principal, null);
 
             } else {
-                sendEvent(loan, LoanEvent.SEND_TRANSACTION_FAILED, null, null);
+                sendEvent(loan, LoanEvent.SEND_TRANSACTION_FAILED, principal, null);
 
                 //TODO execute compensations actions:
                 //1 - We send event to Credit Account and set state account to ACTIVE
@@ -175,6 +183,7 @@ public class LoanManagerServiceImpl implements LoanManagerService {
     }
 
     @Override
+    @Transactional
     public void processConfirmAccountDebitResponse(CustomPrincipal principal, String loanId, ConfirmDebitAccountResponse response) {
         log.info("Process confirm debit account action result");
         Loan loan = loanService.findById(null, loanId);
@@ -183,22 +192,55 @@ public class LoanManagerServiceImpl implements LoanManagerService {
             if(!response.getConfirmDebitAccountError()) {
                 //We send event to change the state from CONFIRM_DEBIT_PENDING to CONFIRM_DEBIT
                 // not action needed
-                sendEvent(loan, LoanEvent.CONFIRM_DEBIT_PASSED, null, null);
+                sendEvent(loan, LoanEvent.CONFIRM_DEBIT_PASSED, principal, null);
 
                 //await for status change
-                awaitForStatusChange(null, loanId, LoanState.CONFIRM_DEBIT);
+                awaitForStatusChange(principal, loanId, LoanState.CONFIRM_DEBIT);
 
-                Loan confirmedLoan = loanService.findById(null, loan.getId());
+                Loan confirmedLoan = loanService.findById(principal, loan.getId());
 
-                //We send event to change the state from CONFIRM_DEBIT to SEND_NOTIFICATION_PENDING
+                //We send event to change the state from CONFIRM_DEBIT to EMAIL_NOTIFICATION_CREATE_PENDING
                 // CreateTransactionAction needed
-                sendEvent(confirmedLoan, LoanEvent.SEND_NOTIFICATION, null, null);
+                sendEvent(confirmedLoan, LoanEvent.CREATE_EMAIL_NOTIFICATION, principal, response);
 
             } else {
-                sendEvent(loan, LoanEvent.CONFIRM_DEBIT_FAILED, null, null);
+                sendEvent(loan, LoanEvent.CONFIRM_DEBIT_FAILED, principal, null);
 
                 //TODO execute compensations actions:
                 //1 - We send a notification to manager to manually activate the account
+
+                //2- We set error message and state of transaction
+
+
+            }
+        }
+    }
+
+    @Override
+    @Transactional
+    public void processCreateSendMoneySuccessEmailResponse(CustomPrincipal principal, String loanId, CreateSendMoneySuccessEmailResponse response) {
+        log.info("Process create send money success email response action result");
+        Loan loan = loanService.findById(null, loanId);
+
+        if(loan != null) {
+            if(!response.getCreateSendMoneySuccessEmailError()) {
+                //We send event to change the state from EMAIL_NOTIFICATION_CREATE_PENDING to EMAIL_NOTIFICATION_CREATE
+                // not action needed
+                sendEvent(loan, LoanEvent.CREATE_EMAIL_NOTIFICATION_PASSED, principal, null);
+
+                //await for status change
+                awaitForStatusChange(principal, loanId, LoanState.EMAIL_NOTIFICATION_CREATE);
+
+                Loan notificationCreatedLoan = loanService.findById(principal, loan.getId());
+
+                //We send event to change the state from EMAIL_NOTIFICATION_CREATE to TERMINATE
+                sendEvent(notificationCreatedLoan, LoanEvent.TERMINATE, principal, response);
+
+            } else {
+                sendEvent(loan, LoanEvent.CREATE_EMAIL_NOTIFICATION_FAILED, principal, null);
+
+                //TODO execute compensations actions:
+                //1 - We send a notification to manager to check why email was not create
 
                 //2- We set error message and state of transaction
 
@@ -241,10 +283,20 @@ public class LoanManagerServiceImpl implements LoanManagerService {
 
     private void sendEvent(Loan loan, LoanEvent event, CustomPrincipal principal, Object payload) {
         StateMachine<LoanState, LoanEvent> machine = build(loan);
+        ConfirmDebitAccountResponse confirmDebitAccountResponse = null;
+
+        if(payload instanceof ConfirmDebitAccountResponse)
+            confirmDebitAccountResponse = (ConfirmDebitAccountResponse) payload;
+
+
 
         MessageBuilder messageBuilder = MessageBuilder.withPayload(event)
                 .setHeader(LoanConstantType.LOAN_ID_HEADER, loan.getId())
                 .setHeader(LoanConstantType.PRINCIPAL_ID_HEADER, principal);
+
+        if(confirmDebitAccountResponse != null) {
+            messageBuilder.setHeader(LoanConstantType.ACCOUNT_BALANCE_HEADER, confirmDebitAccountResponse.getBalance());
+        }
 
         machine.sendEvent(messageBuilder.build());
     }

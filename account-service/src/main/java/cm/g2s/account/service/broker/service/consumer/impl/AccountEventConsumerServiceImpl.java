@@ -1,6 +1,7 @@
 package cm.g2s.account.service.broker.service.consumer.impl;
 
 
+
 import cm.g2s.account.domain.model.Account;
 import cm.g2s.account.domain.model.AccountState;
 import cm.g2s.account.service.AccountService;
@@ -11,8 +12,12 @@ import cm.g2s.account.service.partner.model.PartnerDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.stream.annotation.StreamListener;
+import org.springframework.http.*;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+
+import java.util.Collections;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -21,9 +26,9 @@ public class AccountEventConsumerServiceImpl implements AccountEventConsumerServ
 
     private final AccountService accountService;
     private final AccountEventPublisherService publisherService;
+    private final RestTemplate restTemplate;
 
     @Override
-    //@StreamListener(target = "uaaChannel", condition = "headers['uaa'] == 'createAccount'")
     @StreamListener(target = "uaaCreateAccountChannel", condition = "headers['uaa'] == 'createAccount'")
     public void observeAccountCreateRequest(@Payload CreateAccountRequest createAccountRequest) {
         log.info("Receiving Create Account Request from uaa-service");
@@ -50,7 +55,6 @@ public class AccountEventConsumerServiceImpl implements AccountEventConsumerServ
     }
 
     @Override
-    //@StreamListener(target = "loanChannel", condition = "headers['loan'] == 'debitAccount'")
     @StreamListener(target = "loanDebitAccountChannel", condition = "headers['loan'] == 'debitAccount'")
     public void observeAccountDebitRequest(@Payload DebitAccountRequest debitAccountRequest) {
 
@@ -58,11 +62,15 @@ public class AccountEventConsumerServiceImpl implements AccountEventConsumerServ
         DebitAccountResponse.DebitAccountResponseBuilder builder = DebitAccountResponse.builder();
         try {
             accountService.debitAccount(null, debitAccountRequest.getAccountId(), debitAccountRequest.getDebitAmount());
-            builder.debitAccountError(false).loanId(debitAccountRequest.getLoanId());
+            builder
+                    .debitAccountError(false)
+                    .loanId(debitAccountRequest.getLoanId());
             log.info("Debit Account Request Successfully");
         }catch (Exception e) {
             log.error("Error when debiting account with data from loan-service");
-            builder.debitAccountError(true).loanId(debitAccountRequest.getLoanId());
+            builder
+                    .debitAccountError(true)
+                    .loanId(debitAccountRequest.getLoanId());
         } finally {
             //Sending Response to loan-service
             publisherService.onDebitAccountResponseEvent(builder.build());
@@ -70,7 +78,6 @@ public class AccountEventConsumerServiceImpl implements AccountEventConsumerServ
     }
 
     @Override
-    //@StreamListener(target = "loanChannel", condition = "headers['loan'] == 'confirmDebitAccount'")
     @StreamListener(target = "loanConfirmDebitAccountChannel", condition = "headers['loan'] == 'confirmDebitAccount'")
     public void observeConfirmAccountDebitRequest(@Payload ConfirmDebitAccountRequest confirmDebitAccountRequest) {
         log.info("Receiving Confirm Debit Account Request from loan-service");
@@ -78,7 +85,10 @@ public class AccountEventConsumerServiceImpl implements AccountEventConsumerServ
         try {
             accountService.confirmDeBitAccount(null, confirmDebitAccountRequest.getAccountId(),
                     AccountState.valueOf(confirmDebitAccountRequest.getNextAccountState()));
-            builder.confirmDebitAccountError(false).loanId(confirmDebitAccountRequest.getLoanId());
+            builder
+                    .confirmDebitAccountError(false)
+                    .loanId(confirmDebitAccountRequest.getLoanId())
+                    .balance(accountService.findById(null, confirmDebitAccountRequest.getAccountId()).getBalance());
             log.info("Confirm Debit Account Request Successfully");
         }catch (Exception e) {
             log.error("Error when confirming debiting account with data from loan-service");
@@ -95,6 +105,19 @@ public class AccountEventConsumerServiceImpl implements AccountEventConsumerServ
                 .userId(accountRequest.getUserId())
                 .build();
     }
+
+    private HttpHeaders createHttpJwtHeaders(String jwt)
+    {
+        HttpHeaders headers = new HttpHeaders();
+        headers.set(HttpHeaders.AUTHORIZATION, jwt);
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+
+
+        return headers;
+    }
+
+
 
 
 }

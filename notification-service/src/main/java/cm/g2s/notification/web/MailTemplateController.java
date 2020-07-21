@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/mailTemplate-templates")
+@RequestMapping("/api/v1/mail-templates")
 @Api(value = "Mail Template", tags = "Mail Template End Points")
 public class MailTemplateController {
 

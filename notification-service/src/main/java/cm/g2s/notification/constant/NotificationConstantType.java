@@ -25,4 +25,18 @@ public class NotificationConstantType {
     public static final String EMAIL_START_TLS_ENABLE = "mail.smtp.starttls.enable";
     public static final String DEFAULT_EMAIL_TEST = "brice.mbiandji@g2snet.com";
     public static final String MAIL_SEPARATOR = ";";
+
+    // MAIL RELATED CLASS
+
+    public static final String LOAN_CLASS = "Loan";
+
+    // MAIL TEMPLATE CONSTANT WHEN SEND MONEY WAS SUCCESSFUL
+    public static final String SEND_MONEY_SUCCESS_LOAN_NUMBER = "%loanNumber";
+    public static final String SEND_MONEY_SUCCESS_AMOUNT = "%amount";
+    public static final String SEND_MONEY_SUCCESS_BALANCE = "%balance";
+    public static final String SEND_MONEY_SUCCESS_FULL_NAME = "%fullName";
+
+    public static final String ROUTING_KEY_EXPRESSION = "notification";
+    public static final Object ROUTING_KEY_SUCCESS_SEND_MONEY_NOTIFICATION_RESPONSE = "successSendMoneyNotificationResponse";
+    public static final Object ROUTING_KEY_CREATE_SEND_MONEY_SUCCESS_EMAIL_RESPONSE = "createSendMoneySuccessEmailResponse";
 }

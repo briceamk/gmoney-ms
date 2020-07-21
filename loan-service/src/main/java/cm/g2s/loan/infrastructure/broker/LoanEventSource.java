@@ -22,4 +22,7 @@ public interface LoanEventSource {
     @Input(value = "transactionSendMoneyResponseChannel")
     SubscribableChannel transactionSendMoneyResponseChannel();
 
+    @Input(value = "notificationCreateSendMoneySuccessEmailResponseChannel")
+    SubscribableChannel notificationCreateSendMoneySuccessEmailResponseChannel();
+
 }

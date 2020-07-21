@@ -124,4 +124,9 @@ public class MailServiceImpl implements MailService {
         return mailPage;
     }
 
+    @Override
+    public List<Mail> findByStateNot(MailState send) {
+        return mailRepository.findByStateNot(MailState.SEND);
+    }
+
 }

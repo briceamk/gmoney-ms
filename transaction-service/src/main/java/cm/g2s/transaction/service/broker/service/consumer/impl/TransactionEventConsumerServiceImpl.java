@@ -22,7 +22,6 @@ public class TransactionEventConsumerServiceImpl implements TransactionEventCons
     private final TransactionEventPublisherService publisherService;
 
     @Override
-    //@StreamListener(value = "loanChannel", condition = "headers['loan'] == 'createTransaction'")
     @StreamListener(value = "loanCreateTransactionChannel", condition = "headers['loan'] == 'createTransaction'")
     public void observeCreateTransactionRequest(@Payload  CreateTransactionRequest createTransactionRequest) {
         CreateTransactionResponse.CreateTransactionResponseBuilder builder = CreateTransactionResponse.builder();
@@ -44,7 +43,6 @@ public class TransactionEventConsumerServiceImpl implements TransactionEventCons
     }
 
     @Override
-    //@StreamListener(value = "cronChannel", condition = "headers['cron'] == 'sendMoney'")
     @StreamListener(value = "cronSendMoneyChannel", condition = "headers['cron'] == 'sendMoney'")
     public void observeSendMoneyRequest(@Payload JobRequest jobRequest) {
         log.info("Receiving Send Money Request from cron-service");
@@ -59,7 +57,6 @@ public class TransactionEventConsumerServiceImpl implements TransactionEventCons
                     builder.sendMoneyError(true)
                             .errorMessage("Failed to send your money! we will retry later");
                 }
-
                 publisherService.onSendMoneyResponseEvent(builder.build());
             });
 

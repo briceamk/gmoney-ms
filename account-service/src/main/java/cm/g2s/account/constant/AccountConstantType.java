@@ -25,4 +25,6 @@ public class AccountConstantType {
     public static final String ROUTING_KEY_CREATE_ACCOUNT_RESPONSE = "createAccountResponse";
     public static final String ROUTING_KEY_DEBIT_ACCOUNT_RESPONSE = "debitAccountResponse";
     public static final String ROUTING_KEY_CONFIRM_DEBIT_ACCOUNT_RESPONSE = "confirmDebitAccountResponse";
+    public static final String PRINCIPAL_ID_HEADER = "principal";
+    public static final String ACCESS_TOKEN = "accessToken";
 }

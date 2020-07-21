@@ -1,10 +1,12 @@
 package cm.g2s.notification.service;
 
 import cm.g2s.notification.domain.model.Mail;
+import cm.g2s.notification.domain.model.MailState;
 import cm.g2s.notification.security.CustomPrincipal;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
+import java.util.List;
 
 
 public interface MailService {
@@ -20,4 +22,5 @@ public interface MailService {
 
     Page<Mail> findAll(CustomPrincipal principal, String reference, String state, PageRequest pageRequest);
 
+    List<Mail> findByStateNot(MailState send);
 }

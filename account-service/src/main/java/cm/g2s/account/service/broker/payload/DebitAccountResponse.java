@@ -12,4 +12,5 @@ import lombok.NoArgsConstructor;
 public class DebitAccountResponse {
     private String loanId;
     private Boolean debitAccountError;
+
 }

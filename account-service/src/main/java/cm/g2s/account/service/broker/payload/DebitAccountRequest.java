@@ -1,5 +1,6 @@
 package cm.g2s.account.service.broker.payload;
 
+import cm.g2s.account.security.CustomPrincipal;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

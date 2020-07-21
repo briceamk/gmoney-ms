@@ -36,8 +36,19 @@ public abstract class LoanMapperDecorator implements LoanMapper{
             loan.setAccountId(loanDto.getAccountDto().getId());
         if(loanDto.getCompanyDto() != null)
             loan.setCompanyId(loanDto.getCompanyDto().getId());
-        if(loanDto.getPartnerDto() != null)
+        if(loanDto.getPartnerDto() != null) {
             loan.setPartnerId(loanDto.getPartnerDto().getId());
+            String fullName = "";
+            if(loanDto.getPartnerDto().getFirstName() != null && !loanDto.getPartnerDto().getFirstName().isEmpty())
+                fullName += loanDto.getPartnerDto().getFirstName() +  " ";
+            if(loanDto.getPartnerDto().getLastName() != null && !loanDto.getPartnerDto().getLastName().isEmpty())
+                fullName += loanDto.getPartnerDto().getLastName();
+            loan.setFullName(fullName);
+            if(loanDto.getPartnerDto().getEmail() != null && !loanDto.getPartnerDto().getEmail().isEmpty())
+                loan.setEmail(loanDto.getPartnerDto().getEmail());
+
+        }
+
         if(loanDto.getRuleDto() != null)
             loan.setRuleId(loanDto.getRuleDto().getId());
         if(loanDto.getUserDto() != null)

@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -12,4 +14,5 @@ import lombok.NoArgsConstructor;
 public class ConfirmDebitAccountResponse {
     private String loanId;
     private Boolean confirmDebitAccountError;
+    private BigDecimal balance;
 }

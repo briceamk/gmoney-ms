@@ -30,6 +30,8 @@ public class LoanDto {
 
     private String id;
     private String number;
+    private String fullName;
+    private String email;
     @NotEmpty(message = "mobile number is require")
     private String mobile;
     @JsonSerialize(using = LocalDateTimeSerializer.class)

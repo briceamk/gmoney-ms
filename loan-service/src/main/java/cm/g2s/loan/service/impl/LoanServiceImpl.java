@@ -34,8 +34,16 @@ public class LoanServiceImpl implements LoanService {
 
     @Override
     public Loan create(CustomPrincipal principal, Loan loan) throws ScriptException {
-        //We first check if account is not in PENDING state. In this state, loan can't be create
-        //TODO check account state before
+
+        //We check if fullName and email is set
+        if(loan.getFullName() == null || loan.getFullName().isEmpty()) {
+            log.error("fullName is required. check your profile");
+            throw new BadRequestException("fullName is required. check your profile");
+        }
+        if(loan.getEmail() == null || loan.getEmail().isEmpty()) {
+            log.error("email is required. check your profile");
+            throw new BadRequestException("email is required. check your profile");
+        }
 
         //We set default value
         loan.setNumber(LoanConstantType.NEW_LOAN_NUMBER);

@@ -5,10 +5,10 @@ import cm.g2s.loan.infrastructure.broker.LoanEventSource;
 import cm.g2s.loan.service.broker.payload.ConfirmDebitAccountRequest;
 import cm.g2s.loan.service.broker.payload.CreateTransactionRequest;
 import cm.g2s.loan.service.broker.payload.DebitAccountRequest;
+import cm.g2s.loan.service.broker.payload.CreateSendMoneySuccessEmailRequest;
 import cm.g2s.loan.service.broker.service.publisher.LoanEventPublisherService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.event.TransactionalEventListener;
@@ -23,7 +23,7 @@ public class LoanEventPublisherServiceImpl implements LoanEventPublisherService 
 
     @Override
     @TransactionalEventListener
-    public void onTransactionCreatedEvent(@Payload CreateTransactionRequest createTransactionRequest) {
+    public void onTransactionCreatedEvent(CreateTransactionRequest createTransactionRequest) {
         log.info("Publishing Create Transaction action to rabbitmq");
         eventSource.loanChannel().send(
                 MessageBuilder
@@ -34,7 +34,7 @@ public class LoanEventPublisherServiceImpl implements LoanEventPublisherService 
 
     @Override
     @TransactionalEventListener
-    public void onDebitAccountEvent(@Payload DebitAccountRequest debitAccountRequest) {
+    public void onDebitAccountEvent(DebitAccountRequest debitAccountRequest) {
         log.info("Publishing Debit Account action to rabbitmq");
         eventSource.loanChannel().send(
                 MessageBuilder
@@ -51,5 +51,16 @@ public class LoanEventPublisherServiceImpl implements LoanEventPublisherService 
                 .withPayload(confirmDebitAccountRequest)
                 .setHeader(LoanConstantType.ROUTING_KEY_EXPRESSION, LoanConstantType.ROUTING_KEY_CONFIRM_DEBIT_ACCOUNT)
                 .build());
+    }
+
+    @Override
+    @TransactionalEventListener
+    public void onCreateSendMoneySuccessEmailEvent(CreateSendMoneySuccessEmailRequest createSendMoneySuccessEmailRequest) {
+        log.info("Publishing Send Money Success Email action to rabbitmq {}", createSendMoneySuccessEmailRequest.toString());
+        eventSource.loanChannel().send(MessageBuilder
+                .withPayload(createSendMoneySuccessEmailRequest)
+                .setHeader(LoanConstantType.ROUTING_KEY_EXPRESSION, LoanConstantType.ROUTING_KEY_CREATE_SEND_MONEY_SUCCESS_EMAIL)
+                .build());
+
     }
 }

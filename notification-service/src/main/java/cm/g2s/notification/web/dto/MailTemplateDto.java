@@ -23,4 +23,6 @@ public class MailTemplateDto implements Serializable {
     private String subject;
     @NotEmpty(message = "content is required!")
     private String content;
+    @NotEmpty(message = "type is required!")
+    private String type;
 }

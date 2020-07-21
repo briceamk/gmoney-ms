@@ -21,6 +21,10 @@ public class Loan extends BaseEntity {
 
     @Column(length = 32, nullable = false)
     private String number;
+    @Column(length = 128, nullable = false)
+    private String fullName;
+    @Column(length = 255, nullable = false)
+    private String email;
     @Column(nullable = false)
     private String partnerId;
     @Column(nullable = false)
@@ -48,12 +52,14 @@ public class Loan extends BaseEntity {
     private LoanState state;
 
     @Builder
-    public Loan(String id, String number, String partnerId, String accountId,
+    public Loan(String id, String number, String fullName, String email, String partnerId, String accountId,
                 String companyId, String userId, String mobile, String ruleId,
                 Timestamp creationDate, Timestamp issueDate, BigDecimal amount,
                 BigDecimal interest, LoanMode mode, LoanState state) {
         super(id);
         this.number = number;
+        this.fullName = fullName;
+        this.email = email;
         this.partnerId = partnerId;
         this.accountId = accountId;
         this.companyId = companyId;
@@ -67,4 +73,5 @@ public class Loan extends BaseEntity {
         this.mode = mode;
         this.state = state;
     }
+
 }

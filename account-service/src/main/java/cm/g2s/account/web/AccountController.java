@@ -12,16 +12,20 @@ import cm.g2s.account.web.mapper.AccountMapper;
 import cm.g2s.account.web.payload.ResponseApi;
 import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.math.BigDecimal;
 import java.net.URI;
 import java.util.stream.Collectors;
 
@@ -29,6 +33,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/accounts")
 @Api(value = "Account", tags = "Account End Points")
+@Slf4j
 public class AccountController {
 
     private final AccountService accountService;
@@ -122,6 +127,13 @@ public class AccountController {
                                         @PathVariable String id) {
         accountService.deleteById(principal, id);
         return new ResponseEntity<>(new ResponseApi(true, "Account deleted successfully!"), HttpStatus.OK);
+    }
+
+    @GetMapping("/id/{id}/debitAmount/{debitAmount}")
+    public ResponseEntity<?> debitAccount(@CurrentPrincipal CustomPrincipal principal,
+                                        @PathVariable String id, @PathVariable BigDecimal debitAmount) {
+        accountService.debitAccount(principal, id, debitAmount);
+        return new ResponseEntity<>(new ResponseApi(true, "Account debited successfully!"), HttpStatus.OK);
     }
 
 

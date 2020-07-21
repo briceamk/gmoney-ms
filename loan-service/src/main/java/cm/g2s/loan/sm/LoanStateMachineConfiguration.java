@@ -5,6 +5,7 @@ import cm.g2s.loan.domain.model.LoanState;
 import cm.g2s.loan.sm.action.ConfirmDebitAccountAction;
 import cm.g2s.loan.sm.action.DebitAccountAction;
 import cm.g2s.loan.sm.action.CreateTransactionAction;
+import cm.g2s.loan.sm.action.CreateEmailNotificationAction;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.statemachine.config.EnableStateMachineFactory;
@@ -22,6 +23,7 @@ public class LoanStateMachineConfiguration extends StateMachineConfigurerAdapter
     private final CreateTransactionAction createTransactionAction;
     private final DebitAccountAction debitAccountAction;
     private final ConfirmDebitAccountAction confirmDebitAccountAction;
+    private final CreateEmailNotificationAction createEmailNotificationAction;
 
     @Override
     public void configure(StateMachineStateConfigurer<LoanState, LoanEvent> states) throws Exception {
@@ -34,7 +36,7 @@ public class LoanStateMachineConfiguration extends StateMachineConfigurerAdapter
                 .end(LoanState.TRANSACTION_CREATED_EXCEPTION)
                 .end(LoanState.TRANSACTION_SEND_EXCEPTION)
                 .end(LoanState.CONFIRM_DEBIT_EXCEPTION)
-                .end(LoanState.NOTIFICATION_EXCEPTION);
+                .end(LoanState.EMAIL_NOTIFICATION_CREATE_EXCEPTION);
     }
 
     @Override
@@ -104,18 +106,19 @@ public class LoanStateMachineConfiguration extends StateMachineConfigurerAdapter
                 .event(LoanEvent.CONFIRM_DEBIT_FAILED)
             .and().withExternal()
                 .source(LoanState.CONFIRM_DEBIT)
-                .target(LoanState.NOTIFICATION_SEND_PENDING)
-                .event(LoanEvent.SEND_NOTIFICATION)
+                .target(LoanState.EMAIL_NOTIFICATION_CREATE_PENDING)
+                .event(LoanEvent.CREATE_EMAIL_NOTIFICATION)
+                .action(createEmailNotificationAction)
             .and().withExternal()
-                .source(LoanState.NOTIFICATION_SEND_PENDING)
-                .target(LoanState.NOTIFICATION_SEND)
-                .event(LoanEvent.SEND_NOTIFICATION_PASSED)
+                .source(LoanState.EMAIL_NOTIFICATION_CREATE_PENDING)
+                .target(LoanState.EMAIL_NOTIFICATION_CREATE)
+                .event(LoanEvent.CREATE_EMAIL_NOTIFICATION_PASSED)
             .and().withExternal()
-                .source(LoanState.NOTIFICATION_SEND_PENDING)
-                .target(LoanState.NOTIFICATION_EXCEPTION)
-                .event(LoanEvent.SEND_NOTIFICATION_FAILED)
+                .source(LoanState.EMAIL_NOTIFICATION_CREATE_PENDING)
+                .target(LoanState.EMAIL_NOTIFICATION_CREATE_EXCEPTION)
+                .event(LoanEvent.CREATE_EMAIL_NOTIFICATION_FAILED)
             .and().withExternal()
-                .source(LoanState.NOTIFICATION_SEND)
+                .source(LoanState.EMAIL_NOTIFICATION_CREATE)
                 .target(LoanState.DONE)
                 .event(LoanEvent.TERMINATE);
 

@@ -11,6 +11,7 @@ import org.quartz.JobExecutionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.scheduling.quartz.QuartzJobBean;
+import org.springframework.transaction.event.TransactionalEventListener;
 
 
 @Slf4j
@@ -25,13 +26,14 @@ public class SendMailCronJob extends QuartzJobBean {
     }
 
     @Override
+    @TransactionalEventListener
     protected void executeInternal(JobExecutionContext context) throws JobExecutionException {
         log.info("SendMail Cron Job Start................");
         cronEventSource.cronChannel().send(
                 MessageBuilder
                         .withPayload(
                                 JobRequest.builder()
-                                        .eventType(JobType.SEND_MAIL)
+                                        .eventType(JobType.SEND_EMAIL)
                                         .jobId(context.getFireInstanceId())
                                         .build()
                         )
