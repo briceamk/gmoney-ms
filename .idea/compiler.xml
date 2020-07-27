@@ -9,11 +9,10 @@
         <outputRelativeToContentRoot value="true" />
         <module name="documentation-service" />
         <module name="proxy-service" />
-        <module name="momo-service" />
         <module name="configuration-service" />
         <module name="discovery-service" />
       </profile>
-      <profile name="Annotation profile for cron-service" enabled="true">
+      <profile name="Annotation profile for momo-service" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
@@ -39,6 +38,7 @@
         <module name="company-service" />
         <module name="uaa-service" />
         <module name="account-service" />
+        <module name="momo-service" />
         <module name="loan-service" />
         <module name="partner-service" />
         <module name="transaction-service" />
@@ -52,7 +52,7 @@
       <module name="discovery-service" target="11" />
       <module name="documentation-service" target="11" />
       <module name="loan-service" target="1.8" />
-      <module name="momo-service" target="11" />
+      <module name="momo-service" target="1.8" />
       <module name="notification-service" target="1.8" />
       <module name="partner-service" target="1.8" />
       <module name="proxy-service" target="11" />
@@ -70,7 +70,7 @@
       <module name="discovery-service" options="-parameters" />
       <module name="documentation-service" options="-parameters" />
       <module name="loan-service" options="-parameters -Amapstruct.defaultComponentModel=spring" />
-      <module name="momo-service" options="-parameters" />
+      <module name="momo-service" options="-parameters -Amapstruct.defaultComponentModel=spring" />
       <module name="notification-service" options="-parameters -Amapstruct.defaultComponentModel=spring" />
       <module name="partner-service" options="-parameters -Amapstruct.defaultComponentModel=spring" />
       <module name="proxy-service" options="-parameters" />
