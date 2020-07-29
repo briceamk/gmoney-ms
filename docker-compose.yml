@@ -1,4 +1,4 @@
-version: '3.8'
+version: '3.3'
 services:
   dbpostgresql:
     image: postgres
@@ -10,6 +10,19 @@ services:
       - POSTGRES_PASSWORD=?.@159MmmmM@++
       - POSTGRES_USER=gmoney
       - POSTGRES_DB=gmoney_account_db
+  pgadmin:
+    image: dpage/pgadmin4
+    links:
+      - postgres
+    depends_on:
+      - postgres
+    environment:
+      PGADMIN_DEFAULT_EMAIL: postgres@g2snet.com
+      PGADMIN_DEFAULT_PASSWORD: postgres
+    volumes:
+      - pgadmin:/root/.pgadmin
+    ports:
+      - "5050:80"
   configuration:
     restart: always
     hostname: configuration
