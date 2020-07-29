@@ -60,8 +60,8 @@ services:
       - "8500:8500"
     environment:
       - CONFIGURATION_SERVICE=http://configuration:7000
-      - PROFILE=test
       - DISCOVERY_SERVICE=http://discovery:7010/eureka
+      - PROFILE=test
   account:
     restart: always
     hostname: account
@@ -75,8 +75,8 @@ services:
       - "8550:8550"
     environment:
       - CONFIGURATION_SERVICE=http://configuration:7000
-      - PROFILE=test
       - DISCOVERY_SERVICE=http://discovery:7010/eureka
+      - PROFILE=test
 
 volumes:
   postgres-data:
