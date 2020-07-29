@@ -1,4 +1,5 @@
 #!/bin/sh
+echo "##################################################"
 echo "Waiting for GMONEY Configuration service  to start"
 echo "##################################################"
 
@@ -17,9 +18,9 @@ echo "##################################################"
 
 while ! $(nc -z rule 8100 ); do sleep 3; done
 
-echo ">>>>>>>>>>>>>>>>> Starting GMONEY Partner......."
+echo ">>>>>>>>>>>>>>>>> Starting GMONEY Momo......."
 
 echo "##################################################"
-echo "GMONEY - Partner Service"
+echo "GMONEY - MoMo Service"
 echo "##################################################"
-java -Dspring.profiles.active=$PROFILE -jar -Xmx32m -Xss256k /usr/local/partner/@project.build.finalName@.jar
+java -Dspring.profiles.active=$PROFILE -jar -Xmx32m -Xss256k /usr/local/momo/@project.build.finalName@.jar
