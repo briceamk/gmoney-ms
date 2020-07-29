@@ -52,4 +52,19 @@ services:
       - CONFIGURATION_SERVICE=http://configuration:7000
       - PROFILE=test
       - DISCOVERY_SERVICE=http://discovery:7010/eureka
+  account:
+    restart: always
+    hostname: account
+    container_name: account
+    image: ambaindji/gmoney-account:latest
+    build:
+      context: account-service/src/main/docker
+      dockerfile: Dockerfile
+    ports:
+      - "8150:8150"
+      - "8550:8550"
+    environment:
+      - CONFIGURATION_SERVICE=http://configuration:7000
+      - PROFILE=test
+      - DISCOVERY_SERVICE=http://discovery:7010/eureka
 
