@@ -18,8 +18,8 @@ services:
       - "5672:5672"
       - "15672:15672"
     volumes:
-      - ./rabbitmq/definitions.json:/etc/rabbitmq/definitions.json:ro
-      - ./rabbitmq/rabbitmq.config:/etc/rabbitmq/rabbitmq.config:ro
+      - rabbitmq-definitions:/etc/rabbitmq/definitions.json:ro
+      - rabbitmq-config:/etc/rabbitmq/rabbitmq.config:ro
   pgadmin:
     image: dpage/pgadmin4
     hostname: pgadmin
@@ -99,6 +99,6 @@ services:
 volumes:
   postgres-data:
   pgadmin-data:
-  ./rabbitmq/definitions.json:
-  ./rabbitmq/rabbitmq.config:
+  rabbitmq-definitions:
+  rabbitmq-config:
 
