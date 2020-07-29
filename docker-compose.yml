@@ -5,7 +5,7 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - ./postgres/data:/var/lib/postgresql/data
+      - postgres-data:/var/lib/postgresql/data
     environment:
       - POSTGRES_PASSWORD=?.@159MmmmM@++
       - POSTGRES_USER=gmoney
@@ -78,3 +78,6 @@ services:
       - PROFILE=test
       - DISCOVERY_SERVICE=http://discovery:7010/eureka
 
+volumes:
+  - pgadmin-data
+  - postgres-data
