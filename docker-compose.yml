@@ -42,7 +42,7 @@ services:
       context: discovery-service/src/main/docker
       dockerfile: Dockerfile
     ports:
-      - "7000:7000"
+      - "7010:7010"
       - "7510:7510"
     environment:
       - CONFIGURATION_SERVICE=http://configuration:7000
