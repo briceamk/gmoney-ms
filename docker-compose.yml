@@ -2,7 +2,7 @@ version: '3.3'
 services:
   dbpostgresql:
     image: postgres
-    hostname: dbpostgresql
+    hostname: postgresql
     ports:
       - "5432:5432"
     volumes:
@@ -11,14 +11,23 @@ services:
       - POSTGRES_PASSWORD=?.@159MmmmM@++
       - POSTGRES_USER=gmoney
       - POSTGRES_DB=gmoney_account_db
+  rabbitmq-container:
+    image: rabbitmq:3-management
+    hostname: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - ./rabbitmq/definitions.json:/etc/rabbitmq/definitions.json:ro
+      - ./rabbitmq/rabbitmq.config:/etc/rabbitmq/rabbitmq.config:ro
   pgadmin:
     image: dpage/pgadmin4
     hostname: pgadmin
     ports:
       - "5858:80"
     environment:
-      PGADMIN_DEFAULT_EMAIL: postgres@g2snet.com
-      PGADMIN_DEFAULT_PASSWORD: postgres
+      - PGADMIN_DEFAULT_EMAIL=postgres@g2snet.com
+      - PGADMIN_DEFAULT_PASSWORD=?.@159MmmmM@++
     volumes:
       - pgadmin-data:/root/.pgadmin
 
@@ -78,9 +87,18 @@ services:
     environment:
       - CONFIGURATION_SERVICE=http://configuration:7000
       - DISCOVERY_SERVICE=http://discovery:7010/eureka
+      - DATABASE_HOST=dbpostgresql
+      - DATABASE_PORT=5432
+      - DATABASE_DB=gmoney_account_db
+      - RABBIT_MQ_HOST=rabbitmq
+      - RABBIT_MQ_PORT=5672
+      - RABBIT_MQ_USER=guest
+      - RABBIT_MQ_PASSWORD=guest
       - PROFILE=test
 
 volumes:
   postgres-data:
   pgadmin-data:
+  ./rabbitmq/definitions.json:
+  ./rabbitmq/rabbitmq.config:
 
