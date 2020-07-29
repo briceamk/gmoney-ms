@@ -15,7 +15,7 @@ echo "##################################################"
 echo "Waiting for GMONEY Proxy service  to start"
 echo "##################################################"
 
-while ! $(nc -z rule 8100 ); do sleep 3; done
+while ! $(nc -z proxy 8100 ); do sleep 3; done
 
 echo ">>>>>>>>>>>>>>>>> Starting GMONEY Account......."
 
