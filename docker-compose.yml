@@ -79,5 +79,5 @@ services:
       - DISCOVERY_SERVICE=http://discovery:7010/eureka
 
 volumes:
-  - pgadmin-data
-  - postgres-data
+  pgadmin-data
+  postgres-data
