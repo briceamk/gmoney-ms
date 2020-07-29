@@ -12,6 +12,8 @@ import java.io.Serializable;
 @AllArgsConstructor
 public class ApiUserRequest implements Serializable {
 
+    private static final long serialVersionUID = 7138105439815909111L;
+
     @NotEmpty(message = "provider call back host is required!")
     private String providerCallbackHost;
 }

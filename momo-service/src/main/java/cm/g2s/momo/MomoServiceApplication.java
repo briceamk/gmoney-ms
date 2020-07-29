@@ -21,7 +21,8 @@ public class MomoServiceApplication {
 	@Bean
 	public RestTemplate restTemplate() {
 		HttpComponentsClientHttpRequestFactory clientHttpRequestFactory = new HttpComponentsClientHttpRequestFactory();
-		clientHttpRequestFactory.setConnectTimeout(3000);
+		clientHttpRequestFactory.setConnectTimeout(5000);
+		clientHttpRequestFactory.setConnectionRequestTimeout(5000);
 		return new RestTemplate(clientHttpRequestFactory);
 	}
 

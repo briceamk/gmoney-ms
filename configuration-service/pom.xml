@@ -16,6 +16,8 @@
 
 	<properties>
 		<java.version>11</java.version>
+		<maven.compiler.source>${java.version}</maven.compiler.source>
+		<maven.compiler.target>${java.version}</maven.compiler.target>
 		<spring-cloud.version>Hoxton.SR6</spring-cloud.version>
 		<docker.image.name>ambaindji/gmoney-configuration</docker.image.name>
 		<docker.image.tag>latest</docker.image.tag>

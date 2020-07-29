@@ -4,11 +4,12 @@ import cm.g2s.momo.security.CurrentPrincipal;
 import cm.g2s.momo.security.CustomPrincipal;
 import cm.g2s.momo.service.MomoService;
 import cm.g2s.momo.service.ValidationErrorService;
-import cm.g2s.momo.web.payload.ApiUserRequest;
+import cm.g2s.momo.web.payload.*;
 import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
+import org.codehaus.jettison.json.JSONException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -26,8 +27,7 @@ public class MomoController {
     private final ValidationErrorService validationErrorService;
 
     @PostMapping
-    public ResponseEntity<?> createApiUser(@CurrentPrincipal CustomPrincipal principal,
-                                    @Valid @RequestBody ApiUserRequest apiUserRequest, BindingResult result)   {
+    public ResponseEntity<?> createApiUser(@Valid @RequestBody ApiUserRequest apiUserRequest, BindingResult result)   {
 
         ResponseEntity<?> errors = validationErrorService.process(result);
         if(errors != null)
@@ -39,10 +39,66 @@ public class MomoController {
         return ResponseEntity.created(uri).body("");
     }
 
-    @GetMapping("/api-users/{XReferenceId}")
-    public ResponseEntity<?> createApiUser(@CurrentPrincipal CustomPrincipal principal,
-                                          @PathVariable String XReferenceId) {
-        return ResponseEntity.ok(momoService.getApiUser(XReferenceId));
+    @GetMapping("/api-user")
+    public ResponseEntity<?> createApiUser() {
+        return ResponseEntity.ok(momoService.getApiUser());
+    }
+
+    @PostMapping("/api-key")
+    public ResponseEntity<?> generateApiKey()   {
+
+        ApiKeyResponse apiKeyResponse = momoService.generateApiKey();
+        URI uri = ServletUriComponentsBuilder
+                .fromCurrentContextPath().path("/api/v1/momos/api-key/{apiKeyResponse}")
+                .buildAndExpand(apiKeyResponse.getApiKey()).toUri();
+        return ResponseEntity.created(uri).body(apiKeyResponse);
+    }
+
+    @PostMapping("/token")
+    public ResponseEntity<?> getAccessToken()   {
+        return ResponseEntity.ok(momoService.getAccessToken());
+    }
+
+    @PostMapping("/transfer/{resourceId}")
+    public ResponseEntity<?> makeTransfer(@RequestBody @Valid TransferRequest transferRequest, @PathVariable String resourceId,BindingResult result) throws JSONException {
+        ResponseEntity<?> errors = validationErrorService.process(result);
+        if(errors != null)
+            return errors;
+        AccessTokenResponse accessTokenResponse = momoService.getAccessToken();
+        Object response = momoService.makeTransfer(resourceId, transferRequest, accessTokenResponse);
+        if(response instanceof Boolean && (Boolean)response) {
+            return ResponseEntity.ok(true);
+        }else if(response instanceof Reason) {
+            if(((Reason) response).getStatus() == HttpStatus.CONFLICT.value()) {
+                return new ResponseEntity<>((Reason)response, HttpStatus.CONFLICT);
+            }
+            else if(((Reason) response).getStatus() == HttpStatus.INTERNAL_SERVER_ERROR.value()) {
+                return new ResponseEntity<>((Reason)response, HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+            else return new ResponseEntity<>((Reason)response, HttpStatus.BAD_REQUEST);
+        } else {
+            return ResponseEntity.ok(false);
+        }
+
+    }
+
+    @GetMapping("/transfer/{resourceId}")
+    public ResponseEntity<?> findTransferInfo(@PathVariable String resourceId) throws JSONException {
+        AccessTokenResponse accessTokenResponse = momoService.getAccessToken();
+        Object response = momoService.findTransferInfo(resourceId, accessTokenResponse);
+        if(response instanceof TransferResponse) {
+            return ResponseEntity.ok((TransferResponse)response);
+        }else if(response instanceof Reason) {
+            if(((Reason) response).getStatus() == HttpStatus.CONFLICT.value()) {
+                return new ResponseEntity<>((Reason)response, HttpStatus.CONFLICT);
+            }
+            else if(((Reason) response).getStatus() == HttpStatus.INTERNAL_SERVER_ERROR.value()) {
+                return new ResponseEntity<>((Reason)response, HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+            else return new ResponseEntity<>((Reason)response, HttpStatus.BAD_REQUEST);
+        } else {
+            return ResponseEntity.ok(false);
+        }
     }
 
 

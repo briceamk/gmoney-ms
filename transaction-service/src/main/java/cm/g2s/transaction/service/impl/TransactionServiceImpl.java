@@ -1,12 +1,13 @@
 package cm.g2s.transaction.service.impl;
 
+import cm.g2s.transaction.constant.TransactionConstantType;
 import cm.g2s.transaction.domain.model.*;
 import cm.g2s.transaction.infrastructure.repository.TransactionRepository;
 import cm.g2s.transaction.security.CustomPrincipal;
-import cm.g2s.transaction.security.CustomPrincipal;
 import cm.g2s.transaction.service.TransactionService;
 import cm.g2s.transaction.exception.BadRequestException;
-import cm.g2s.transaction.web.mapper.TransactionMapper;
+import cm.g2s.transaction.service.momo.MomoClientService;
+import cm.g2s.transaction.service.momo.dto.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -24,7 +25,7 @@ import java.util.List;
 public class TransactionServiceImpl implements TransactionService {
 
     private final TransactionRepository transactionRepository;
-    private final TransactionMapper transactionMapper;
+    private final MomoClientService momoClientService;
 
     @Override
     public Transaction create(CustomPrincipal principal, Transaction transaction) {
@@ -98,12 +99,7 @@ public class TransactionServiceImpl implements TransactionService {
             transactionPage = transactionRepository.findAll(pageRequest);
         }
 
-        return transactionPage; /*new TransactionDtoPage(
-                transactionPage.getContent().stream().map(transactionMapper::map).collect(Collectors.toList()),
-                PageRequest.of(transactionPage.getPageable().getPageNumber(),
-                        transactionPage.getPageable().getPageSize()),
-                transactionPage.getTotalElements()
-        );*/
+        return transactionPage;
     }
 
     @Override
@@ -125,9 +121,67 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     public Boolean sendMoney(CustomPrincipal principal, Transaction transaction) {
-        //TODO implement this method
-        transaction.setState(TransactionState.SEND);
-        update(principal, transaction);
-        return true;
+        TransferRequestDto transferRequestDto = transform(transaction);
+        Object result = momoClientService.makeTransfer(transferRequestDto, transaction.getId());
+        if(result instanceof Boolean && (Boolean)result) {
+            transaction.setState(TransactionState.WAITING_SEND_RESPONSE);
+            update(principal, transaction);
+            transaction = findById(principal, transaction.getId());
+            Object info = momoClientService.findTransferInfo(transaction.getId());
+            if(info instanceof TransferResponseDto) {
+                TransferResponseDto transferResponseDto = (TransferResponseDto) info;
+                if(transferResponseDto.getStatus().equals(TransferState.SUCCESSFUL.name())) {
+                    transaction.setState(TransactionState.SEND);
+                    transaction.setTransferState(TransferState.SUCCESSFUL);
+                    transaction.setFinancialTransactionId(transferResponseDto.getFinancialTransactionId());
+                    update(principal, transaction);
+                    return true;
+                } else if(transferResponseDto.getStatus().equals(TransferState.PENDING.name())){
+                    transaction.setState(TransactionState.SEND_PENDING);
+                    transaction.setTransferState(TransferState.PENDING);
+                    transaction.setFinancialTransactionId(transferResponseDto.getFinancialTransactionId());
+                    update(principal, transaction);
+                    return false;
+                } else {
+                    transaction.setState(TransactionState.SEND_EXCEPTION);
+                    transaction.setTransferState(TransferState.FAILED);
+                    transaction.setErrorCode(transferResponseDto.getReason().getCode());
+                    transaction.setErrorMessage(transferResponseDto.getReason().getMessage());
+                    update(principal, transaction);
+                    return false;
+                }
+            } else {
+                log.error("Unable to call momo-service");
+                return false;
+            }
+
+        } else if(result instanceof ReasonDto) {
+            ReasonDto reasonDto = (ReasonDto) result;
+            transaction.setTransferState(TransferState.FAILED);
+            transaction.setErrorCode(reasonDto.getCode());
+            transaction.setErrorMessage(reasonDto.getMessage());
+            update(principal, transaction);
+            return false;
+        }
+        else {
+            log.error("Unable to call momo-service");
+            return false;
+        }
+    }
+
+    private TransferRequestDto transform(Transaction transaction) {
+        return TransferRequestDto.builder()
+                .amount(transaction.getAmount().setScale(0).toPlainString())
+                .currency(TransactionConstantType.DEFAULT_CURRENCY_CODE)
+                .externalId(transaction.getNumber())
+                .payee(
+                        PayeeDto.builder()
+                                .partyId(transaction.getMobile())
+                                .partyIdType(PartyType.MSISDN.name())
+                                .build()
+                )
+                .payerMessage(TransactionConstantType.PAYER_MESSAGE)
+                .payeeNote(TransactionConstantType.PAYER_MESSAGE)
+                .build();
     }
 }

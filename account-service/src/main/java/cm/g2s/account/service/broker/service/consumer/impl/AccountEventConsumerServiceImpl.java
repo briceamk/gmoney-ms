@@ -15,7 +15,6 @@ import org.springframework.cloud.stream.annotation.StreamListener;
 import org.springframework.http.*;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.Collections;
 
@@ -26,7 +25,6 @@ public class AccountEventConsumerServiceImpl implements AccountEventConsumerServ
 
     private final AccountService accountService;
     private final AccountEventPublisherService publisherService;
-    private final RestTemplate restTemplate;
 
     @Override
     @StreamListener(target = "uaaCreateAccountChannel", condition = "headers['uaa'] == 'createAccount'")

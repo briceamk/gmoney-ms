@@ -45,7 +45,7 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="account-service" target="1.8" />
+      <module name="account-service" target="11" />
       <module name="company-service" target="1.8" />
       <module name="configuration-service" target="11" />
       <module name="cron-service" target="1.8" />

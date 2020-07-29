@@ -26,4 +26,6 @@ public class TransactionConstantType {
 
     public static final String ROUTING_KEY_CREATE_TRANSACTION_RESPONSE = "createTransactionResponse";
     public static final String ROUTING_KEY_SEND_MONEY_RESPONSE = "sendMoneyResponse";
+    public static final String DEFAULT_CURRENCY_CODE = "EUR";
+    public static final String PAYER_MESSAGE = "Dépôt du montant que vous avez solocité.";
 }

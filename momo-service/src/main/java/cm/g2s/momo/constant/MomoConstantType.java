@@ -13,13 +13,17 @@ public class MomoConstantType {
 
     public static final String[] PUBLIC_MATCHERS = {
             "/actuator/**",
-            "/v2/api-docs/**"
+            "/v2/api-docs/**",
+            "/api/v1/momos/**"
     };
     public static final String AUTHORIZATION_HEADER = "Authorization";
     public static final String BEARER_TOKEN_TYPE = "Bearer";
-    public static final String ACCESS_TOKEN = "accessToken";
+    public static final String MOMO_ACCESS_TOKEN = "accessToken";
 
-    public static final String OCP_APIM_SUBSCRIPTION_KEY = "Ocp-Apim-Subscription-Key";
-    public static final String X_REFERENCE_ID = "X-Reference-Id";
+    public static final String MOMO_OCP_APIM_SUBSCRIPTION_KEY = "Ocp-Apim-Subscription-Key";
+    public static final String MOMO_X_REFERENCE_ID = "X-Reference-Id";
+    public static final String MOMO_X_TARGET_ENVIRONMENT = "X-Target-Environment";
+    public static final String MOMO_X_REFERENCE_ID_VARIABLE = "xReferenceId";
+    public static final String MOMO_RESOURCE_ID = "resourceId";
 
 }

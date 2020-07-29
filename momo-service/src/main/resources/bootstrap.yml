@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: momo
+  cloud:
+    config:
+      uri: ${CONFIGURATION_SERVICE}

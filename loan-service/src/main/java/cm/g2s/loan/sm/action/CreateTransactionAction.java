@@ -52,7 +52,7 @@ public class CreateTransactionAction implements Action<LoanState, LoanEvent> {
                 .userId(loan.getUserId())
                 .mobile(loan.getMobile())
                 .issueDate(loan.getIssueDate())
-                .amount(loan.getAmount().add(loan.getInterest()))
+                .amount(loan.getAmount())
                 .mode(LoanMode.ORANGE_MONEY.name())
                 .loanId(loan.getId())
                 .build();
