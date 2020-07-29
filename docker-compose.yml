@@ -12,17 +12,14 @@ services:
       - POSTGRES_DB=gmoney_account_db
   pgadmin:
     image: dpage/pgadmin4
-    links:
-      - postgres
-    depends_on:
-      - postgres
+    ports:
+      - "5858:80"
     environment:
       PGADMIN_DEFAULT_EMAIL: postgres@g2snet.com
       PGADMIN_DEFAULT_PASSWORD: postgres
     volumes:
       - pgadmin:/root/.pgadmin
-    ports:
-      - "5050:80"
+
   configuration:
     restart: always
     hostname: configuration
