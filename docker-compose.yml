@@ -2,6 +2,7 @@ version: '3.3'
 services:
   dbpostgresql:
     image: postgres
+    hostname: dbpostgresql
     ports:
       - "5432:5432"
     volumes:
@@ -12,6 +13,7 @@ services:
       - POSTGRES_DB=gmoney_account_db
   pgadmin:
     image: dpage/pgadmin4
+    hostname: pgadmin
     ports:
       - "5858:80"
     environment:
