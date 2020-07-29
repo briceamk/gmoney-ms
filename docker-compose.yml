@@ -18,7 +18,7 @@ services:
       PGADMIN_DEFAULT_EMAIL: postgres@g2snet.com
       PGADMIN_DEFAULT_PASSWORD: postgres
     volumes:
-      - pgadmin:/root/.pgadmin
+      - pgadmin-data:/root/.pgadmin
 
   configuration:
     restart: always
@@ -79,5 +79,6 @@ services:
       - DISCOVERY_SERVICE=http://discovery:7010/eureka
 
 volumes:
-  pgadmin-data:
   postgres-data:
+  pgadmin-data:
+
