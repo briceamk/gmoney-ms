@@ -1,17 +1,18 @@
-version: '3.6'
+version: '3.7'
 services:
   dbpostgresql:
-    image: postgres
+    image: "postgres:12.3-alpine"
     hostname: dbpostgresql
     container_name: dbpostgresql
     ports:
       - "5432:5432"
     volumes:
-      - ./postgres-data:/var/lib/postgresql/data
+      - ./pg-init-scripts:/docker-entrypoint-initdb.d
     environment:
-      - POSTGRES_PASSWORD=?.@159MmmmM@++
       - POSTGRES_USER=gmoney
-      - POSTGRES_DB=gmoney_account_db
+      - POSTGRES_PASSWORD=?.@159MmmmM@++
+      - POSTGRES_MULTIPLE_DATABASES=gmoney_account_db,gmoney_company_db,gmoney_cron_db,gmoney_loan_db,gmoney_notification_db,gmoney_partner_db,gmoney_rule_db,gmoney_transaction_db,gmoney_uaa_db,gmoney
+
   rabbitmq-container:
     image: rabbitmq:3-management
     hostname: gmoneyrabbitmq
