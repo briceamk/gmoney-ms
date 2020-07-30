@@ -186,8 +186,8 @@ services:
       context: momo-service/src/main/docker
       dockerfile: Dockerfile
     ports:
-      - "8170:8170"
-      - "8570:8570"
+      - "8210:8210"
+      - "8610:8610"
     environment:
       - CONFIGURATION_SERVICE=http://configuration:7000
       - DISCOVERY_SERVICE=http://discovery:7010/eureka
