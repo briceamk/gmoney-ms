@@ -3,6 +3,7 @@ services:
   dbpostgresql:
     image: postgres
     hostname: dbpostgresql
+    container_name: dbpostgresql
     ports:
       - "5432:5432"
     volumes:
@@ -14,6 +15,7 @@ services:
   rabbitmq-container:
     image: rabbitmq:3-management
     hostname: gmoneyrabbitmq
+    container_name: gmoneyrabbitmq
     ports:
       - "5672:5672"
       - "15672:15672"
@@ -26,6 +28,7 @@ services:
   pgadmin:
     image: dpage/pgadmin4
     hostname: pgadmin
+    container_name: pgadmin
     ports:
       - "5858:80"
     volumes:
@@ -92,7 +95,7 @@ services:
       - DATABASE_HOST=dbpostgresql
       - DATABASE_PORT=5432
       - DATABASE_DB=gmoney_account_db
-      - RABBIT_MQ_HOST=rabbit@gmoneyrabbitmq
+      - RABBIT_MQ_HOST=gmoneyrabbitmq
       - RABBIT_MQ_PORT=5672
       - RABBIT_MQ_USER_NAME=guest
       - RABBIT_MQ_PASSWORD=guest
