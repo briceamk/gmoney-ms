@@ -304,9 +304,4 @@ services:
       - RABBIT_MQ_USER_NAME=guest
       - RABBIT_MQ_PASSWORD=guest
       - PROFILE=test
-volumes:
-  postgres-data:
-  pgadmin-data:
-  rabbitmq-definitions:
-  rabbitmq-config:
 
