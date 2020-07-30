@@ -23,4 +23,4 @@ echo ">>>>>>>>>>>>>>>>> Starting GMONEY Account......."
 echo "##################################################"
 echo "GMONEY - Account Service"
 echo "##################################################"
-java -Dspring.profiles.active=$PROFILE -jar -Xmx32m -Xss256k /usr/local/account/@project.build.finalName@.jar
+java -Dspring.profiles.active=$PROFILE -jar -Xmx2048m -Xss256k /usr/local/account/@project.build.finalName@.jar
