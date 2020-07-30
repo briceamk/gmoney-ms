@@ -7,7 +7,7 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - ./docker_postgres_init.sql:/docker-entrypoint-initdb.d/docker_postgres_init.sql
+      - ./postgres-data:/var/lib/postgresql/data
     environment:
       - POSTGRES_PASSWORD=?.@159MmmmM@++
       - POSTGRES_USER=gmoney
