@@ -100,6 +100,46 @@ services:
       - RABBIT_MQ_USER_NAME=guest
       - RABBIT_MQ_PASSWORD=guest
       - PROFILE=test
+  company:
+    restart: always
+    hostname: company
+    container_name: company
+    image: ambaindji/gmoney-company:latest
+    build:
+      context: company-service/src/main/docker
+      dockerfile: Dockerfile
+    ports:
+      - "8120:8120"
+      - "8520:8520"
+    environment:
+      - CONFIGURATION_SERVICE=http://configuration:7000
+      - DISCOVERY_SERVICE=http://discovery:7010/eureka
+      - DATABASE_HOST=dbpostgresql
+      - DATABASE_PORT=5432
+      - DATABASE_DB=gmoney_company_db
+      - PROFILE=test
+  cron:
+    restart: always
+    hostname: cron
+    container_name: cron
+    image: ambaindji/gmoney-cron:latest
+    build:
+      context: cron-service/src/main/docker
+      dockerfile: Dockerfile
+    ports:
+      - "8150:8190"
+      - "8550:8590"
+    environment:
+      - CONFIGURATION_SERVICE=http://configuration:7000
+      - DISCOVERY_SERVICE=http://discovery:7010/eureka
+      - DATABASE_HOST=dbpostgresql
+      - DATABASE_PORT=5432
+      - DATABASE_DB=gmoney_cron_db
+      - RABBIT_MQ_HOST=gmoneyrabbitmq
+      - RABBIT_MQ_PORT=5672
+      - RABBIT_MQ_USER_NAME=guest
+      - RABBIT_MQ_PASSWORD=guest
+      - PROFILE=test
 
 volumes:
   postgres-data:
