@@ -27,7 +27,7 @@ services:
       - "5858:80"
     environment:
       - PGADMIN_DEFAULT_EMAIL=postgres@g2snet.com
-      - PGADMIN_DEFAULT_PASSWORD=?.@159MmmmM@++
+      - PGADMIN_DEFAULT_PASSWORD=postgres
     volumes:
       - pgadmin-data:/root/.pgadmin
 
@@ -88,8 +88,6 @@ services:
       - CONFIGURATION_SERVICE=http://configuration:7000
       - DISCOVERY_SERVICE=http://discovery:7010/eureka
       - DATABASE_HOST=postgresql
-      - DATABASE_PORT=5432
-      - DATABASE_DB=gmoney_account_db
       - RABBIT_MQ_HOST=rabbitmq
       - RABBIT_MQ_PORT=5672
       - RABBIT_MQ_USER=guest
