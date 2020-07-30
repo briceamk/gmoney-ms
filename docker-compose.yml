@@ -32,7 +32,7 @@ services:
       - pgadmin-data:/root/.pgadmin
     environment:
       - PGADMIN_DEFAULT_EMAIL=postgres@g2snet.com
-      - PGADMIN_DEFAULT_PASSWORD=postgres
+      - PGADMIN_DEFAULT_PASSWORD=?.@159MmmmM@++
   configuration:
     restart: always
     hostname: configuration
