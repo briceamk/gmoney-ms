@@ -2,7 +2,7 @@ version: '3.3'
 services:
   dbpostgresql:
     image: postgres
-    hostname: postgresql
+    hostname: dbpostgresql
     ports:
       - "5432:5432"
     volumes:
@@ -89,7 +89,7 @@ services:
     environment:
       - CONFIGURATION_SERVICE=http://configuration:7000
       - DISCOVERY_SERVICE=http://discovery:7010/eureka
-      - DATABASE_HOST=postgresql
+      - DATABASE_HOST=dbpostgresql
       - DATABASE_PORT=5432
       - DATABASE_DB=gmoney_account_db
       - RABBIT_MQ_HOST=rabbitmq
