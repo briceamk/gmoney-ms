@@ -127,8 +127,8 @@ services:
       context: cron-service/src/main/docker
       dockerfile: Dockerfile
     ports:
-      - "8150:8190"
-      - "8550:8590"
+      - "8190:8190"
+      - "8590:8590"
     environment:
       - CONFIGURATION_SERVICE=http://configuration:7000
       - DISCOVERY_SERVICE=http://discovery:7010/eureka
@@ -140,7 +140,168 @@ services:
       - RABBIT_MQ_USER_NAME=guest
       - RABBIT_MQ_PASSWORD=guest
       - PROFILE=test
-
+  documentation:
+    restart: always
+    hostname: documentation
+    container_name: documentation
+    image: ambaindji/gmoney-documentation:latest
+    build:
+      context: documentation-service/src/main/docker
+      dockerfile: Dockerfile
+    ports:
+      - "8140:8140"
+      - "8540:8540"
+    environment:
+      - CONFIGURATION_SERVICE=http://configuration:7000
+      - DISCOVERY_SERVICE=http://discovery:7010/eureka
+      - PROFILE=test
+  loan:
+    restart: always
+    hostname: loan
+    container_name: loan
+    image: ambaindji/gmoney-loan:latest
+    build:
+      context: loan-service/src/main/docker
+      dockerfile: Dockerfile
+    ports:
+      - "8170:8170"
+      - "8570:8570"
+    environment:
+      - CONFIGURATION_SERVICE=http://configuration:7000
+      - DISCOVERY_SERVICE=http://discovery:7010/eureka
+      - DATABASE_HOST=dbpostgresql
+      - DATABASE_PORT=5432
+      - DATABASE_DB=gmoney_loan_db
+      - RABBIT_MQ_HOST=gmoneyrabbitmq
+      - RABBIT_MQ_PORT=5672
+      - RABBIT_MQ_USER_NAME=guest
+      - RABBIT_MQ_PASSWORD=guest
+      - PROFILE=test
+  momo:
+    restart: always
+    hostname: momo
+    container_name: momo
+    image: ambaindji/gmoney-momo:latest
+    build:
+      context: momo-service/src/main/docker
+      dockerfile: Dockerfile
+    ports:
+      - "8170:8170"
+      - "8570:8570"
+    environment:
+      - CONFIGURATION_SERVICE=http://configuration:7000
+      - DISCOVERY_SERVICE=http://discovery:7010/eureka
+      - PROFILE=test
+  notification:
+    restart: always
+    hostname: notification
+    container_name: notification
+    image: ambaindji/gmoney-notification:latest
+    build:
+      context: notification-service/src/main/docker
+      dockerfile: Dockerfile
+    ports:
+      - "8200:8200"
+      - "8600:8600"
+    environment:
+      - CONFIGURATION_SERVICE=http://configuration:7000
+      - DISCOVERY_SERVICE=http://discovery:7010/eureka
+      - DATABASE_HOST=dbpostgresql
+      - DATABASE_PORT=5432
+      - DATABASE_DB=gmoney_notification_db
+      - RABBIT_MQ_HOST=gmoneyrabbitmq
+      - RABBIT_MQ_PORT=5672
+      - RABBIT_MQ_USER_NAME=guest
+      - RABBIT_MQ_PASSWORD=guest
+      - PROFILE=test
+  partner:
+    restart: always
+    hostname: partner
+    container_name: partner
+    image: ambaindji/gmoney-partner:latest
+    build:
+      context: partner-service/src/main/docker
+      dockerfile: Dockerfile
+    ports:
+      - "8130:8130"
+      - "8530:8530"
+    environment:
+      - CONFIGURATION_SERVICE=http://configuration:7000
+      - DISCOVERY_SERVICE=http://discovery:7010/eureka
+      - DATABASE_HOST=dbpostgresql
+      - DATABASE_PORT=5432
+      - DATABASE_DB=gmoney_partner_db
+      - RABBIT_MQ_HOST=gmoneyrabbitmq
+      - RABBIT_MQ_PORT=5672
+      - RABBIT_MQ_USER_NAME=guest
+      - RABBIT_MQ_PASSWORD=guest
+      - PROFILE=test
+  rule:
+    restart: always
+    hostname: rule
+    container_name: rule
+    image: ambaindji/gmoney-rule:latest
+    build:
+      context: rule-service/src/main/docker
+      dockerfile: Dockerfile
+    ports:
+      - "8160:8160"
+      - "8560:8560"
+    environment:
+      - CONFIGURATION_SERVICE=http://configuration:7000
+      - DISCOVERY_SERVICE=http://discovery:7010/eureka
+      - DATABASE_HOST=dbpostgresql
+      - DATABASE_PORT=5432
+      - DATABASE_DB=gmoney_rule_db
+      - RABBIT_MQ_HOST=gmoneyrabbitmq
+      - RABBIT_MQ_PORT=5672
+      - RABBIT_MQ_USER_NAME=guest
+      - RABBIT_MQ_PASSWORD=guest
+      - PROFILE=test
+  transaction:
+    restart: always
+    hostname: transaction
+    container_name: transaction
+    image: ambaindji/gmoney-transaction:latest
+    build:
+      context: transaction-service/src/main/docker
+      dockerfile: Dockerfile
+    ports:
+      - "8180:8180"
+      - "8580:8580"
+    environment:
+      - CONFIGURATION_SERVICE=http://configuration:7000
+      - DISCOVERY_SERVICE=http://discovery:7010/eureka
+      - DATABASE_HOST=dbpostgresql
+      - DATABASE_PORT=5432
+      - DATABASE_DB=gmoney_transaction_db
+      - RABBIT_MQ_HOST=gmoneyrabbitmq
+      - RABBIT_MQ_PORT=5672
+      - RABBIT_MQ_USER_NAME=guest
+      - RABBIT_MQ_PASSWORD=guest
+      - PROFILE=test
+  uaa:
+    restart: always
+    hostname: uaa
+    container_name: uaa
+    image: ambaindji/gmoney-uaa:latest
+    build:
+      context: uaa-service/src/main/docker
+      dockerfile: Dockerfile
+    ports:
+      - "8110:8110"
+      - "8510:8510"
+    environment:
+      - CONFIGURATION_SERVICE=http://configuration:7000
+      - DISCOVERY_SERVICE=http://discovery:7010/eureka
+      - DATABASE_HOST=dbpostgresql
+      - DATABASE_PORT=5432
+      - DATABASE_DB=gmoney_uaa_db
+      - RABBIT_MQ_HOST=gmoneyrabbitmq
+      - RABBIT_MQ_PORT=5672
+      - RABBIT_MQ_USER_NAME=guest
+      - RABBIT_MQ_PASSWORD=guest
+      - PROFILE=test
 volumes:
   postgres-data:
   pgadmin-data:
