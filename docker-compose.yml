@@ -20,17 +20,19 @@ services:
     volumes:
       - rabbitmq-definitions:/etc/rabbitmq/definitions.json:ro
       - rabbitmq-config:/etc/rabbitmq/rabbitmq.config:ro
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
   pgadmin:
     image: dpage/pgadmin4
     hostname: pgadmin
     ports:
       - "5858:80"
+    volumes:
+      - pgadmin-data:/root/.pgadmin
     environment:
       - PGADMIN_DEFAULT_EMAIL=postgres@g2snet.com
       - PGADMIN_DEFAULT_PASSWORD=postgres
-    volumes:
-      - pgadmin-data:/root/.pgadmin
-
   configuration:
     restart: always
     hostname: configuration
