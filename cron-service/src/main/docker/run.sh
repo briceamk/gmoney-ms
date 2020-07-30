@@ -9,7 +9,7 @@ echo "##################################################"
 echo "Waiting for GMONEY Discovery service  to start"
 echo "##################################################"
 
-while ! $(nc -z discovery 7000 ); do sleep 3; done
+while ! $(nc -z discovery 7010 ); do sleep 3; done
 
 
 echo "##################################################"
