@@ -5,22 +5,22 @@ services:
     hostname: dbpostgresql
     container_name: dbpostgresql
     ports:
-      - "5432:5432"
+      - "5838:5432"
     volumes:
-      - ./pg-init-scripts:/docker-entrypoint-initdb.d
+      - ./docker_postgres_init.sql:/docker-entrypoint-initdb.d/docker_postgres_init.sql
       - ./postgres_data:/var/lib/postgresql/data
     environment:
-      - POSTGRES_USER=gmoney
-      - POSTGRES_PASSWORD=?.@159MmmmM@++
-      - POSTGRES_MULTIPLE_DATABASES=gmoney_account_db,gmoney_company_db,gmoney_cron_db,gmoney_loan_db,gmoney_notification_db,gmoney_partner_db,gmoney_rule_db,gmoney_transaction_db,gmoney_uaa_db,gmoney
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=?.@159MmmmM@..!
+      - POSTGRES_DB=postgres
 
   rabbitmq-container:
     image: rabbitmq:3-management
     hostname: gmoneyrabbitmq
     container_name: gmoneyrabbitmq
     ports:
-      - "5672:5672"
-      - "15672:15672"
+      - "5840:5672"
+      - "15840:15672"
     volumes:
       - ./rabbitmq-definitions:/etc/rabbitmq/definitions.json:ro
       - ./rabbitmq-config:/etc/rabbitmq/rabbitmq.config:ro
@@ -32,12 +32,12 @@ services:
     hostname: pgadmin
     container_name: pgadmin
     ports:
-      - "5858:80"
+      - "5839:80"
     volumes:
       - ./pgadmin-data:/root/.pgadmin
     environment:
-      - PGADMIN_DEFAULT_EMAIL=postgres@g2snet.com
-      - PGADMIN_DEFAULT_PASSWORD=?.@159MmmmM@++
+      - PGADMIN_DEFAULT_EMAIL=gomney@g2snet.com
+      - PGADMIN_DEFAULT_PASSWORD=?.@159MmmmM@..!
   configuration:
     restart: always
     hostname: configuration
@@ -95,10 +95,10 @@ services:
       - CONFIGURATION_SERVICE=http://configuration:7000
       - DISCOVERY_SERVICE=http://discovery:7010/eureka
       - DATABASE_HOST=dbpostgresql
-      - DATABASE_PORT=5432
+      - DATABASE_PORT=5838
       - DATABASE_DB=gmoney_account_db
       - RABBIT_MQ_HOST=gmoneyrabbitmq
-      - RABBIT_MQ_PORT=5672
+      - RABBIT_MQ_PORT=5840
       - RABBIT_MQ_USER_NAME=guest
       - RABBIT_MQ_PASSWORD=guest
       - PROFILE=test
@@ -118,7 +118,7 @@ services:
       - CONFIGURATION_SERVICE=http://configuration:7000
       - DISCOVERY_SERVICE=http://discovery:7010/eureka
       - DATABASE_HOST=dbpostgresql
-      - DATABASE_PORT=5432
+      - DATABASE_PORT=5838
       - DATABASE_DB=gmoney_company_db
       - PROFILE=test
   cron:
@@ -136,10 +136,10 @@ services:
       - CONFIGURATION_SERVICE=http://configuration:7000
       - DISCOVERY_SERVICE=http://discovery:7010/eureka
       - DATABASE_HOST=dbpostgresql
-      - DATABASE_PORT=5432
+      - DATABASE_PORT=5838
       - DATABASE_DB=gmoney_cron_db
       - RABBIT_MQ_HOST=gmoneyrabbitmq
-      - RABBIT_MQ_PORT=5672
+      - RABBIT_MQ_PORT=5840
       - RABBIT_MQ_USER_NAME=guest
       - RABBIT_MQ_PASSWORD=guest
       - PROFILE=test
@@ -173,10 +173,10 @@ services:
       - CONFIGURATION_SERVICE=http://configuration:7000
       - DISCOVERY_SERVICE=http://discovery:7010/eureka
       - DATABASE_HOST=dbpostgresql
-      - DATABASE_PORT=5432
+      - DATABASE_PORT=5838
       - DATABASE_DB=gmoney_loan_db
       - RABBIT_MQ_HOST=gmoneyrabbitmq
-      - RABBIT_MQ_PORT=5672
+      - RABBIT_MQ_PORT=5840
       - RABBIT_MQ_USER_NAME=guest
       - RABBIT_MQ_PASSWORD=guest
       - PROFILE=test
@@ -210,10 +210,10 @@ services:
       - CONFIGURATION_SERVICE=http://configuration:7000
       - DISCOVERY_SERVICE=http://discovery:7010/eureka
       - DATABASE_HOST=dbpostgresql
-      - DATABASE_PORT=5432
+      - DATABASE_PORT=5838
       - DATABASE_DB=gmoney_notification_db
       - RABBIT_MQ_HOST=gmoneyrabbitmq
-      - RABBIT_MQ_PORT=5672
+      - RABBIT_MQ_PORT=5840
       - RABBIT_MQ_USER_NAME=guest
       - RABBIT_MQ_PASSWORD=guest
       - PROFILE=test
@@ -232,10 +232,10 @@ services:
       - CONFIGURATION_SERVICE=http://configuration:7000
       - DISCOVERY_SERVICE=http://discovery:7010/eureka
       - DATABASE_HOST=dbpostgresql
-      - DATABASE_PORT=5432
+      - DATABASE_PORT=5838
       - DATABASE_DB=gmoney_partner_db
       - RABBIT_MQ_HOST=gmoneyrabbitmq
-      - RABBIT_MQ_PORT=5672
+      - RABBIT_MQ_PORT=5840
       - RABBIT_MQ_USER_NAME=guest
       - RABBIT_MQ_PASSWORD=guest
       - PROFILE=test
@@ -254,10 +254,10 @@ services:
       - CONFIGURATION_SERVICE=http://configuration:7000
       - DISCOVERY_SERVICE=http://discovery:7010/eureka
       - DATABASE_HOST=dbpostgresql
-      - DATABASE_PORT=5432
+      - DATABASE_PORT=5838
       - DATABASE_DB=gmoney_rule_db
       - RABBIT_MQ_HOST=gmoneyrabbitmq
-      - RABBIT_MQ_PORT=5672
+      - RABBIT_MQ_PORT=5840
       - RABBIT_MQ_USER_NAME=guest
       - RABBIT_MQ_PASSWORD=guest
       - PROFILE=test
@@ -276,10 +276,10 @@ services:
       - CONFIGURATION_SERVICE=http://configuration:7000
       - DISCOVERY_SERVICE=http://discovery:7010/eureka
       - DATABASE_HOST=dbpostgresql
-      - DATABASE_PORT=5432
+      - DATABASE_PORT=5838
       - DATABASE_DB=gmoney_transaction_db
       - RABBIT_MQ_HOST=gmoneyrabbitmq
-      - RABBIT_MQ_PORT=5672
+      - RABBIT_MQ_PORT=5840
       - RABBIT_MQ_USER_NAME=guest
       - RABBIT_MQ_PASSWORD=guest
       - PROFILE=test
@@ -298,10 +298,10 @@ services:
       - CONFIGURATION_SERVICE=http://configuration:7000
       - DISCOVERY_SERVICE=http://discovery:7010/eureka
       - DATABASE_HOST=dbpostgresql
-      - DATABASE_PORT=5432
+      - DATABASE_PORT=5838
       - DATABASE_DB=gmoney_uaa_db
       - RABBIT_MQ_HOST=gmoneyrabbitmq
-      - RABBIT_MQ_PORT=5672
+      - RABBIT_MQ_PORT=5840
       - RABBIT_MQ_USER_NAME=guest
       - RABBIT_MQ_PASSWORD=guest
       - PROFILE=test

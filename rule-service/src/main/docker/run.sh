@@ -18,6 +18,12 @@ echo "##################################################"
 
 while ! $(nc -z proxy 8100 ); do sleep 3; done
 
+echo "##################################################"
+echo "Waiting for Postgres service  to start"
+echo "##################################################"
+
+while ! $(nc -z dbpostgresql 5838 ); do sleep 3; done
+
 echo ">>>>>>>>>>>>>>>>> Starting GMONEY Rule......."
 
 echo "##################################################"
