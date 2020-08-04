@@ -28,7 +28,7 @@ echo "##################################################"
 echo "Waiting for Rabbit MQ service  to start"
 echo "##################################################"
 
-while ! $(nc -z gmoneyrabbitmq 5840 ); do sleep 3; done
+while ! $(nc -z gmoneyrabbitmq 5672 ); do sleep 3; done
 
 echo ">>>>>>>>>>>>>>>>> Starting GMONEY Partner......."
 
