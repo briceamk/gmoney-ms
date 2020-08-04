@@ -1,6 +1,6 @@
 DROP ROLE IF EXISTS gmoney;
 DROP DATABASE IF EXISTS gmoney_account_db;
-DROP DATABASE IF EXISTS gmoney_compnay_db;
+DROP DATABASE IF EXISTS gmoney_company_db;
 DROP DATABASE IF EXISTS gmoney_cron_db;
 DROP DATABASE IF EXISTS gmoney_loan_db;
 DROP DATABASE IF EXISTS gmoney_notification_db;
@@ -25,7 +25,7 @@ CREATE DATABASE gmoney_account_db
     LC_CTYPE = 'en_US.utf8'
     TABLESPACE = pg_default
     CONNECTION LIMIT = -1;
-CREATE DATABASE gmoney_compnay_db
+CREATE DATABASE gmoney_company_db
     WITH 
     OWNER = gmoney
     ENCODING = 'UTF8'
