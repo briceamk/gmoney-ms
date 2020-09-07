@@ -24,6 +24,7 @@ public class CustomTokenEnhancer extends JwtAccessTokenConverter {
         info.put(UaaConstantType.USERNAME, principal.getUsername());
         info.put(UaaConstantType.EMAIL, principal.getEmail());
         info.put(UaaConstantType.MOBILE, principal.getMobile());
+        info.put(UaaConstantType.USER_ID, principal.getId());
         DefaultOAuth2AccessToken customAccessToken = new DefaultOAuth2AccessToken(accessToken);
         customAccessToken.setAdditionalInformation(info);
         return super.enhance(customAccessToken, authentication);

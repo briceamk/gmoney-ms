@@ -16,6 +16,7 @@ public class UaaConstantType {
     public static final String USERNAME = "username";
     public static final String MOBILE = "mobile";
     public static final String EMAIL = "email";
+    public static final String USER_ID = "id";
     public static final String JTI = "jti";
 
     public static final String[] PUBLIC_MATCHERS = {
@@ -33,5 +34,6 @@ public class UaaConstantType {
     public static final String ROUTING_KEY_CREATE_ACCOUNT = "createAccount";
     public static final String ROUTING_KEY_CREATE_PARTNER = "createPartner";
     public static final String ROUTING_KEY_REMOVE_PARTNER = "removePartner";
+
 
 }
