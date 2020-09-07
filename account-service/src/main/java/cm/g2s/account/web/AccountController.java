@@ -90,6 +90,13 @@ public class AccountController {
         return new ResponseEntity<>(accountMapper.map(accountService.findByPartnerId(principal, partnerId)), HttpStatus.OK);
     }
 
+    @GetMapping("/userId/{userId}")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER','ROLE_USER') and hasAuthority('READ_PARTNER')")
+    public ResponseEntity<?> findByUserId(@CurrentPrincipal CustomPrincipal principal,
+                                          @PathVariable String userId) {
+        return new ResponseEntity<>(accountMapper.map(accountService.findByUserId(principal, userId)), HttpStatus.OK);
+    }
+
     @GetMapping
     @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER', 'ROLE_USER') and hasAuthority('READ_ACCOUNT')")
     public ResponseEntity<?> findAll(@CurrentPrincipal CustomPrincipal principal,

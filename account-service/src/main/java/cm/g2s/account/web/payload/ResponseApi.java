@@ -12,4 +12,5 @@ import lombok.NoArgsConstructor;
 public class ResponseApi {
     private Boolean success;
     private String message;
+
 }

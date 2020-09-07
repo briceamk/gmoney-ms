@@ -13,6 +13,8 @@ public interface PartnerService {
 
     Partner findById(CustomPrincipal principal, String id);
 
+    Partner findByUserId(CustomPrincipal principal, String userId);
+
     Page<Partner> findAll(CustomPrincipal principal, String firstName, String lastName, String email,
                  String nicId, String nicIssuePlace, String city,
                  String type, String state, PageRequest of);

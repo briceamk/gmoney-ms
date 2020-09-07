@@ -79,6 +79,17 @@ public class PartnerServiceImpl implements PartnerService {
     }
 
     @Override
+    public Partner findByUserId(CustomPrincipal principal, String userId) {
+        Partner partner = partnerRepository.findByUserId(userId).orElseThrow(
+                () -> {
+                    log.error("partner with provided user id not found!");
+                    throw new ResourceNotFoundException("partner with provided user id not found!");
+                }
+        );
+        return partner;
+    }
+
+    @Override
     public Page<Partner> findAll(CustomPrincipal principal, String firstName, String lastName, String email, String nicId,
                                   String nicIssuePlace, String city, String type,
                                   String state, PageRequest pageRequest) {

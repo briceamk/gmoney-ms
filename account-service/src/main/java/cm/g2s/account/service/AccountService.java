@@ -28,4 +28,5 @@ public interface AccountService {
 
     void confirmDeBitAccount(CustomPrincipal principal, String accountId, AccountState state);
 
+    Account findByUserId(CustomPrincipal principal, String userId);
 }

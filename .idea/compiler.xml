@@ -7,12 +7,12 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="documentation-service" />
         <module name="proxy-service" />
         <module name="configuration-service" />
         <module name="discovery-service" />
+        <module name="documentation-service" />
       </profile>
-      <profile name="Annotation profile for momo-service" enabled="true">
+      <profile name="Annotation profile for company-service" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
@@ -32,16 +32,16 @@
           <entry name="$MAVEN_REPOSITORY$/joda-time/joda-time/2.9/joda-time-2.9.jar" />
           <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.12/lombok-1.18.12.jar" />
         </processorPath>
-        <module name="cron-service" />
-        <module name="rule-service" />
-        <module name="notification-service" />
-        <module name="company-service" />
-        <module name="uaa-service" />
-        <module name="account-service" />
-        <module name="momo-service" />
-        <module name="loan-service" />
         <module name="partner-service" />
+        <module name="rule-service" />
+        <module name="cron-service" />
+        <module name="loan-service" />
         <module name="transaction-service" />
+        <module name="momo-service" />
+        <module name="company-service" />
+        <module name="account-service" />
+        <module name="uaa-service" />
+        <module name="notification-service" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>

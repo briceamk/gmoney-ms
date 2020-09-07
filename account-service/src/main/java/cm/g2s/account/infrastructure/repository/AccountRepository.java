@@ -17,6 +17,8 @@ public interface AccountRepository extends JpaRepository<Account, String> {
 
     Optional<Account> findByNumber(String number);
 
+    Optional<Account> findByUserId(String userId);
+
     Page<Account> findByNumber(String number, Pageable pageable);
 
     Page<Account> findByPartnerId(String partnerId, Pageable pageable);

@@ -142,6 +142,17 @@ public class AccountServiceImpl implements AccountService {
         accountRepository.save(account);
     }
 
+    @Override
+    public Account findByUserId(CustomPrincipal principal, String userId) {
+        Account account =  accountRepository.findByUserId(userId).orElseThrow(
+                () -> {
+                    log.error("Account with user id {} not found",userId);
+                    throw new ResourceNotFoundException(String.format("Account with user id %s not found",userId));
+                }
+        );
+        return account;
+    }
+
     private String generateNumber(){
         val random = ThreadLocalRandom.current();
         return ((Long)  random.nextLong(1_000_000_000L, 10_000_000_000L)).toString();

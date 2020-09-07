@@ -70,6 +70,13 @@ public class PartnerController {
         return new ResponseEntity<>(partnerMapper.map(partnerService.findById(principal, id)), HttpStatus.OK);
     }
 
+    @GetMapping("/userId/{userId}")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER','ROLE_USER') and hasAuthority('READ_PARTNER')")
+    public ResponseEntity<?> findByUserId(@CurrentPrincipal CustomPrincipal principal,
+                                      @PathVariable String userId) {
+        return new ResponseEntity<>(partnerMapper.map(partnerService.findByUserId(principal, userId)), HttpStatus.OK);
+    }
+
     @GetMapping
     @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_MANAGER','ROLE_USER') and hasAuthority('READ_PARTNER')")
     public ResponseEntity<?> findAll(@CurrentPrincipal CustomPrincipal principal,
