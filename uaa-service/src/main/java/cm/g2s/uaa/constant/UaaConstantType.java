@@ -16,7 +16,7 @@ public class UaaConstantType {
     public static final String USERNAME = "username";
     public static final String MOBILE = "mobile";
     public static final String EMAIL = "email";
-    public static final String USER_ID = "id";
+    public static final String USER_ID = "userId";
     public static final String JTI = "jti";
 
     public static final String[] PUBLIC_MATCHERS = {
