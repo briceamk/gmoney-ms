@@ -1,6 +1,8 @@
 package cm.g2s.loan.web.dto;
 
 
+import cm.g2s.loan.constant.LoanConstantType;
+import cm.g2s.loan.domain.model.LoanState;
 import cm.g2s.loan.service.account.model.AccountDto;
 import cm.g2s.loan.service.company.CompanyDto;
 import cm.g2s.loan.service.partner.model.PartnerDto;
@@ -48,7 +50,7 @@ public class LoanDto {
     private BigDecimal interest;
     @NotEmpty(message = "payment mode is required")
     private String mode;
-    private String state;
+    private String state = LoanState.DRAFT.name();
     private RuleDto ruleDto;
     private PartnerDto partnerDto;
     private AccountDto accountDto;
