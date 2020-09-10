@@ -66,7 +66,8 @@ public class AuthServiceImpl implements AuthService {
         //Default sate
         user.setState(UserState.NEW);
         //We disable user. user should enable account by clicking link send to his mailbox
-        user.setEnabled(false);
+        //user.setEnabled(false); TODO enable this when mail notification is integrate in process
+        user.setEnabled(true);
         //We check company if user has send company code
         if(signUp.getCompanyCode() != null && !signUp.getCompanyCode().isEmpty()) {
             CompanyDto companyDto = companyClientService.findByCode(signUp.getCompanyCode());
