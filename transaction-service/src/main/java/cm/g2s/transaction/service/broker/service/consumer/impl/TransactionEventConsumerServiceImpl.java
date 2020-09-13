@@ -9,6 +9,7 @@ import cm.g2s.transaction.service.broker.payload.*;
 import cm.g2s.transaction.service.broker.service.publisher.TransactionEventPublisherService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.codehaus.jettison.json.JSONException;
 import org.springframework.cloud.stream.annotation.StreamListener;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Service;
@@ -50,7 +51,12 @@ public class TransactionEventConsumerServiceImpl implements TransactionEventCons
             SendMoneyResponse.SendMoneyResponseBuilder builder = SendMoneyResponse.builder();
             transactionService.findReadyToSend(null, TransactionState.TO_SEND).forEach(transaction -> {
                 builder.loanId(transaction.getLoanId());
-                Boolean result  = transactionService.sendMoney(null, transaction);
+                Boolean result  = null;
+                try {
+                    result = transactionService.sendMoney(null, transaction);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
                 if(result) {
                     builder.sendMoneyError(false);
                 } else {
