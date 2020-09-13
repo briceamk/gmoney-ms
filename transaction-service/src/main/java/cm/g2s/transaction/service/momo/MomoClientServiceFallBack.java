@@ -7,8 +7,8 @@ import org.springframework.stereotype.Component;
 import javax.validation.Valid;
 
 @Slf4j
-@Component
-public class MomoClientServiceFallBack implements MomoClientService {
+//@Component
+public class MomoClientServiceFallBack {}/*implements MomoClientService {
 
 
     @Override
@@ -22,4 +22,4 @@ public class MomoClientServiceFallBack implements MomoClientService {
         log.error("Error when calling momo-service api from transaction-service");
         return null;
     }
-}
+}*/

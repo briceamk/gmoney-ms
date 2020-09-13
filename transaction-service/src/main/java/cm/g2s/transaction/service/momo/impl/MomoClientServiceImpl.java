@@ -9,9 +9,9 @@ import org.springframework.stereotype.Service;
 import javax.validation.Valid;
 
 @Slf4j
-@RequiredArgsConstructor
-@Service("momoClientService")
-public class MomoClientServiceImpl implements MomoClientService {
+//@RequiredArgsConstructor
+//@Service("momoClientService")
+public class MomoClientServiceImpl {}/*implements MomoClientService {
 
     private final MomoClientService momoClientService;
 
@@ -26,4 +26,4 @@ public class MomoClientServiceImpl implements MomoClientService {
         log.info("Calling momo-service api from transaction-service");
         return momoClientService.findTransferInfo(resourceId);
     }
-}
+}*/

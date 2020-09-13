@@ -10,14 +10,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.validation.Valid;
 
-@FeignClient(value = "momo")//, fallback = MomoClientServiceFallBack.class)
+//@FeignClient(value = "momo")//, fallback = MomoClientServiceFallBack.class)
 public interface MomoClientService {
 
-    @PostMapping("/momo/api/v1/momos/transfer/{resourceId}")
-    Object makeTransfer(@RequestBody @Valid TransferRequestDto transferRequest, @PathVariable String resourceId);
+    //@PostMapping("/momo/api/v1/momos/transfer/{resourceId}")
+    //Object makeTransfer(@RequestBody @Valid TransferRequestDto transferRequest, @PathVariable String resourceId);
 
-    @GetMapping("/momo/api/v1/momos/transfer/{resourceId}")
-    Object findTransferInfo(@PathVariable String resourceId);
+    //@GetMapping("/momo/api/v1/momos/transfer/{resourceId}")
+    //Object findTransferInfo(@PathVariable String resourceId);
 
 
 }

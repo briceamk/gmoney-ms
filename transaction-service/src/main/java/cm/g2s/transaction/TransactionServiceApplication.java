@@ -1,8 +1,10 @@
 package cm.g2s.transaction;
 
 import cm.g2s.transaction.infrastructure.broker.TransactionEventSource;
+import cm.g2s.transaction.momo.configuration.MomoApiConfiguration;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.cloud.stream.annotation.EnableBinding;
@@ -11,6 +13,7 @@ import org.springframework.cloud.stream.annotation.EnableBinding;
 @EnableEurekaClient
 @SpringBootApplication
 @EnableBinding(TransactionEventSource.class)
+@EnableConfigurationProperties({MomoApiConfiguration.class})
 public class TransactionServiceApplication {
 
 	public static void main(String[] args) {

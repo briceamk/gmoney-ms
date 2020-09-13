@@ -3,6 +3,7 @@ package cm.g2s.transaction.service;
 import cm.g2s.transaction.domain.model.Transaction;
 import cm.g2s.transaction.domain.model.TransactionState;
 import cm.g2s.transaction.security.CustomPrincipal;
+import org.codehaus.jettison.json.JSONException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
@@ -19,5 +20,5 @@ public interface TransactionService {
 
     List<Transaction> findReadyToSend(CustomPrincipal principal, TransactionState toSend);
 
-    Boolean sendMoney(CustomPrincipal principal, Transaction transaction);
+    Boolean sendMoney(CustomPrincipal principal, Transaction transaction) throws JSONException;
 }
